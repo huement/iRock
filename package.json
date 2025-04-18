@@ -11,6 +11,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "nodemon -x \"npm run build\"",
         "postfix": "postcss --config postcss.config.cjs --replace docs/css/docs.css",
+        "imageConvert": "find . -name \"*.jpg\" -exec mogrify -format png {} \\;",
         "imagemin": "./node_modules/.bin/imagemin _pics/**/* --plugin=pngquant --out-dir=docs/imgs",
         "thumbnails": "node ./thumbnails.js"
     },

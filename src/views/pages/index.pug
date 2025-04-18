@@ -25,23 +25,23 @@ block scriptsJS
             let result = ''
             if($('.profile-section').hasClass('visible') || forceTargetActive === 'contact'){
                 result = 'contact'
-                $('.profile-dot').addClass('active');
+                $('.profile-dot').addClass('active')
             } else if($('.homepage').hasClass('visible') || forceTargetActive === 'home'){
                 result = 'home'
-                $('.homepage-dot').addClass('active');
+                $('.homepage-dot').addClass('active')
             } else if($('.portfolio-section').hasClass('visible') || forceTargetActive === 'work'){
                 result = 'work'
-                $('.portfolio-dot').addClass('active');
+                $('.portfolio-dot').addClass('active')
             } else if($('.hobby-section').hasClass('visible') || forceTargetActive === 'hobbies'){
                 result = 'hobbies'
-                $('.hobby-dot').addClass('active');
+                $('.hobby-dot').addClass('active')
             } else if($('.timeline-section').hasClass('visible') || forceTargetActive === 'timeline'){
                 result = 'timeline'
-                $('.timeline-dot').addClass('active');
+                $('.timeline-dot').addClass('active')
             }
 
             if(result === ''){
-                $('.homepage-dot').addClass('active');
+                $('.homepage-dot').addClass('active')
             }
 
             lastDot = result
@@ -55,62 +55,114 @@ block scriptsJS
 
         // Throttle function to limit execution rate
         function throttle(func, limit) {
-            let inThrottle;
+            let inThrottle
             return function (...args) {
                 if (!inThrottle) {
-                func.apply(this, args);
-                inThrottle = true;
-                setTimeout(() => (inThrottle = false), limit);
+                func.apply(this, args)
+                inThrottle = true
+                setTimeout(() => (inThrottle = false), limit)
                 }
-            };
+            }
         }
 
         // Scroll handler
         const handleScroll = throttle(() => {
-            updateDots();
-        }, 100); // 100ms = 10 times per second
+            updateDots()
+        }, 100) // 100ms = 10 times per second
 
         function goToDot(idTarget) {
             if(idTarget !== 'home'){
-                const element = document.getElementById(idTarget);
-                element.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+                const element = document.getElementById(idTarget)
+                element.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
             } else {
-                document.body.scrollTop = 0; // For Safari
-                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+                document.body.scrollTop = 0 // For Safari
+                document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
             }
 
-            updateDots(idTarget);
-            setTimeout(setLastDot, 100);
+            updateDots(idTarget)
+            setTimeout(setLastDot, 100)
         }
 
         function centerHomeTitle() {
-            const halfWidth = Math.round($('body').innerWidth() * 0.5)
-            const titleWidth = 540
-            const marginAmount = Math.round((((halfWidth - titleWidth) * 0.25) + 20))
-            $(".homepage-content .display-1").css('marginLeft', marginAmount + 'px')
-            $(".homepage-content .subtitle").css('marginLeft', marginAmount + 'px')
-            console.log($('body').innerWidth(), titleWidth, marginAmount)
+            const marginAmount = Math.round($('ul.dots').innerWidth() * 1.5)
+            $(".homepage-content .display-1, .homepage-content .subtitle").css('paddingLeft', marginAmount + 'px')
+        }
+
+        /**
+        * fires when the page loads or resizes. controls spacing and height of various elements.
+        */
+        function mainUISync() {
+            console.log('updating UI...')
+            centerHomeTitle()
+
+            const containerWorkHeight = Math.round($('.masonryRow', 0).innerHeight())
+            const containerHobbyHeight = Math.round($('.masonryRow', 1).innerHeight())
+            const sectionWorkHeight = Math.round($('.portfolio-section').innerHeight())
+            const sectionHobbyHeight = Math.round($('.hobby-section').innerHeight())
+            console.log(sectionWorkHeight, containerWorkHeight)
+
+            if(sectionWorkHeight <= containerWorkHeight + 100){
+                console.log('work small error!')
+                $('.portfolio-section').css('minHeight', containerWorkHeight + 150 + 'px')
+            } else {
+                $('.portfolio-section').css('minHeight', containerWorkHeight + 100 + 'px')
+            }
+
+            if(sectionHobbyHeight <= containerHobbyHeight + 100){
+                console.log('hobby small error!')
+                $('.portfolio-section').css('minHeight', containerHobbyHeight + 150 + 'px')
+            } else {
+                $('.portfolio-section').css('minHeight', containerHobbyHeight + 100 + 'px')
+            }
+
+            $('.section.homepage').css('minHeight', $('body').height() + 'px')
+            $('.homepage-content').css('minHeight', $('body').height() + 'px')
+            $('#homepageCanvas').css('minHeight', $('body').height() + 'px')
+        }
+
+        window.addEventListener('resize', (event) => {})
+        onresize = (event) => {
+            console.log('resize')
+            mainUISync()
         }
 
         $(function () {
-            $('html').addClass ( 'dom-loaded' );
-            $(window).on('scroll', handleScroll);
+            $('html').addClass ( 'dom-loaded' )
+            $(window).on('scroll', handleScroll)
 
             $('a.nav-dots').each(function () {
-                var $this = $(this);
+                var $this = $(this)
                 $this.on("click", function (ev) {
-                    ev.preventDefault();
-                    const nTarget = $(this).data('target');
-                    goToDot(nTarget);
-                    updateDots(nTarget);
-                    // console.log(nTarget);
-                });
-            });
+                    ev.preventDefault()
+                    const nTarget = $(this).data('target')
+                    goToDot(nTarget)
+                    updateDots(nTarget)
+                    console.log(nTarget)
+                })
+            })
 
-            centerHomeTitle();
-        });
+            var emailTo = 'admin@huement.com'
+            var emailSub = 'Portfolio%20Related%20Message'
+            var mailString = "mailto:"+emailTo+"?subject="+emailSub
+            //- $('.emailBtn').on("click", function(ev){
+            //-     console.log('contacting!')
+            //-     location.href = "mailto:"+emailTo+"?subject="+emailSub
+            //-     x=window.open(mailstring);
+            //-     x.close();
+            //- })
+
+            $('.emailBtn').attr('href', mailString)
+            mainUISync()
+            $('.page-loader').addClass('loaded')
+        })
 
 block content
+    .page-loader
+        .spinner
+        .txt
+            | Derek Scott's
+            br
+            | portfolio is loading...
     #fullpage
         .section.homepage(data-trigger="true")
             .smallTitle
@@ -121,16 +173,16 @@ block content
                 .row.no-gutters
                     .col-md-6.d-none.d-sm-none.d-md-block.d-lg-block.d-xl-block.d-xxl-block
                         #homepageTitle
-                            h1#home.display-1 Derek Scott
-                            h2.subtitle.d-none.d-sm-none.d-md-none.d-lg-block.d-xl-block.d-xxl-block Developer Extraordinaire
+                            h1#home.display-1.text-center Derek Scott
+                            h2.subtitle.d-none.d-sm-none.d-md-none.d-lg-block.d-xl-block.d-xxl-block.text-center Developer Extraordinaire
                     .col-md-6
                         #homepageCanvas
             .container-fluid.homepage-border
         .section.portfolio-section(data-trigger="true")
-            .container.py-5
+            .container.py-5.mb-5
                 h2#work.display-3.text-center.background.h2.heavyTitle
                     span Recent Work
-                .row(data-masonry={percentPosition: true })
+                .row.masonryRow(data-masonry={percentPosition: true })
 
                     .col-sm-6.col-lg-4.mb-4
                         .card
@@ -168,7 +220,7 @@ block content
                         .card
                             img.rounded.card-img-top(src="thumbnails/thumb_results.png" alt="flightplan")
                             .card-body
-                                p.card-text Loading statistics and AI copiled results as mapped data layers
+                                p.card-text Loading statistics and AI compiled results as mapped data layers
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             img.rounded.card-img-top(src="thumbnails/thumb_freshlime3.png" alt="flightplan")
@@ -262,7 +314,7 @@ block content
                     p.lead.pt-2 I am not always coding business and professional applications in secure environments. Sometimes I like to just have fun and work on cool open source projects. I am especially fond of Arduino &amp; Raspberry Pi's, as well as HomeLab projects.
                         strong &nbsp;If its mini or micro and boots, I'm into it.
 
-                .row(data-masonry={percentPosition: true })
+                .row.masonryRow(data-masonry={percentPosition: true })
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a(href="imgs/pigasus-logo.png")
@@ -297,8 +349,8 @@ block content
                                 p.card-text Styleguides are a must have for any big project
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            a(href="imgs/statue-13.png")
-                                img.card-img-top.rounded(src="thumbnails/thumb_statue-13.png" alt="Roman Wallpaper")
+                            a(href="imgs/immbackground.png")
+                                img.card-img-top.rounded(src="thumbnails/thumb_immbackground.png" alt="Lips Wallpaper")
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a(href="imgs/hackintosh.png")
@@ -340,7 +392,7 @@ block content
                                 | I’m Derek Scott, a dedicated Full Stack Web Developer with over 8 years of experience crafting robust web and mobile solutions. My expertise lies in TypeScript, PHP, and UI/UX automation, honed through impactful projects at Packet Digital / Botlink for the U.S. Navy, where I developed secure applications like quad-copter drone flight controllers and ship-based battery management systems in strict government cloud environments. My work at Myriad Mobile and Realtruck.com further sharpened my ability to deliver user-focused applications using React.js, Vue.js, and PHP 8, ensuring seamless front-end and back-end integration.
 
                             p
-                                | With a background in psychology and economics from the University of North Dakota, I bring a deep understanding of user behavior and financial mathematics to my development process, creating intuitive and efficient digital experiences. Known for my upbeat personality and collaborative spirit, I thrive in team settings and am passionate about taking ideas from napkin mock-ups to deployable MVPs. My GitHub Profile:
+                                | With a Bachelors of Science in Psychology and another Bachelors Degree in Economics from the University of North Dakota, I bring a deep understanding of user behavior and financial mathematics to my development process, creating intuitive and efficient digital experiences. Known for my upbeat personality and collaborative spirit, I thrive in team settings and am passionate about taking ideas from napkin mock-ups to deployable MVPs. My GitHub Profile:
                                 a(href="https://johnny13.github.io/iRock/") https://johnny13.github.io/iRock/
                                 |  has a lot of other projects and things I've done if you're looking for my coding qualifications.
                         .mt-3.ps-3
@@ -348,7 +400,7 @@ block content
                                 .row.cta-buttons
                                     .col-md-8.offset-md-2
                                         .cta-wrapper
-                                            a.btn.btn-primary.cta-btn(href="mailto:derek@huement.com")
+                                            a.btn.btn-primary.cta-btn.emailBtn(href="#" target="_top")
                                                 i.me-2.bx.bxs-envelope(style="color: #ffffff")
                                                 | Message Me
                                             a.btn.btn-success.ms-3.cta-btn(href="https://drive.google.com/file/d/11_ITeJZZNV719vXedPy6BDsrokquGL6r/view?usp=drive_link")
