@@ -12,6 +12,7 @@ block scriptsJS
     script(src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/cash/8.1.5/cash.min.js")
     script(src="https://cdn.jsdelivr.net/npm/@terwanerik/scrolltrigger@1.0.5/dist/ScrollTrigger.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/bs5-lightbox@1.8.5/dist/index.bundle.min.js")
     script(src="./fractal.js")
     script.
         const trigger = new ScrollTrigger.default()
@@ -45,7 +46,6 @@ block scriptsJS
             }
 
             lastDot = result
-
         }
 
         function setLastDot(){
@@ -92,24 +92,20 @@ block scriptsJS
         * fires when the page loads or resizes. controls spacing and height of various elements.
         */
         function mainUISync() {
-            console.log('updating UI...')
             centerHomeTitle()
 
             const containerWorkHeight = Math.round($('.masonryRow', 0).innerHeight())
             const containerHobbyHeight = Math.round($('.masonryRow', 1).innerHeight())
             const sectionWorkHeight = Math.round($('.portfolio-section').innerHeight())
             const sectionHobbyHeight = Math.round($('.hobby-section').innerHeight())
-            console.log(sectionWorkHeight, containerWorkHeight)
 
             if(sectionWorkHeight <= containerWorkHeight + 100){
-                console.log('work small error!')
                 $('.portfolio-section').css('minHeight', containerWorkHeight + 150 + 'px')
             } else {
                 $('.portfolio-section').css('minHeight', containerWorkHeight + 100 + 'px')
             }
 
             if(sectionHobbyHeight <= containerHobbyHeight + 100){
-                console.log('hobby small error!')
                 $('.portfolio-section').css('minHeight', containerHobbyHeight + 150 + 'px')
             } else {
                 $('.portfolio-section').css('minHeight', containerHobbyHeight + 100 + 'px')
@@ -122,13 +118,18 @@ block scriptsJS
 
         window.addEventListener('resize', (event) => {})
         onresize = (event) => {
-            console.log('resize')
             mainUISync()
         }
 
+        var doneLoading = function () {
+            $('.page-loader').addClass('loaded')
+        }
+
         $(function () {
-            $('html').addClass ( 'dom-loaded' )
+            $('html').addClass ( 'cash-dom-loaded' )
             $(window).on('scroll', handleScroll)
+
+            document.querySelectorAll('.lightbox-toggle').forEach(el => el.addEventListener('click', Lightbox.initialize));
 
             $('a.nav-dots').each(function () {
                 var $this = $(this)
@@ -144,16 +145,11 @@ block scriptsJS
             var emailTo = 'admin@huement.com'
             var emailSub = 'Portfolio%20Related%20Message'
             var mailString = "mailto:"+emailTo+"?subject="+emailSub
-            //- $('.emailBtn').on("click", function(ev){
-            //-     console.log('contacting!')
-            //-     location.href = "mailto:"+emailTo+"?subject="+emailSub
-            //-     x=window.open(mailstring);
-            //-     x.close();
-            //- })
 
             $('.emailBtn').attr('href', mailString)
+            $('.emailBtn').removeClass('d-none')
             mainUISync()
-            $('.page-loader').addClass('loaded')
+            setTimeout(doneLoading, 100)
         })
 
 block content
@@ -164,7 +160,7 @@ block content
             br
             | portfolio is loading...
     #fullpage
-        .section.homepage(data-trigger="true")
+        .section.homepage(data-trigger="true").gradient
             .smallTitle
                 .smallTitleWrapper
                     h1.display-1 Derek Scott
@@ -186,50 +182,60 @@ block content
 
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            img.rounded.card-img-top(src="thumbnails/thumb_flightplan.png" alt="flightplan")
+                            a.lightbox-toggle(href="imgs/flightplan.png")
+                                img.rounded.card-img-top(src="thumbnails/thumb_flightplan.png" alt="flightplan")
                             .card-body
                                 p.card-text.
                                     Building &amp; flying drone flightplans via hybrid Android application
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            img.rounded.card-img-top(src="thumbnails/thumb_laanc.png" alt="map layers")
+                            a.lightbox-toggle(href="imgs/laanc.png")
+                                img.rounded.card-img-top(src="thumbnails/thumb_laanc.png" alt="laanc map layers")
                             .card-body
                                 p.card-text Generating complex maps and layers from PostGIS GeoJSON
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            a(href="imgs/")
+                            a.lightbox-toggle(href="imgs/map.png")
                                 img.rounded.card-img-top(src="thumbnails/thumb_map.png" alt="map data")
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            img.rounded.card-img-top(src="thumbnails/thumb_map_texture.png" alt="flightplan")
+                            a.lightbox-toggle(href="imgs/map_texture.png")
+                                img.rounded.card-img-top(src="thumbnails/thumb_map_texture.png" alt="map texture")
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            img.rounded.card-img-top(src="thumbnails/thumb_sites.png" alt="flightplan")
+                            a.lightbox-toggle(href="imgs/sites.png")
+                                img.rounded.card-img-top(src="thumbnails/thumb_sites.png" alt="app sites view")
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            img.rounded.card-img-top(src="thumbnails/thumb_image.png" alt="flightplan")
+                            a.lightbox-toggle(href="imgs/image.png")
+                                img.rounded.card-img-top(src="thumbnails/thumb_image.png" alt="flightplan")
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            img.rounded.card-img-top(src="thumbnails/thumb_printed.png" alt="flightplan")
+                            a.lightbox-toggle(href="imgs/printed.png")
+                                img.rounded.card-img-top(src="thumbnails/thumb_printed.png" alt="printed paper map")
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            img.rounded.card-img-top(src="thumbnails/thumb_freshlime1.png" alt="flightplan")
+                            a.lightbox-toggle(href="imgs/freshlime1.png")
+                                img.rounded.card-img-top(src="thumbnails/thumb_freshlime1.png" alt="freshlime preview")
                             .card-body
                                 p.card-text I have been building hybrid mobile applications for years. Using ReactJS since its earliest days.
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            img.rounded.card-img-top(src="thumbnails/thumb_results.png" alt="flightplan")
+                            a.lightbox-toggle(href="imgs/results.png")
+                                img.rounded.card-img-top(src="thumbnails/thumb_results.png" alt="flightplan")
                             .card-body
                                 p.card-text Loading statistics and AI compiled results as mapped data layers
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            img.rounded.card-img-top(src="thumbnails/thumb_freshlime3.png" alt="flightplan")
+                            a.lightbox-toggle(href="imgs/freshlime3.png")
+                                img.rounded.card-img-top(src="thumbnails/thumb_freshlime3.png" alt="freshlime app preview")
 
         .section.timeline-section(data-trigger="true")
             .container.py-5
                 .row
                     .col-12.mt-5.pt-5#timeline
                         h2.display-3.timeline-main-title.heavyTitle Professional Timeline
+                        p.lead Here is a quick horizontally arranged summary of my recent work history and professional life events.
             .container-fluid.mt-5
                 .scrolling-wrapper.row.flex-row.flex-nowrap.mt-4.pb-4.pt-2
                     .col-12.pt-5.my-5.timeline-col
@@ -257,7 +263,7 @@ block content
                                                 i.bx.bxs-time(style="color: #3b5998;")
                                                 |  2015 - 2017
                                     .timeline-body
-                                        p Created a mapping app, focused on drilling rig locations and creating large printed maps with customer data
+                                        p Created a mapping app, focused on drilling rig locations and creating large printed maps with customer data. Used PHP, PostGIS, SQL, HTML5
                             li.timeline-item
                                 .timeline-badge.success
                                     i.bx.bx-check(style="color: #FFFFFF;")
@@ -269,7 +275,7 @@ block content
                                                 i.bx.bxs-time(style="color: #3b5998;")
                                                 |  2012 - 2014
                                     .timeline-body
-                                        p Created a mapping app, focused on drilling rig locations and creating large printed maps with customer data
+                                        p Started at a Utah startup as 1 of 3 devs, we built a service worker focused business management suite of tools. Attended Quickbooks hackathon. Integrated their code into our app. Everything was built entirely in Python (Django) with AWS. Lots of javascript, angularJS
                             li.timeline-item
                                 .timeline-badge.warning
                                     i.bx.bx-check(style="color: #FFFFFF;")
@@ -281,7 +287,7 @@ block content
                                                 i.bx.bxs-time(style="color: #3b5998;")
                                                 |  2012 - 2014
                                     .timeline-body
-                                        p Created a mapping app, focused on drilling rig locations and creating large printed maps with customer data
+                                        p Built out the mobile web app for one of the largest eCommerce companies in North Dakota. Very high sales volume website with audit requirements. Used Javascript, PHP, Microsoft SQL. Worked in a strictly managed environment.
                             li.timeline-item
                                 .timeline-badge.danger
                                     i.bx.bx-check(style="color: #FFFFFF;")
@@ -293,7 +299,7 @@ block content
                                                 i.bx.bxs-time(style="color: #3b5998;")
                                                 |  2016 - 2020
                                     .timeline-body
-                                        p Built out Bushel.ag. Worked on various other client applications using PHP and React.js
+                                        p Worked on agricultural financially focused software like Bushel.ag. Also assisted and worked on various other client applications. Everything was coded using Laravel PHP, React.js, Ant.Design, Next.js, SCSS.
                             li.timeline-item
                                 .timeline-badge.info
                                     i.bx.bx-check(style="color: #FFFFFF;")
@@ -305,11 +311,11 @@ block content
                                                 i.bx.bxs-time(style="color: #3b5998;")
                                                 |  2021 - 2025
                                     .timeline-body
-                                        p Created a mapping app, focused on drilling rig locations and creating large printed maps with customer data
+                                        p Built multiple web apps and Android applications. Including complex functionality like allowing users to create drone flight for capturing images, that were then ran through Ai algorithms for image detections and extrapolation. Asset management and tracking and capturing data in various ways. Used Vue.js GraphQL Node.jS Typescript
 
         .section.hobby-section(data-trigger="true")
             .container.py-5#hobbies
-                .jumbotron.p-4.my-4.bg-dark.rounded-3
+                .jumbotron.p-4.mt-3.mb-4.bg-dark.rounded-3
                     h2.display-3.heavyTitle Hobby Projects
                     p.lead.pt-2 I am not always coding business and professional applications in secure environments. Sometimes I like to just have fun and work on cool open source projects. I am especially fond of Arduino &amp; Raspberry Pi's, as well as HomeLab projects.
                         strong &nbsp;If its mini or micro and boots, I'm into it.
@@ -317,11 +323,11 @@ block content
                 .row.masonryRow(data-masonry={percentPosition: true })
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            a(href="imgs/pigasus-logo.png")
+                            a.lightbox-toggle(href="imgs/pigasus-logo.png")
                                 img.card-img-top.rounded(src="thumbnails/thumb_pigasus-logo.png" alt="pigasus")
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            a(href="imgs/cyber-deck.png")
+                            a.lightbox-toggle(href="imgs/cyber-deck.png")
                                 img.card-img-top(src="thumbnails/thumb_cyber-deck.png" alt="cyber-deck")
                             .card-body
                                 p.card-text.
@@ -329,39 +335,39 @@ block content
 
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            a(href="imgs/torchwood.png")
+                            a.lightbox-toggle(href="imgs/torchwood.png")
                                 img.card-img-top.rounded(src="thumbnails/thumb_torchwood.png" alt="project torchwood")
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            a(href="imgs/leah.png")
+                            a.lightbox-toggle(href="imgs/leah.png")
                                 img.card-img-top.rounded(src="thumbnails/thumb_leah.png" alt="relationship status")
                             .card-body
                                 p.card-text Me and my long term girlfriend
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            a(href="imgs/figma-blog.png")
+                            a.lightbox-toggle(href="imgs/figma-blog.png")
                                 img.card-img-top.rounded(src="thumbnails/thumb_figma-blog.png" alt="figma blog project")
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            a(href="imgs/style-tile.png")
+                            a.lightbox-toggle(href="imgs/style-tile.png")
                                 img.card-img-top.rounded(src="thumbnails/thumb_style-tile.png" alt="Styleguide preview")
                             .card-body
                                 p.card-text Styleguides are a must have for any big project
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            a(href="imgs/immbackground.png")
+                            a.lightbox-toggle(href="imgs/immbackground.png")
                                 img.card-img-top.rounded(src="thumbnails/thumb_immbackground.png" alt="Lips Wallpaper")
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            a(href="imgs/hackintosh.png")
+                            a.lightbox-toggle(href="imgs/hackintosh.png")
                                 img.card-img-top.rounded(src="thumbnails/thumb_hackintosh.png" alt="Hackintosh FTW")
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            a(href="imgs/watch-what-you-say.png")
+                            a.lightbox-toggle(href="imgs/watch-what-you-say.png")
                                 img.card-img-top.rounded(src="thumbnails/thumb_watch-what-you-say.png" alt="Hackintosh FTW")
                     .col-sm-6.col-lg-4.mb-4
                         .card
-                            a(href="imgs/paco.png")
+                            a.lightbox-toggle(href="imgs/paco.png")
                                 img.card-img-top.rounded(src="thumbnails/thumb_paco.png" alt="I love my baby bear")
 
         .section.profile-section(data-trigger="true")
@@ -392,20 +398,27 @@ block content
                                 | I’m Derek Scott, a dedicated Full Stack Web Developer with over 8 years of experience crafting robust web and mobile solutions. My expertise lies in TypeScript, PHP, and UI/UX automation, honed through impactful projects at Packet Digital / Botlink for the U.S. Navy, where I developed secure applications like quad-copter drone flight controllers and ship-based battery management systems in strict government cloud environments. My work at Myriad Mobile and Realtruck.com further sharpened my ability to deliver user-focused applications using React.js, Vue.js, and PHP 8, ensuring seamless front-end and back-end integration.
 
                             p
-                                | With a Bachelors of Science in Psychology and another Bachelors Degree in Economics from the University of North Dakota, I bring a deep understanding of user behavior and financial mathematics to my development process, creating intuitive and efficient digital experiences. Known for my upbeat personality and collaborative spirit, I thrive in team settings and am passionate about taking ideas from napkin mock-ups to deployable MVPs. My GitHub Profile:
-                                a(href="https://johnny13.github.io/iRock/") https://johnny13.github.io/iRock/
+                                | With a Bachelors of Science in Psychology and another Bachelors Degree in Economics from the University of North Dakota, I bring a deep understanding of user behavior and financial mathematics to my development process, creating intuitive and efficient digital experiences. Known for my upbeat personality and collaborative spirit, I thrive in team settings and am passionate about taking ideas from napkin mock-ups to deployable MVPs. My GitHub Profile:&nbsp;
+                                a(href="https://github.com/johnny13/") github.com/johnny13
                                 |  has a lot of other projects and things I've done if you're looking for my coding qualifications.
-                        .mt-3.ps-3
-                            .call-to-action-wrapper.container
-                                .row.cta-buttons
-                                    .col-md-8.offset-md-2
-                                        .cta-wrapper
-                                            a.btn.btn-primary.cta-btn.emailBtn(href="#" target="_top")
-                                                i.me-2.bx.bxs-envelope(style="color: #ffffff")
-                                                | Message Me
-                                            a.btn.btn-success.ms-3.cta-btn(href="https://drive.google.com/file/d/11_ITeJZZNV719vXedPy6BDsrokquGL6r/view?usp=drive_link")
-                                                i.me-2.bx.bxs-download(style="color: #ffffff")
-                                                | Resume Download
+
+                            p.lead If you are a recruiter or looking at potentially hiring me, I've also included a handy list on the side of all my Software Keywords
+
+                            .software-list
+                                p
+                                    each val in ['PHP','Laravel','Symfony','SCSS', 'SASS', 'CSS', 'HTML', 'Svelte', 'LESS', 'Stylus','SQL', 'MySQL', 'GraphQL',  'MSSQL', 'PostGRE', 'PostGIS', 'MariaDB', 'SQLite','Python', 'Django', 'Python3','Javascript', 'Typescript','Vue.js', 'React.js', 'Next.js', 'Node.js', 'AngularJS','Ionic', 'Capacitor', 'Android', 'iOS', 'Java', 'Swift']
+                                        | #{ val } &nbsp;
+                            .mt-3.ps-3
+                                .call-to-action-wrapper.container
+                                    .row.cta-buttons
+                                        .col-md-8.offset-md-2
+                                            .cta-wrapper
+                                                a.btn.btn-primary.cta-btn.d-none.emailBtn(href="#" target="_top")
+                                                    i.me-2.bx.bxs-envelope(style="color: #ffffff")
+                                                    | Message Me
+                                                a.btn.btn-success.ms-3.cta-btn(href="https://drive.google.com/file/d/11_ITeJZZNV719vXedPy6BDsrokquGL6r/view?usp=drive_link")
+                                                    i.me-2.bx.bxs-download(style="color: #ffffff")
+                                                    | Resume Download
 
     .svgWave
         .svgBottom

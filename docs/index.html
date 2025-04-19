@@ -32,7 +32,7 @@
     <!-- [if lt IE 9]><script language="javascript" type="text/javascript" src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./mojo.css?token=1745002653" type="text/css" id="mojo_css">
+    <link rel="stylesheet" href="./mojo.css?token=1745030254" type="text/css" id="mojo_css">
     <link rel="stylesheet" href="./prismjs/prism.css" type="text/css" id="highlight_css">
   </head>
   <body class="no-javascript d-flex flex-column h-100">
@@ -43,7 +43,7 @@
       <div class="txt">Derek Scott's<br>portfolio is loading...</div>
     </div>
     <div id="fullpage">
-      <div class="section homepage" data-trigger="true">
+      <div class="section homepage gradient" data-trigger="true">
         <div class="smallTitle">
           <div class="smallTitleWrapper">
             <h1 class="display-1">Derek Scott</h1>
@@ -70,50 +70,50 @@
           <h2 class="display-3 text-center background h2 heavyTitle" id="work"><span>Recent Work</span></h2>
           <div class="row masonryRow" data-masonry="{&quot;percentPosition&quot;:true}">
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><img class="rounded card-img-top" src="thumbnails/thumb_flightplan.png" alt="flightplan">
+              <div class="card"><a class="lightbox-toggle" href="imgs/flightplan.png"><img class="rounded card-img-top" src="thumbnails/thumb_flightplan.png" alt="flightplan"></a>
                 <div class="card-body">
                   <p class="card-text">Building &amp; flying drone flightplans via hybrid Android application</p>
                 </div>
               </div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><img class="rounded card-img-top" src="thumbnails/thumb_laanc.png" alt="map layers">
+              <div class="card"><a class="lightbox-toggle" href="imgs/laanc.png"><img class="rounded card-img-top" src="thumbnails/thumb_laanc.png" alt="laanc map layers"></a>
                 <div class="card-body">
                   <p class="card-text">Generating complex maps and layers from PostGIS GeoJSON</p>
                 </div>
               </div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><a href="imgs/"><img class="rounded card-img-top" src="thumbnails/thumb_map.png" alt="map data"></a></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/map.png"><img class="rounded card-img-top" src="thumbnails/thumb_map.png" alt="map data"></a></div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><img class="rounded card-img-top" src="thumbnails/thumb_map_texture.png" alt="flightplan"></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/map_texture.png"><img class="rounded card-img-top" src="thumbnails/thumb_map_texture.png" alt="map texture"></a></div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><img class="rounded card-img-top" src="thumbnails/thumb_sites.png" alt="flightplan"></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/sites.png"><img class="rounded card-img-top" src="thumbnails/thumb_sites.png" alt="app sites view"></a></div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><img class="rounded card-img-top" src="thumbnails/thumb_image.png" alt="flightplan"></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/image.png"><img class="rounded card-img-top" src="thumbnails/thumb_image.png" alt="flightplan"></a></div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><img class="rounded card-img-top" src="thumbnails/thumb_printed.png" alt="flightplan"></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/printed.png"><img class="rounded card-img-top" src="thumbnails/thumb_printed.png" alt="printed paper map"></a></div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><img class="rounded card-img-top" src="thumbnails/thumb_freshlime1.png" alt="flightplan">
+              <div class="card"><a class="lightbox-toggle" href="imgs/freshlime1.png"><img class="rounded card-img-top" src="thumbnails/thumb_freshlime1.png" alt="freshlime preview"></a>
                 <div class="card-body">
                   <p class="card-text">I have been building hybrid mobile applications for years. Using ReactJS since its earliest days.</p>
                 </div>
               </div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><img class="rounded card-img-top" src="thumbnails/thumb_results.png" alt="flightplan">
+              <div class="card"><a class="lightbox-toggle" href="imgs/results.png"><img class="rounded card-img-top" src="thumbnails/thumb_results.png" alt="flightplan"></a>
                 <div class="card-body">
                   <p class="card-text">Loading statistics and AI compiled results as mapped data layers</p>
                 </div>
               </div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><img class="rounded card-img-top" src="thumbnails/thumb_freshlime3.png" alt="flightplan"></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/freshlime3.png"><img class="rounded card-img-top" src="thumbnails/thumb_freshlime3.png" alt="freshlime app preview"></a></div>
             </div>
           </div>
         </div>
@@ -123,6 +123,7 @@
           <div class="row">
             <div class="col-12 mt-5 pt-5" id="timeline">
               <h2 class="display-3 timeline-main-title heavyTitle">Professional Timeline</h2>
+              <p class="lead">Here is a quick horizontally arranged summary of my recent work history and professional life events.</p>
             </div>
           </div>
         </div>
@@ -150,7 +151,7 @@
                       <p><small class="text-muted"><i class="bx bxs-time" style="color: #3b5998;"></i> 2015 - 2017</small></p>
                     </div>
                     <div class="timeline-body">
-                      <p>Created a mapping app, focused on drilling rig locations and creating large printed maps with customer data</p>
+                      <p>Created a mapping app, focused on drilling rig locations and creating large printed maps with customer data. Used PHP, PostGIS, SQL, HTML5</p>
                     </div>
                   </div>
                 </li>
@@ -162,7 +163,7 @@
                       <p><small class="text-muted"><i class="bx bxs-time" style="color: #3b5998;"></i> 2012 - 2014</small></p>
                     </div>
                     <div class="timeline-body">
-                      <p>Created a mapping app, focused on drilling rig locations and creating large printed maps with customer data</p>
+                      <p>Started at a Utah startup as 1 of 3 devs, we built a service worker focused business management suite of tools. Attended Quickbooks hackathon. Integrated their code into our app. Everything was built entirely in Python (Django) with AWS. Lots of javascript, angularJS</p>
                     </div>
                   </div>
                 </li>
@@ -174,7 +175,7 @@
                       <p><small class="text-muted"><i class="bx bxs-time" style="color: #3b5998;"></i> 2012 - 2014</small></p>
                     </div>
                     <div class="timeline-body">
-                      <p>Created a mapping app, focused on drilling rig locations and creating large printed maps with customer data</p>
+                      <p>Built out the mobile web app for one of the largest eCommerce companies in North Dakota. Very high sales volume website with audit requirements. Used Javascript, PHP, Microsoft SQL. Worked in a strictly managed environment.</p>
                     </div>
                   </div>
                 </li>
@@ -186,7 +187,7 @@
                       <p><small class="text-muted"><i class="bx bxs-time" style="color: #3b5998;"></i> 2016 - 2020</small></p>
                     </div>
                     <div class="timeline-body">
-                      <p>Built out Bushel.ag. Worked on various other client applications using PHP and React.js</p>
+                      <p>Worked on agricultural financially focused software like Bushel.ag. Also assisted and worked on various other client applications. Everything was coded using Laravel PHP, React.js, Ant.Design, Next.js, SCSS.</p>
                     </div>
                   </div>
                 </li>
@@ -198,7 +199,7 @@
                       <p><small class="text-muted"><i class="bx bxs-time" style="color: #3b5998;"></i> 2021 - 2025</small></p>
                     </div>
                     <div class="timeline-body">
-                      <p>Created a mapping app, focused on drilling rig locations and creating large printed maps with customer data</p>
+                      <p>Built multiple web apps and Android applications. Including complex functionality like allowing users to create drone flight for capturing images, that were then ran through Ai algorithms for image detections and extrapolation. Asset management and tracking and capturing data in various ways. Used Vue.js GraphQL Node.jS Typescript</p>
                     </div>
                   </div>
                 </li>
@@ -209,16 +210,16 @@
       </div>
       <div class="section hobby-section" data-trigger="true">
         <div class="container py-5" id="hobbies">
-          <div class="jumbotron p-4 my-4 bg-dark rounded-3">
+          <div class="jumbotron p-4 mt-3 mb-4 bg-dark rounded-3">
             <h2 class="display-3 heavyTitle">Hobby Projects</h2>
             <p class="lead pt-2">I am not always coding business and professional applications in secure environments. Sometimes I like to just have fun and work on cool open source projects. I am especially fond of Arduino &amp; Raspberry Pi's, as well as HomeLab projects.<strong>&nbsp;If its mini or micro and boots, I'm into it.</strong></p>
           </div>
           <div class="row masonryRow" data-masonry="{&quot;percentPosition&quot;:true}">
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><a href="imgs/pigasus-logo.png"><img class="card-img-top rounded" src="thumbnails/thumb_pigasus-logo.png" alt="pigasus"></a></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/pigasus-logo.png"><img class="card-img-top rounded" src="thumbnails/thumb_pigasus-logo.png" alt="pigasus"></a></div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><a href="imgs/cyber-deck.png"><img class="card-img-top" src="thumbnails/thumb_cyber-deck.png" alt="cyber-deck"></a>
+              <div class="card"><a class="lightbox-toggle" href="imgs/cyber-deck.png"><img class="card-img-top" src="thumbnails/thumb_cyber-deck.png" alt="cyber-deck"></a>
                 <div class="card-body">
                   <p class="card-text">
                     CAD preview of a RPi based Cyber deck I am working on.
@@ -228,36 +229,36 @@
               </div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><a href="imgs/torchwood.png"><img class="card-img-top rounded" src="thumbnails/thumb_torchwood.png" alt="project torchwood"></a></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/torchwood.png"><img class="card-img-top rounded" src="thumbnails/thumb_torchwood.png" alt="project torchwood"></a></div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><a href="imgs/leah.png"><img class="card-img-top rounded" src="thumbnails/thumb_leah.png" alt="relationship status"></a>
+              <div class="card"><a class="lightbox-toggle" href="imgs/leah.png"><img class="card-img-top rounded" src="thumbnails/thumb_leah.png" alt="relationship status"></a>
                 <div class="card-body">
                   <p class="card-text">Me and my long term girlfriend</p>
                 </div>
               </div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><a href="imgs/figma-blog.png"><img class="card-img-top rounded" src="thumbnails/thumb_figma-blog.png" alt="figma blog project"></a></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/figma-blog.png"><img class="card-img-top rounded" src="thumbnails/thumb_figma-blog.png" alt="figma blog project"></a></div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><a href="imgs/style-tile.png"><img class="card-img-top rounded" src="thumbnails/thumb_style-tile.png" alt="Styleguide preview"></a>
+              <div class="card"><a class="lightbox-toggle" href="imgs/style-tile.png"><img class="card-img-top rounded" src="thumbnails/thumb_style-tile.png" alt="Styleguide preview"></a>
                 <div class="card-body">
                   <p class="card-text">Styleguides are a must have for any big project</p>
                 </div>
               </div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><a href="imgs/immbackground.png"><img class="card-img-top rounded" src="thumbnails/thumb_immbackground.png" alt="Lips Wallpaper"></a></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/immbackground.png"><img class="card-img-top rounded" src="thumbnails/thumb_immbackground.png" alt="Lips Wallpaper"></a></div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><a href="imgs/hackintosh.png"><img class="card-img-top rounded" src="thumbnails/thumb_hackintosh.png" alt="Hackintosh FTW"></a></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/hackintosh.png"><img class="card-img-top rounded" src="thumbnails/thumb_hackintosh.png" alt="Hackintosh FTW"></a></div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><a href="imgs/watch-what-you-say.png"><img class="card-img-top rounded" src="thumbnails/thumb_watch-what-you-say.png" alt="Hackintosh FTW"></a></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/watch-what-you-say.png"><img class="card-img-top rounded" src="thumbnails/thumb_watch-what-you-say.png" alt="Hackintosh FTW"></a></div>
             </div>
             <div class="col-sm-6 col-lg-4 mb-4">
-              <div class="card"><a href="imgs/paco.png"><img class="card-img-top rounded" src="thumbnails/thumb_paco.png" alt="I love my baby bear"></a></div>
+              <div class="card"><a class="lightbox-toggle" href="imgs/paco.png"><img class="card-img-top rounded" src="thumbnails/thumb_paco.png" alt="I love my baby bear"></a></div>
             </div>
           </div>
         </div>
@@ -287,13 +288,18 @@
               <div class="pt-0 jost normal">
                 <h2 class="display-3 heavyTitle" id="contact">About Me</h2>
                 <p>I’m Derek Scott, a dedicated Full Stack Web Developer with over 8 years of experience crafting robust web and mobile solutions. My expertise lies in TypeScript, PHP, and UI/UX automation, honed through impactful projects at Packet Digital / Botlink for the U.S. Navy, where I developed secure applications like quad-copter drone flight controllers and ship-based battery management systems in strict government cloud environments. My work at Myriad Mobile and Realtruck.com further sharpened my ability to deliver user-focused applications using React.js, Vue.js, and PHP 8, ensuring seamless front-end and back-end integration.</p>
-                <p>With a Bachelors of Science in Psychology and another Bachelors Degree in Economics from the University of North Dakota, I bring a deep understanding of user behavior and financial mathematics to my development process, creating intuitive and efficient digital experiences. Known for my upbeat personality and collaborative spirit, I thrive in team settings and am passionate about taking ideas from napkin mock-ups to deployable MVPs. My GitHub Profile:<a href="https://johnny13.github.io/iRock/">https://johnny13.github.io/iRock/</a> has a lot of other projects and things I've done if you're looking for my coding qualifications.</p>
-              </div>
-              <div class="mt-3 ps-3">
-                <div class="call-to-action-wrapper container">
-                  <div class="row cta-buttons">
-                    <div class="col-md-8 offset-md-2">
-                      <div class="cta-wrapper"><a class="btn btn-primary cta-btn emailBtn" href="#" target="_top"><i class="me-2 bx bxs-envelope" style="color: #ffffff"></i>Message Me</a><a class="btn btn-success ms-3 cta-btn" href="https://drive.google.com/file/d/11_ITeJZZNV719vXedPy6BDsrokquGL6r/view?usp=drive_link"><i class="me-2 bx bxs-download" style="color: #ffffff"></i>Resume Download</a></div>
+                <p>With a Bachelors of Science in Psychology and another Bachelors Degree in Economics from the University of North Dakota, I bring a deep understanding of user behavior and financial mathematics to my development process, creating intuitive and efficient digital experiences. Known for my upbeat personality and collaborative spirit, I thrive in team settings and am passionate about taking ideas from napkin mock-ups to deployable MVPs. My GitHub Profile:&nbsp;<a href="https://github.com/johnny13/">github.com/johnny13</a> has a lot of other projects and things I've done if you're looking for my coding qualifications.</p>
+                <p class="lead">If you are a recruiter or looking at potentially hiring me, I've also included a handy list on the side of all my Software Keywords</p>
+                <div class="software-list">
+                  <p>PHP &nbsp;Laravel &nbsp;Symfony &nbsp;SCSS &nbsp;SASS &nbsp;CSS &nbsp;HTML &nbsp;Svelte &nbsp;LESS &nbsp;Stylus &nbsp;SQL &nbsp;MySQL &nbsp;GraphQL &nbsp;MSSQL &nbsp;PostGRE &nbsp;PostGIS &nbsp;MariaDB &nbsp;SQLite &nbsp;Python &nbsp;Django &nbsp;Python3 &nbsp;Javascript &nbsp;Typescript &nbsp;Vue.js &nbsp;React.js &nbsp;Next.js &nbsp;Node.js &nbsp;AngularJS &nbsp;Ionic &nbsp;Capacitor &nbsp;Android &nbsp;iOS &nbsp;Java &nbsp;Swift &nbsp;
+                  </p>
+                </div>
+                <div class="mt-3 ps-3">
+                  <div class="call-to-action-wrapper container">
+                    <div class="row cta-buttons">
+                      <div class="col-md-8 offset-md-2">
+                        <div class="cta-wrapper"><a class="btn btn-primary cta-btn d-none emailBtn" href="#" target="_top"><i class="me-2 bx bxs-envelope" style="color: #ffffff"></i>Message Me</a><a class="btn btn-success ms-3 cta-btn" href="https://drive.google.com/file/d/11_ITeJZZNV719vXedPy6BDsrokquGL6r/view?usp=drive_link"><i class="me-2 bx bxs-download" style="color: #ffffff"></i>Resume Download</a></div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -341,6 +347,7 @@
     <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cash/8.1.5/cash.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@terwanerik/scrolltrigger@1.0.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs5-lightbox@1.8.5/dist/index.bundle.min.js"></script>
     <script src="./fractal.js"></script>
     <script>
       const trigger = new ScrollTrigger.default()
@@ -374,7 +381,6 @@
           }
       
           lastDot = result
-      
       }
       
       function setLastDot(){
@@ -421,24 +427,20 @@
       * fires when the page loads or resizes. controls spacing and height of various elements.
       */
       function mainUISync() {
-          console.log('updating UI...')
           centerHomeTitle()
       
           const containerWorkHeight = Math.round($('.masonryRow', 0).innerHeight())
           const containerHobbyHeight = Math.round($('.masonryRow', 1).innerHeight())
           const sectionWorkHeight = Math.round($('.portfolio-section').innerHeight())
           const sectionHobbyHeight = Math.round($('.hobby-section').innerHeight())
-          console.log(sectionWorkHeight, containerWorkHeight)
       
           if(sectionWorkHeight <= containerWorkHeight + 100){
-              console.log('work small error!')
               $('.portfolio-section').css('minHeight', containerWorkHeight + 150 + 'px')
           } else {
               $('.portfolio-section').css('minHeight', containerWorkHeight + 100 + 'px')
           }
       
           if(sectionHobbyHeight <= containerHobbyHeight + 100){
-              console.log('hobby small error!')
               $('.portfolio-section').css('minHeight', containerHobbyHeight + 150 + 'px')
           } else {
               $('.portfolio-section').css('minHeight', containerHobbyHeight + 100 + 'px')
@@ -451,13 +453,18 @@
       
       window.addEventListener('resize', (event) => {})
       onresize = (event) => {
-          console.log('resize')
           mainUISync()
       }
       
+      var doneLoading = function () {
+          $('.page-loader').addClass('loaded')
+      }
+      
       $(function () {
-          $('html').addClass ( 'dom-loaded' )
+          $('html').addClass ( 'cash-dom-loaded' )
           $(window).on('scroll', handleScroll)
+      
+          document.querySelectorAll('.lightbox-toggle').forEach(el => el.addEventListener('click', Lightbox.initialize));
       
           $('a.nav-dots').each(function () {
               var $this = $(this)
@@ -473,16 +480,11 @@
           var emailTo = 'admin@huement.com'
           var emailSub = 'Portfolio%20Related%20Message'
           var mailString = "mailto:"+emailTo+"?subject="+emailSub
-          //- $('.emailBtn').on("click", function(ev){
-          //-     console.log('contacting!')
-          //-     location.href = "mailto:"+emailTo+"?subject="+emailSub
-          //-     x=window.open(mailstring);
-          //-     x.close();
-          //- })
       
           $('.emailBtn').attr('href', mailString)
+          $('.emailBtn').removeClass('d-none')
           mainUISync()
-          $('.page-loader').addClass('loaded')
+          setTimeout(doneLoading, 100)
       })
       
     </script>
