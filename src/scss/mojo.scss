@@ -595,16 +595,17 @@ h2.background span {
         .headshot-container {
             position: relative;
             width: 100%;
-            max-width: 400px;
-            height: 400px;
-            margin: 0 0 3rem 1rem;
-            display: block;
+            max-width: 380px;
+            height: 350px;
+            margin: 0;
+            display: inline-block;
             background: url('https://i.imgur.com/jYmFd5a.jpeg') no-repeat top
                 center;
             background-size: cover;
             border-radius: 10px;
             border: 2px solid #1f1f1f;
             opacity: 1;
+            margin-bottom: 50px;
         }
 
         .headshot-container::after {
@@ -612,7 +613,7 @@ h2.background span {
             background: url('https://i.imgur.com/jYmFd5a.jpeg') no-repeat top
                 center;
             background-size: cover;
-            background-position-y: -398px;
+            background-position-y: -350px;
             opacity: 0;
             transition: opacity 0.5s linear;
             position: absolute;
