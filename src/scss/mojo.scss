@@ -608,6 +608,10 @@ h2.background span {
             margin-bottom: 50px;
         }
 
+        .profile-card {
+            max-width: 380px;
+        }
+
         .headshot-container::after {
             content: '';
             background: url('https://i.imgur.com/jYmFd5a.jpeg') no-repeat top
@@ -689,6 +693,12 @@ h2.background span {
 
             .headshot-container::after {
                 background-position-y: -276px;
+            }
+
+            .profile-card {
+                max-width: 100%;
+                margin-top: 0px;
+                margin-bottom: 4rem;
             }
         }
         .cta-buttons {
