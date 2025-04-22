@@ -19,7 +19,7 @@ $grid-breakpoints: (
     md: 768px,
     lg: 992px,
     xl: 1200px,
-    xxl: 1400px
+    xxl: 1400px,
 );
 
 $smMax: map.get($grid-breakpoints, 'sm');
@@ -98,6 +98,11 @@ button,
     min-height: 100vh;
 }
 
+.section.portfolio-section,
+.section.timeline-section {
+    min-height: auto;
+}
+
 .heavyTitle {
     text-transform: uppercase;
     font-weight: 700;
@@ -145,6 +150,10 @@ h2.background span {
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
     height: 100vh;
+}
+
+.card img {
+    min-height: 180px;
 }
 
 /* Homepage Section */
@@ -590,7 +599,8 @@ h2.background span {
             height: 400px;
             margin: 0 0 3rem 1rem;
             display: block;
-            background: url('https://i.imgur.com/jYmFd5a.jpeg') no-repeat top center;
+            background: url('https://i.imgur.com/jYmFd5a.jpeg') no-repeat top
+                center;
             background-size: cover;
             border-radius: 10px;
             border: 2px solid #1f1f1f;
@@ -599,7 +609,8 @@ h2.background span {
 
         .headshot-container::after {
             content: '';
-            background: url('https://i.imgur.com/jYmFd5a.jpeg') no-repeat top center;
+            background: url('https://i.imgur.com/jYmFd5a.jpeg') no-repeat top
+                center;
             background-size: cover;
             background-position-y: -398px;
             opacity: 0;
@@ -650,6 +661,19 @@ h2.background span {
 
         .call-to-action-wrapper {
             min-height: 300px;
+        }
+    }
+}
+
+@media (max-width: $xlMax) and (min-width: $lgMax) {
+    .profile-section .author-profile {
+        .headshot-container {
+            margin: 0 auto 2rem auto;
+            height: 296px !important;
+        }
+
+        .headshot-container::after {
+            background-position-y: -296px;
         }
     }
 }

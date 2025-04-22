@@ -12,6 +12,7 @@ block scriptsJS
     script(src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.min.js")
     script(src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/cash/8.1.5/cash.min.js")
+    script(src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js")
     script(src="https://cdn.jsdelivr.net/npm/@terwanerik/scrolltrigger@1.0.5/dist/ScrollTrigger.min.js")
     script(src="https://cdn.jsdelivr.net/npm/bs5-lightbox@1.8.5/dist/index.bundle.min.js")
     script(src="./fractal.js")
@@ -89,6 +90,37 @@ block scriptsJS
             $(".homepage-content .display-1, .homepage-content .subtitle").css('paddingLeft', marginAmount + 'px')
         }
 
+        // Masonry only works when we know the images are all loaded
+        function masonSetup() {
+            // vanilla JS
+            var masonryRow = document.querySelector('.masonryRow'); // Targeting the Masonry container
+            if (masonryRow) {
+                imagesLoaded(masonryRow, function() {
+                    console.log('images loaded')
+                    // Initialize Masonry after all images have loaded
+                    var msnry = Masonry.data(masonryRow)
+                    msnry.reloadItems()
+                    console.log(msnry.items.length)
+                    mainUISync()
+                });
+            }
+
+            // Hobby Gallery
+            var masonryRowHobby = document.querySelector('.masonryRowHobby');
+            if (masonryRowHobby) {
+                console.log('masonHobby setup')
+                imagesLoaded(masonryRow, function() {
+                    console.log('hobby images loaded')
+                    // Initialize Masonry after all images have loaded
+                    var msnryH = Masonry.data(masonryRowHobby)
+                    var itemsH = msnryH.items.length
+                    msnryH.reloadItems()
+                    console.log(itemsH)
+                    mainUISync()
+                });
+            }
+        }
+
         /**
         * fires when the page loads or resizes. controls spacing and height of various elements.
         */
@@ -96,7 +128,7 @@ block scriptsJS
             centerHomeTitle()
 
             const containerWorkHeight = Math.round($('.masonryRow', 0).innerHeight())
-            const containerHobbyHeight = Math.round($('.masonryRow', 1).innerHeight())
+            const containerHobbyHeight = Math.round($('.masonryRowHobby', 1).innerHeight())
             const sectionWorkHeight = Math.round($('.portfolio-section').innerHeight())
             const sectionHobbyHeight = Math.round($('.hobby-section').innerHeight())
 
@@ -107,9 +139,9 @@ block scriptsJS
             }
 
             if(sectionHobbyHeight <= containerHobbyHeight + 100){
-                $('.portfolio-section').css('minHeight', containerHobbyHeight + 150 + 'px')
+                $('.hobby-section').css('minHeight', containerHobbyHeight + 150 + 'px')
             } else {
-                $('.portfolio-section').css('minHeight', containerHobbyHeight + 100 + 'px')
+                $('.hobby-section').css('minHeight', containerHobbyHeight + 100 + 'px')
             }
 
             $('.section.homepage').css('minHeight', $('body').height() + 'px')
@@ -129,7 +161,7 @@ block scriptsJS
         $(function () {
             $('html').addClass ( 'cash-dom-loaded' )
             $(window).on('scroll', handleScroll)
-
+            masonSetup()
             document.querySelectorAll('.lightbox-toggle').forEach(el => el.addEventListener('click', Lightbox.initialize));
 
             $('a.nav-dots').each(function () {
@@ -209,11 +241,11 @@ block content
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a.lightbox-toggle(href="imgs/image.png")
-                                img.rounded.card-img-top(src="thumbnails/thumb_image.png" alt="flightplan")
+                                img.rounded.card-img-top(src="thumbnails/thumb_image.png" alt="flightplan" height="238px")
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a.lightbox-toggle(href="imgs/printed.png")
-                                img.rounded.card-img-top(src="thumbnails/thumb_printed.png" alt="printed paper map")
+                                img.rounded.card-img-top(src="thumbnails/thumb_printed.png" alt="printed paper map" height="304px")
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a.lightbox-toggle(href="imgs/freshlime1.png")
@@ -223,7 +255,7 @@ block content
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a.lightbox-toggle(href="imgs/results.png")
-                                img.rounded.card-img-top(src="thumbnails/thumb_results.png" alt="flightplan")
+                                img.rounded.card-img-top(src="thumbnails/thumb_results.png" alt="flightplan" height="333px")
                             .card-body
                                 p.card-text Loading statistics and AI compiled results as mapped data layers
                     .col-sm-6.col-lg-4.mb-4
@@ -321,15 +353,15 @@ block content
                     p.lead.pt-2 I am not always coding business and professional applications in secure environments. Sometimes I like to just have fun and work on cool open source projects. I am especially fond of Arduino &amp; Raspberry Pi's, as well as HomeLab projects.
                         strong &nbsp;If its mini or micro and boots, I'm into it.
 
-                .row.masonryRow(data-masonry={percentPosition: true })
+                .row.masonryRowHobby(data-masonry={percentPosition: true })
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a.lightbox-toggle(href="imgs/pigasus-logo.png")
-                                img.card-img-top.rounded(src="thumbnails/thumb_pigasus-logo.png" alt="pigasus")
+                                img.card-img-top.rounded(src="thumbnails/thumb_pigasus-logo.png" alt="pigasus" height="233px")
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a.lightbox-toggle(href="imgs/cyber-deck.png")
-                                img.card-img-top(src="thumbnails/thumb_cyber-deck.png" alt="cyber-deck")
+                                img.card-img-top(src="thumbnails/thumb_cyber-deck.png" alt="cyber-deck" height="265px")
                             .card-body
                                 p.card-text.
                                     CAD preview of a RPi based Cyber deck I am working on.
@@ -337,11 +369,11 @@ block content
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a.lightbox-toggle(href="imgs/torchwood.png")
-                                img.card-img-top.rounded(src="thumbnails/thumb_torchwood.png" alt="project torchwood")
+                                img.card-img-top.rounded(src="thumbnails/thumb_torchwood.png" alt="project torchwood" height="209px")
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a.lightbox-toggle(href="imgs/leah.png")
-                                img.card-img-top.rounded(src="thumbnails/thumb_leah.png" alt="relationship status")
+                                img.card-img-top.rounded(src="thumbnails/thumb_leah.png" alt="relationship status" height="265px")
                             .card-body
                                 p.card-text Me and my long term girlfriend
                     .col-sm-6.col-lg-4.mb-4
@@ -351,7 +383,7 @@ block content
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a.lightbox-toggle(href="imgs/style-tile.png")
-                                img.card-img-top.rounded(src="thumbnails/thumb_style-tile.png" alt="Styleguide preview")
+                                img.card-img-top.rounded(src="thumbnails/thumb_style-tile.png" alt="Styleguide preview" height="200px")
                             .card-body
                                 p.card-text Styleguides are a must have for any big project
                     .col-sm-6.col-lg-4.mb-4
@@ -361,7 +393,7 @@ block content
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a.lightbox-toggle(href="imgs/hackintosh.png")
-                                img.card-img-top.rounded(src="thumbnails/thumb_hackintosh.png" alt="Hackintosh FTW")
+                                img.card-img-top.rounded(src="thumbnails/thumb_hackintosh.png" alt="Hackintosh FTW" height="470px")
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a.lightbox-toggle(href="imgs/watch-what-you-say.png")
@@ -369,25 +401,25 @@ block content
                     .col-sm-6.col-lg-4.mb-4
                         .card
                             a.lightbox-toggle(href="imgs/paco.png")
-                                img.card-img-top.rounded(src="thumbnails/thumb_paco.png" alt="I love my baby bear")
+                                img.card-img-top.rounded(src="thumbnails/thumb_paco.png" alt="I love my baby bear" height="470px")
 
         .section.profile-section(data-trigger="true")
             .container.pt-5.mt-5
                 .row.mt-5.author-profile
                     .col-md-5.col-lg-4.text-center.text-md-start
                         .headshot-container
-                        .card.mb-4.mb-lg-0.ms-3.ps-1
-                            .card-body.p-0.ps-1
+                        .card.mb-4.mb-lg-0.ms-1.ps-1
+                            .card-body.p-0
                                 ul.list-group.list-group-flush.rounded-3.social-links.jura.normal
-                                    li.list-group-item.d-flex.justify-content-between.align-items-center.p-3
+                                    li.list-group-item.d-flex.justify-content-between.align-items-center.p-3.ps-2
                                         i.bx.bxl-microsoft(style="color: #3b5998;")
                                         p.mb-0
                                             a(href="https://github.com/johnny13" target="_blank") github.com/johnny13
-                                    li.list-group-item.d-flex.justify-content-between.align-items-center.p-3
+                                    li.list-group-item.d-flex.justify-content-between.align-items-center.p-3.ps-2
                                         i.bx.bxl-linkedin-square(style="color: #55acee;")
                                         p.mb-0
                                             a(href="https://www.linkedin.com/in/derekscott13/" target="_blank") linkedin.com/in/derekscott13/
-                                    li.list-group-item.d-flex.justify-content-between.align-items-center.p-3
+                                    li.list-group-item.d-flex.justify-content-between.align-items-center.p-3.ps-2
                                         i.bx.bxl-discord(style="color: #5865F2")
                                         p.mb-0
                                             a(href="https://discordapp.com/users/johnnyfortune_21837" target="_blank") discord / johnnyfortune
