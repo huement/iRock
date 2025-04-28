@@ -158,6 +158,10 @@ block scriptsJS
             $('.page-loader').addClass('loaded')
         }
 
+        var sendTo = 'admin@huement.com'
+        var emailSub = 'Portfolio%20Contact%20Message'
+        var mailString = "mailto:"+sendTo+"?subject="+emailSub
+
         $(function () {
             $('html').addClass ( 'cash-dom-loaded' )
             $(window).on('scroll', handleScroll)
@@ -175,12 +179,12 @@ block scriptsJS
                 })
             })
 
-            var emailTo = 'admin@huement.com'
-            var emailSub = 'Portfolio%20Related%20Message'
-            var mailString = "mailto:"+emailTo+"?subject="+emailSub
-
             $('.emailBtn').attr('href', mailString)
             $('.emailBtn').removeClass('d-none')
+            $('.emailBtn').on("click", function(ev){
+                console.log($(this), ev)
+                location.href = mailString
+            })
             mainUISync()
             setTimeout(doneLoading, 100)
         })
@@ -446,10 +450,10 @@ block content
                                     .row.cta-buttons
                                         .col-md-8.offset-md-2
                                             .cta-wrapper
-                                                a.btn.btn-primary.cta-btn.d-none.emailBtn(href="#" target="_top")
+                                                a.btn.btn-primary.cta-btn.d-none.emailBtn(href="mailto" target="_top")
                                                     i.me-2.bx.bxs-envelope(style="color: #ffffff")
-                                                    | Message Me
-                                                a.btn.btn-success.ms-3.cta-btn(href="https://drive.google.com/file/d/11_ITeJZZNV719vXedPy6BDsrokquGL6r/view?usp=drive_link")
+                                                    | Email Me
+                                                a.btn.btn-success.ms-3.cta-btn(href="https://drive.google.com/file/d/12LXr7UXmUMaHTIh6kHEuXXAvwBy8wa7h/view?usp=sharing")
                                                     i.me-2.bx.bxs-download(style="color: #ffffff")
                                                     | Resume Download
 
