@@ -1,6 +1,6 @@
-![iRock logo](logo.png)
+![iRock logo](irock-logo.png)
 
-# Derek Scott // Developer Extraordinaire
+# Derek Scott // Rock Star Developer Extraordinaire
 
 ![Astro](https://img.shields.io/badge/Astro-5.0-orange?style=for-the-badge&logo=astro)
 ![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)
@@ -42,7 +42,7 @@ It is responsive, it is accessible, and it is arguably the best looking thing yo
 
 ## 💻 Running the Beast
 
-Want to see how the magic is made?
+Want to see how the magic is made? Or wanna make yourself your own 'RockStar' Resume? 
 
 1.  Clone the repo.
 2.  Install the dependencies (we use `npm` because we are civilized).
@@ -54,8 +54,8 @@ Want to see how the magic is made?
     npm run dev
     ```
 
-## 📄 The Paper Trail
+## 📄 Check My Paper Trail
 
-If the code isn't enough to convince you that I'm the developer you need, the piece of paper below will.
+Here is an online version of my resume. It has my contact information, and more details about my work history. If you're a fan of PDFs this is the resume for you.
 
 [**📥 Download My Resume (PDF)**](https://drive.google.com/file/d/12iPY5GhldMc1_CVRw1VqAyNbo3dAn3t2/view?usp=sharing)
