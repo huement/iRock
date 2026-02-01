@@ -1,0 +1,196 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { hobbies } from '../data/portfolio';
+
+// Import hobby images from src/assets so Astro can optimize (WebP, resize) at build time
+import gameartPreview from '../assets/imgs/gameart-preview.png';
+import godotImg from '../assets/imgs/godot.png';
+import hackintoshOc from '../assets/imgs/hackintosh-oc.png';
+import hackintoshImg from '../assets/imgs/hackintosh.png';
+import leahImg from '../assets/imgs/leah.png';
+import overworldPreview from '../assets/imgs/overworld-preview.png';
+import pacoImg from '../assets/imgs/paco.png';
+import videoGen from '../assets/imgs/video-gen.png';
+import theEnd from '../assets/imgs/the-end.png';
+
+const hobbyImages: Record<string, ImageMetadata> = {
+  'gameart-preview.png': gameartPreview,
+  'godot.png': godotImg,
+  'hackintosh-oc.png': hackintoshOc,
+  'hackintosh.png': hackintoshImg,
+  'leah.png': leahImg,
+  'overworld-preview.png': overworldPreview,
+  'paco.png': pacoImg,
+  'video-gen.png': videoGen,
+  'the-end.png': theEnd,
+};
+
+// Carousel slide: larger to fill 12 cols; thumbnail: 120×120 with retina. Full-size for image lightbox.
+const SLIDE_WIDTH = 1100;
+const SLIDE_HEIGHT = 520;
+const THUMB_SIZE = 240;
+const LIGHTBOX_WIDTH = 1200;
+const LIGHTBOX_HEIGHT = 675;
+
+const hobbyData = await Promise.all(
+  hobbies.map(async (hobby) => {
+    const img = hobbyImages[hobby.imageKey];
+    if (!img) return { ...hobby, imageHref: null };
+    const full = await getImage({ src: img, width: LIGHTBOX_WIDTH, height: LIGHTBOX_HEIGHT, format: 'webp' });
+    return { ...hobby, imageHref: full.src };
+  })
+);
+---
+
+<section id="hobbies" class="content-block wave-block">
+  <div class="container">
+    <h2 class="display-4 mb-2 cool-title">
+      <i class="bx bxs-chip me-2"></i>Hobby Projects
+    </h2>
+    <p class="text-muted mb-5">
+      Open source, Arduino, Raspberry Pi, and HomeLab. If it's mini or micro and boots, I'm into it.
+    </p>
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <div
+          id="hobbyCarousel"
+          class="carousel slide carousel-dark"
+          data-bs-interval="false"
+          data-bs-wrap="true"
+        >
+          <div
+            class="carousel-inner rounded-3 overflow-hidden"
+            style="background: var(--card-bg); border: 1px solid #333;"
+          >
+            {hobbyData.map((hobby, index) => {
+              const img = hobbyImages[hobby.imageKey];
+              if (!img) return null;
+              const isVideo = hobby.videoKey;
+              const href = isVideo ? 'javascript:void(0)' : (hobby.imageHref ?? 'javascript:void(0)');
+              return (
+                <div class={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                  <div class="row g-0 hobby-slide-row">
+                    <div class="col-12 col-md-8 hobby-img-wrap position-relative">
+                      <a
+                        class="lightbox-toggle position-relative d-block"
+                        href={href}
+                        data-video-src={isVideo ? `/videos/${hobby.videoKey}` : undefined}
+                        data-video-title={isVideo ? hobby.title : undefined}
+                        aria-label={isVideo ? `Play video: ${hobby.title}` : `View image: ${hobby.title}`}
+                      >
+                        <Image
+                          src={img}
+                          alt={hobby.title}
+                          width={SLIDE_WIDTH}
+                          height={SLIDE_HEIGHT}
+                          format="webp"
+                          densities={[1.5, 2]}
+                          class="d-block w-100"
+                          style="object-fit: contain; background: var(--card-bg);"
+                        />
+                        <span class="hobby-slide-icon" aria-hidden="true">
+                          {isVideo ? (
+                            <i class="bx bx-play-circle" aria-hidden="true"></i>
+                          ) : (
+                            <i class="bx bxs-camera" aria-hidden="true"></i>
+                          )}
+                        </span>
+                      </a>
+                      <div
+                        class="hobby-overlay d-md-none"
+                        role="button"
+                        tabindex={0}
+                        aria-expanded="false"
+                      >
+                        <div class="hobby-overlay-content">
+                          <h4>{hobby.title}</h4>
+                          {Array.isArray(hobby.description) ? (
+                            <ul class="mb-0">
+                              {hobby.description.map((line) => (
+                                <li>{line}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p>{hobby.description}</p>
+                          )}
+                          {hobby.href && (
+                            <a href={hobby.href} target="_blank" rel="noopener" class="btn btn-outline-light btn-sm mt-2" onclick="event.stopPropagation()">
+                                View repo
+                              </a>
+                          )}
+                          <span class="hobby-overlay-tap-hint">Tap to expand</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4 hobby-text-panel d-none d-md-flex align-items-center p-4">
+                      <div>
+                        <h4>{hobby.title}</h4>
+                        {Array.isArray(hobby.description) ? (
+                          <ul class="text-muted mb-0">
+                            {hobby.description.map((line) => (
+                              <li>{line}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p class="text-muted mb-0">{hobby.description}</p>
+                        )}
+                        {hobby.href && (
+                          <a href={hobby.href} target="_blank" rel="noopener" class="btn btn-outline-light btn-sm mt-2">
+                            View repo
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#hobbyCarousel"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#hobbyCarousel"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+        <div class="hobby-thumbnails" id="hobbyThumbnails">
+          {hobbies.map((hobby, index) => {
+            const img = hobbyImages[hobby.imageKey];
+            if (!img) return null;
+            return (
+              <button
+                type="button"
+                data-bs-target="#hobbyCarousel"
+                data-bs-slide-to={String(index)}
+                class={index === 0 ? 'active' : ''}
+                aria-current={index === 0 ? 'true' : undefined}
+              >
+                <Image
+                  src={img}
+                  alt={hobby.title}
+                  width={THUMB_SIZE}
+                  height={THUMB_SIZE}
+                  format="webp"
+                  densities={[1.5, 2]}
+                  style="object-fit: cover; border-radius: 6px; display: block;"
+                />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

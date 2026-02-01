@@ -1,0 +1,8 @@
+# https://www.robotstxt.org/
+# iRock portfolio — https://huement.github.io/iRock/
+
+User-agent: *
+Allow: /
+
+# Sitemap (if you add @astrojs/sitemap, it will output sitemap-index.xml)
+Sitemap: https://huement.github.io/iRock/sitemap-index.xml

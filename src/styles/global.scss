@@ -1,0 +1,1116 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+@import url('https://fonts.googleapis.com/css2?family=Saira:wght@500..700&family=Jost:wght@300;400&family=Fira+Code:wght@400;500&display=swap');
+
+// ---------------------------------------------------------------------------
+// :root (CSS custom properties for JS / inline use)
+// ---------------------------------------------------------------------------
+:root {
+  --bg-dark: #{$bg-dark};
+  --accent-color: #{$accent-color};
+  --text-main: #{$text-main};
+  --glass-bg: #{$glass-bg};
+  --glass-bg-light: #{$glass-bg-light};
+  --card-bg: #{$card-bg};
+  --bs-heading-color: #{$accent-color};
+  --medium-dark: #303030;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Match expanded header height so anchor links aren’t hidden */
+  scroll-padding-top: 80px;
+}
+
+// ---------------------------------------------------------------------------
+// Very small screens — hide floating edge icons only (reduce clutter)
+// ---------------------------------------------------------------------------
+@media (max-width: 499px) {
+  .floating-edge-icons {
+    display: none !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Utilities (fill)
+// ---------------------------------------------------------------------------
+.fill-dark {
+  fill: var(--bg-dark) !important;
+}
+
+.fill-wave {
+  fill: var(--medium-dark) !important;
+}
+
+// ---------------------------------------------------------------------------
+// Base
+// ---------------------------------------------------------------------------
+body {
+  position: relative;
+  background-color: var(--bg-dark);
+  color: $text-main;
+  font-family: $font-jost;
+  margin: 0;
+  overflow-x: hidden;
+  font-weight: 300;
+}
+
+// Contain scroll: About is the last section; no extra space below.
+// The floating-edge-icons div is position: absolute with a large height;
+// wrapping in .site-root (position: relative + overflow: clip) prevents
+// that absolute child from extending the document scroll height.
+// overflow: clip (not hidden) so position: sticky works on the section header.
+.site-root {
+  position: relative;
+  overflow: clip;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.heavy-title {
+  font-family: $font-saira;
+  font-weight: 700;
+}
+
+code,
+pre {
+  font-family: $font-fira !important;
+  font-size: 0.85rem !important;
+}
+
+// ---------------------------------------------------------------------------
+// Animated titles
+// ---------------------------------------------------------------------------
+.cool-title {
+  @include gradient-text-animated($gradient-cool-title, text-flow, 6s, 700);
+}
+
+@keyframes text-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.card .card-title {
+  @include gradient-text-animated($gradient-card-title, card-title-flow, 8s, 600);
+}
+
+@keyframes card-title-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Starfield
+// ---------------------------------------------------------------------------
+#starfield-canvas {
+  @include fill-area;
+  position: fixed;
+  z-index: -2;
+  pointer-events: none;
+}
+
+// ---------------------------------------------------------------------------
+// Floating edge icons (drift effect) — full page height until About section
+// ---------------------------------------------------------------------------
+.floating-edge-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--floating-icons-height, 100vh);
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 0.2s ease-out;
+
+  &.floating-edge-icons-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.floating-icon {
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  transform: translate(-50%, -50%);
+  font-size: var(--size, 20px);
+  @include gradient-text-animated($gradient-floating-icons, floating-icon-color, 7s, 400);
+  animation: icon-drift var(--dur, 6s) ease-in-out var(--delay, 0s) infinite,
+    floating-icon-color 7s ease-in-out infinite;
+}
+
+@keyframes floating-icon-color {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes icon-drift {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-50%, -50%) translate(var(--drift, 3px), calc(var(--drift, 3px) * -0.5));
+  }
+
+  50% {
+    transform: translate(-50%, -50%) translate(calc(var(--drift, 3px) * -0.3), var(--drift, 3px));
+  }
+
+  75% {
+    transform: translate(-50%, -50%) translate(calc(var(--drift, 3px) * 0.6), calc(var(--drift, 3px) * 0.4));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Hero
+// ---------------------------------------------------------------------------
+.hero-section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-card {
+  background: rgba(0, 0, 0, 0.12) !important;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 2rem;
+  padding: 4rem;
+  max-width: $hero-card-max-width;
+  text-align: center;
+  z-index: 10;
+}
+
+@media (max-width: 767px) {
+  .hero-card {
+    padding: 2rem 1.5rem;
+    margin: 0 1rem;
+    border-radius: 1.25rem;
+  }
+
+  .hero-section .display-1 {
+    font-size: 2.25rem;
+  }
+
+  .content-block {
+    padding: 60px 0;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Sticky Sentinel header / section nav (scroll-spy: .active on scroll)
+// Sentinel leaves viewport → .is-stuck; scroll down → .scroll-down (skinny); scroll up → .scroll-up (full)
+// ---------------------------------------------------------------------------
+.header-sentinel {
+  display: block;
+  width: 100%;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.site-header.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 1rem;
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid $border-light;
+  transition: padding 0.3s ease, box-shadow 0.3s ease;
+
+  // Pinned: scrolled past sentinel
+  &.is-stuck {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  // Pinned + scrolling down → skinny
+  &.is-stuck.scroll-down {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  // Pinned + scrolling up → full
+  &.is-stuck.scroll-up {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+.section-nav-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.section-nav-link {
+  padding: 0.5rem 1rem;
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: $text-muted;
+  text-decoration: none;
+  border-radius: $radius-tag;
+  transition: color 0.2s ease, background 0.2s ease;
+
+  &:hover {
+    color: $text-main;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  &.active {
+    color: $accent-color;
+    background: rgba(99, 102, 241, 0.15);
+    font-weight: 500;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Work section + fractal canvas
+// ---------------------------------------------------------------------------
+#work {
+  position: relative;
+  overflow: hidden;
+  min-height: $fractal-min-height;
+  padding: 100px 0;
+  box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.5);
+
+  #fractalCanvas {
+    @include fill-area;
+    min-height: $fractal-min-height;
+    z-index: 0;
+    opacity: 1;
+    cursor: pointer;
+    background-color: var(--bg-dark);
+  }
+
+  @media (max-width: 767px) {
+    min-height: 1700px;
+    padding: 50px 0;
+
+    #fractalCanvas {
+      min-height: 1700px;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Content blocks
+// ---------------------------------------------------------------------------
+.content-block {
+  position: relative;
+  background: var(--bg-dark);
+  padding: 100px 0;
+  z-index: 10;
+  box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.5);
+
+  &.wave-block {
+    padding-top: 0;
+    background: var(--medium-dark);
+    box-shadow: none;
+  }
+
+  &.wave-block-top {
+    padding-bottom: calc(100px + #{$hobby-wave-height});
+  }
+
+  &.wave-block-bottom {
+    padding-top: calc(100px + #{$hobby-wave-height});
+    box-shadow: none;
+  }
+
+  // Digital Frontier: ~80% transparent so starfield animation is visible
+  &.content-block--starfield-visible {
+    background: rgba(10, 10, 12, 0.2);
+  }
+}
+
+#contact.content-block {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.transparent-block {
+  background: transparent;
+  height: 30vh;
+}
+
+// ---------------------------------------------------------------------------
+// Timeline / career as code
+// ---------------------------------------------------------------------------
+.timeline-container {
+  overflow-x: auto;
+  padding: 100px 0;
+  scrollbar-width: thin;
+}
+
+.timeline-wrapper {
+  display: flex;
+  gap: $timeline-gap;
+  padding: 0 2rem;
+  min-width: max-content;
+}
+
+.code-card {
+  background: $code-card-bg;
+  border-radius: $radius-code-card;
+  width: $code-card-width;
+  border: 1px solid $border-subtle;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+
+  .code-header {
+    background: $code-header-bg;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid $border-subtle;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+
+    &.dot-r {
+      background: $dot-r;
+    }
+
+    &.dot-y {
+      background: $dot-y;
+    }
+
+    &.dot-g {
+      background: $dot-g;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Portfolio grid (CSS Grid — 2 big items, then 3 columns)
+// ---------------------------------------------------------------------------
+.masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1rem;
+}
+
+.masonry-item {
+  min-width: 0; // prevent overflow
+}
+
+.masonry-item--w6 {
+  grid-column: span 3; // 50% (3 of 6)
+}
+
+.masonry-item--w2 {
+  grid-column: span 2; // 2 cols (2 of 6)
+}
+
+.masonry-item--w1 {
+  grid-column: span 1; // 1 col (1 of 6)
+}
+
+.masonry-item--w4 {
+  grid-column: span 2; // 33.33% (2 of 6)
+}
+
+.masonry-item--w4-double {
+  grid-column: span 4; // 2 columns in 3-col layout (4 of 6)
+}
+
+@media (max-width: 991px) {
+  .masonry-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .masonry-item--w6,
+  .masonry-item--w2,
+  .masonry-item--w1,
+  .masonry-item--w4,
+  .masonry-item--w4-double {
+    grid-column: span 1;
+  }
+}
+
+// Mobile: image + text cards — 30% overlay, expand on tap
+@media (max-width: 991px) {
+  .masonry-grid .card {
+    position: relative;
+    overflow: hidden;
+    min-height: 0 !important; // so card height = image; no gap between image and overlay
+
+    .card-img-top {
+      width: 100%;
+      display: block;
+    }
+
+    .card-body {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 30%;
+      min-height: 120px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.8) 60%, transparent 100%);
+      color: $text-main;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1rem 1rem 2.25rem 1rem;
+      padding-top: 1rem;
+      cursor: pointer;
+      transition: height 0.3s ease, top 0.3s ease, overflow 0.3s ease;
+
+      &::after {
+        content: 'Tap to read more';
+        position: absolute;
+        bottom: 0.5rem;
+        right: 1rem;
+        font-size: 0.75rem;
+        opacity: 0.8;
+        color: $text-muted;
+        display: block;
+        pointer-events: none;
+      }
+    }
+
+    .card-title {
+      margin-bottom: 0.35rem;
+      font-size: 1rem;
+      color: #09f;
+      -webkit-text-fill-color: #09f;
+    }
+
+    .card-text {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+      flex: 0 0 auto;
+    }
+
+    .list-group {
+      display: none; // tags hidden in overlay; full caption in lightbox
+    }
+  }
+}
+
+// LAANC card — larger (2-col span), prominent
+.card-laanc {
+  min-height: 440px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.38);
+
+  .card-img-top {
+    object-fit: cover;
+    height: 340px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Buttons — smoother hover animations
+// ---------------------------------------------------------------------------
+.btn {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+    transition-duration: 0.15s;
+  }
+}
+
+.btn-outline-light {
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+}
+
+.btn-primary {
+  &:hover {
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Cards
+// ---------------------------------------------------------------------------
+.card {
+  background: var(--card-bg);
+  border: none;
+  border-radius: $radius-card;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+  }
+
+  .list-group-item {
+    background: transparent;
+    border-color: $border-list;
+    color: $text-main;
+    font-size: 0.8rem;
+    padding: 0.35rem 1rem;
+  }
+}
+
+// Portfolio grid cards — glass effect (semi-transparent, frosted)
+.masonry-grid .card {
+  background: rgba(22, 22, 26, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+// Featured / highlight cards — larger than standard, more prominent
+.card-featured {
+  min-height: 560px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+
+  .card-img-top {
+    object-fit: cover;
+    height: 380px;
+  }
+}
+
+.card-highlight {
+  min-height: 500px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+
+  .card-img-top {
+    object-fit: cover;
+    height: 280px;
+  }
+}
+
+.software-tag {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.2rem 0.8rem;
+  border-radius: $radius-tag;
+  margin: 0.2rem;
+  font-size: 0.9rem;
+  border: 1px solid $border-light;
+  transition: color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+
+  &.active {
+    position: relative;
+    border-color: transparent;
+    color: transparent;
+    background: linear-gradient(90deg,
+        #6366f1,
+        #a855f7,
+        #ec4899,
+        #14b8a6,
+        #0ea5e9,
+        #6366f1),
+      $card-bg;
+    background-size: 300% 100%, auto;
+    background-clip: text, padding-box;
+    -webkit-background-clip: text, padding-box;
+    animation: software-tag-text 2.5s ease-in-out infinite;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      z-index: -1;
+      border-radius: $radius-tag;
+      background: linear-gradient(90deg,
+          #6366f1,
+          #a855f7,
+          #ec4899,
+          #14b8a6,
+          #0ea5e9,
+          #6366f1);
+      background-size: 300% 100%;
+      animation: software-tag-border 2.5s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes software-tag-border {
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes software-tag-text {
+
+  0%,
+  100% {
+    background-position: 0% 50%, 0 0;
+  }
+
+  50% {
+    background-position: 100% 50%, 0 0;
+  }
+}
+
+// Digital Frontier social cards — glass transparent so starfield shows through
+// Higher specificity + !important to override Bootstrap .card solid background
+.content-block--starfield-visible .card.social-card,
+.card.social-card {
+  background: rgba(26, 26, 32, 0.35) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  border: none !important;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+
+  &:hover {
+    border-color: $accent-color;
+    transform: translateY(-6px);
+    background: rgba(26, 26, 32, 0.5) !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+
+    .icon-large {
+      transform: scale(1.2);
+      animation: social-icon-wiggle 0.5s ease-in-out;
+    }
+  }
+}
+
+@keyframes social-icon-wiggle {
+
+  0%,
+  100% {
+    transform: scale(1.2) rotate(0deg);
+  }
+
+  25% {
+    transform: scale(1.2) rotate(-10deg);
+  }
+
+  50% {
+    transform: scale(1.2) rotate(10deg);
+  }
+
+  75% {
+    transform: scale(1.2) rotate(-6deg);
+  }
+}
+
+.icon-large {
+  font-size: 3rem;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+// ---------------------------------------------------------------------------
+// Hobbies carousel
+// ---------------------------------------------------------------------------
+#hobbyCarousel {
+  .carousel-item {
+    min-height: $carousel-img-height;
+
+    .hobby-slide-row {
+      min-height: $carousel-img-height;
+    }
+
+    img {
+      width: 100%;
+      height: $carousel-img-height;
+      object-fit: contain;
+      background: var(--card-bg);
+    }
+
+    .hobby-img-wrap {
+      position: relative;
+      background: var(--card-bg);
+      min-height: $carousel-img-height-mobile;
+
+      @include md {
+        min-height: $carousel-img-height;
+      }
+    }
+
+    a.lightbox-toggle {
+      display: block;
+      cursor: zoom-in;
+    }
+
+    .hobby-slide-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      opacity: 0.8;
+      font-size: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+
+      i {
+        display: block;
+        @include gradient-text-animated($gradient-cool-title, text-flow, 6s, 400);
+      }
+    }
+  }
+
+  .hobby-text-panel {
+    background: var(--card-bg);
+    border-left: 1px solid $border-subtle;
+
+    h4 {
+      font-family: $font-saira;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .hobby-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background: $overlay-bg;
+    color: $text-main;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    max-height: $overlay-max-height;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+
+    &.expanded {
+      top: 0;
+      bottom: 0;
+      max-height: none;
+      height: 100%;
+      overflow: auto;
+      align-items: flex-start;
+      padding: 1rem;
+
+      .hobby-overlay-tap-hint {
+        display: none;
+      }
+    }
+
+    h4 {
+      font-family: $font-saira;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .hobby-overlay-content {
+      width: 100%;
+    }
+
+    .hobby-overlay-tap-hint {
+      font-size: 0.75rem;
+      opacity: 0.8;
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    p,
+    ul {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    ul {
+      padding-left: 1.25rem;
+    }
+  }
+
+  // Carousel arrows: at edges, more visible, white on hover with circle
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 60px;
+    opacity: 1;
+    left: 0;
+    right: auto;
+    overflow: visible;
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      position: relative;
+      width: 2rem;
+      height: 2rem;
+      opacity: 0.6;
+      filter: invert(1) grayscale(100);
+      transition: opacity 0.25s ease, filter 0.25s ease;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 50%;
+        background: transparent;
+        transition: background 0.25s ease;
+        z-index: -1;
+      }
+    }
+
+    &:hover .carousel-control-prev-icon,
+    &:hover .carousel-control-next-icon {
+      opacity: 1;
+      filter: invert(1) grayscale(100) brightness(1.1);
+
+      &::before {
+        background: rgba(255, 255, 255, 0.2);
+      }
+    }
+  }
+
+  .carousel-control-next {
+    left: auto;
+    right: 0;
+  }
+}
+
+.hobby-thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  padding: 0.5rem 0;
+
+  button {
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: $radius-code-card;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+    min-width: 44px;
+    min-height: 44px;
+
+    &:hover,
+    &.active {
+      border-color: $accent-color;
+      transform: scale(1.05);
+      opacity: 1;
+    }
+
+    img {
+      width: $thumb-size;
+      height: $thumb-size;
+      object-fit: cover;
+      border-radius: 6px;
+      display: block;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .hobby-thumbnails button img {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+
+@media (max-width: 575px) {
+  .hobby-thumbnails {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding-bottom: 0.5rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .hobby-thumbnails button img {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Lightbox (bs5-lightbox) — WORK section project detail popup
+// Dark focus background + near full-screen on mobile so caption is readable
+// ---------------------------------------------------------------------------
+.modal.lightbox {
+  .modal-content {
+    background: #0a0a0c !important;
+    border-radius: 0;
+  }
+
+  .modal-body {
+    background: #0a0a0c;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .lightbox-caption {
+    background: rgba(0, 0, 0, 0.92) !important;
+    color: #f8fafc !important;
+    padding: 0.75rem 1rem !important;
+    text-align: left !important;
+    font-style: normal !important;
+    line-height: 1.45;
+  }
+
+  .carousel-item .ratio {
+    background-color: #000 !important;
+  }
+}
+
+// Darker backdrop when lightbox is open (backdrop is body sibling in BS5)
+body:has(.modal.lightbox.show) .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.92) !important;
+  opacity: 1 !important;
+}
+
+// Mobile: lightbox fills screen as much as possible
+@media (max-width: 767px) {
+  .modal.lightbox {
+    .modal-dialog {
+      margin: 0;
+      max-width: 100%;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    .modal-content {
+      min-height: 100vh;
+      min-height: 100dvh;
+      border-radius: 0;
+    }
+
+    .modal-body {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lightbox-carousel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .lightbox-carousel .carousel-inner {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .lightbox-carousel .carousel-item {
+      min-height: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lightbox-carousel .carousel-item .ratio {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .lightbox-carousel .carousel-item .ratio img {
+      object-fit: contain;
+    }
+
+    .lightbox-caption {
+      flex-shrink: 0;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Utilities
+// ---------------------------------------------------------------------------
+.text-muted {
+  color: $text-muted !important;
+}
+
+.hobby-wave {
+  height: $hobby-wave-height;
+  width: 100%;
+  display: block;
+  position: relative;
+  z-index: 11;
+
+  &[data-wave-face='top'] {
+    margin-top: -$hobby-wave-height;
+  }
+
+  &[data-wave-face='bottom'] {
+    margin-bottom: -$hobby-wave-height;
+  }
+}

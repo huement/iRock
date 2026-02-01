@@ -1,0 +1,17 @@
+# humanstxt.org/
+# iRock portfolio — https://huement.github.io/iRock/
+
+# TEAM
+
+  Developer: Derek Scott
+  Site: https://huement.github.io/iRock/
+  Twitter: https://twitter.com/johnnyfortune
+  GitHub: https://github.com/johnny13
+  LinkedIn: https://www.linkedin.com/in/derekscott13/
+  Location: North Dakota
+
+# TECHNOLOGY
+
+  Astro, React, TypeScript
+  Bootstrap 5, SCSS
+  Vite

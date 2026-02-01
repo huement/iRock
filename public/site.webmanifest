@@ -1,0 +1,21 @@
+{
+  "name": "Derek Scott | Developer Extraordinaire",
+  "short_name": "Derek Scott",
+  "description": "Full Stack RockStar Web Developer. Portfolio and resume.",
+  "start_url": "/iRock/",
+  "display": "standalone",
+  "background_color": "#0a0a0c",
+  "theme_color": "#0a0a0c",
+  "icons": [
+    {
+      "src": "/iRock/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/iRock/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

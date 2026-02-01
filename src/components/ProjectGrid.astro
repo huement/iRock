@@ -1,0 +1,96 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { projects } from '../data/portfolio';
+
+import blogImg from '../assets/imgs/blog.png';
+import mapImg from '../assets/imgs/map.png';
+import youtubeImg from '../assets/imgs/youtube.png';
+import flightplanImg from '../assets/imgs/flightplan.png';
+import mapTextureImg from '../assets/imgs/map_texture.png';
+import laancImg from '../assets/imgs/laanc.png';
+import sitesImg from '../assets/imgs/sites.png';
+import imageImg from '../assets/imgs/image.png';
+import printedImg from '../assets/imgs/printed.png';
+import freshlime1Img from '../assets/imgs/freshlime1.png';
+import resultsImg from '../assets/imgs/results.png';
+import freshlime3Img from '../assets/imgs/freshlime3.png';
+
+const projectImages: Record<string, typeof blogImg> = {
+  'blog.png': blogImg,
+  'map.png': mapImg,
+  'youtube.png': youtubeImg,
+  'flightplan.png': flightplanImg,
+  'map_texture.png': mapTextureImg,
+  'laanc.png': laancImg,
+  'sites.png': sitesImg,
+  'image.png': imageImg,
+  'printed.png': printedImg,
+  'freshlime1.png': freshlime1Img,
+  'results.png': resultsImg,
+  'freshlime3.png': freshlime3Img,
+};
+
+const THUMB_WIDTH = 480;
+const THUMB_HEIGHT = 320;
+const LIGHTBOX_WIDTH = 1200;
+const LIGHTBOX_HEIGHT = 800;
+
+const projectData = await Promise.all(
+  projects.map(async (proj) => {
+    const img = projectImages[proj.imageKey];
+    if (!img) return null;
+    const [, full] = await Promise.all([
+      getImage({ src: img, width: THUMB_WIDTH, height: THUMB_HEIGHT, format: 'webp' }),
+      getImage({ src: img, width: LIGHTBOX_WIDTH, height: LIGHTBOX_HEIGHT, format: 'webp' }),
+    ]);
+    return { ...proj, fullSrc: full.src };
+  })
+);
+
+const validProjects = projectData.filter((p): p is NonNullable<typeof p> => p != null);
+---
+
+<div class="container py-5" style="z-index: 5; position: relative">
+  <div
+    class="glass-bg p-4 rounded-4 mb-5 border border-secondary border-opacity-25"
+    style="background: rgba(0,0,0,0.6); backdrop-filter: blur(5px)"
+  >
+    <h2 class="display-4 text-center cool-title">
+      <i class="bx bxs-star me-2"></i>Recent Projects
+    </h2>
+    <p class="text-center text-muted">
+      A dynamic gallery of my technical contributions. Click the background to mutate the fractal.
+    </p>
+  </div>
+
+  <div class="masonry-grid">
+    {validProjects.map((proj) => (
+      <div class={`masonry-item ${proj.gridClass}`}>
+        <div class={`${proj.cardClass} h-100`}>
+          <a class="lightbox-toggle" href={proj.fullSrc} data-caption={proj.description}>
+            <Image
+              src={projectImages[proj.imageKey]}
+              alt={proj.title}
+              width={THUMB_WIDTH}
+              height={THUMB_HEIGHT}
+              format="webp"
+              densities={[1.5, 2]}
+              class="rounded card-img-top"
+            />
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">{proj.title}</h5>
+            <p class="card-text small text-muted">{proj.description}</p>
+            <ul class="list-group list-group-flush">
+              {proj.tags.map((tag) => (
+                <li key={tag} class="list-group-item">
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

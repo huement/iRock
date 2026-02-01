@@ -1,0 +1,64 @@
+// --- Colors ---
+$bg-dark: #0a0a0c;
+$accent-color: #6366f1;
+$text-main: #f8fafc;
+$glass-bg: rgba(10, 10, 12, 0.85);
+$glass-bg-light: rgba(10, 10, 12, 0.5);
+$card-bg: #16161a;
+$border-subtle: #333;
+$text-muted: #d0d0d0;
+$code-card-bg: #1d1f21;
+$code-header-bg: #2d2d2d;
+$social-card-bg: #1a1a20;
+$overlay-bg: rgba(0, 0, 0, 0.8);
+$border-light: rgba(255, 255, 255, 0.1);
+$border-list: rgba(255, 255, 255, 0.08);
+$fill-red: #ff3333;
+$dot-r: #ff5f56;
+$dot-y: #ffbd2e;
+$dot-g: #27c93f;
+
+// --- Fonts ---
+$font-saira: 'Saira', sans-serif;
+$font-jost: 'Jost', sans-serif;
+$font-fira: 'Fira Code', monospace;
+
+// --- Gradients (animated titles) ---
+$gradient-cool-title: (
+  #6366f1,
+  #a855f7,
+  #ec4899,
+  #6366f1
+);
+$gradient-card-title: (
+  #14b8a6,
+  #0ea5e9,
+  #6366f1,
+  #14b8a6
+);
+
+// Reddish-pink ↔ orangish-red (floating edge icons)
+$gradient-floating-icons: (
+  #e11d48,
+  #ea580c,
+  #dc2626,
+  #f43f5e,
+  #e11d48
+);
+
+// --- Breakpoints ---
+$breakpoint-md: 768px;
+
+// --- Spacing / Sizes ---
+$radius-card: 12px;
+$radius-code-card: 8px;
+$radius-tag: 2rem;
+$timeline-gap: 2rem;
+$fractal-min-height: 2200px;
+$hero-card-max-width: 850px;
+$code-card-width: 450px;
+$carousel-img-height: 520px;
+$carousel-img-height-mobile: 360px;
+$overlay-max-height: 5.5em;
+$thumb-size: 120px;
+$hobby-wave-height: 200px;
