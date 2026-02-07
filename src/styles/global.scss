@@ -371,6 +371,13 @@ pre {
 }
 
 #contact.content-block {
+  background: #1F1F1F;
+  background: -webkit-linear-gradient(318deg, rgba(31, 31, 31, 1) 0%, rgba(61, 61, 61, 1) 100%);
+  background: -moz-linear-gradient(318deg, rgba(31, 31, 31, 1) 0%, rgba(61, 61, 61, 1) 100%);
+  background: linear-gradient(318deg, rgba(31, 31, 31, 1) 0%, rgba(61, 61, 61, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1F1F1F",
+      endColorstr="#3D3D3D",
+      GradientType=0);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -1113,4 +1120,31 @@ body:has(.modal.lightbox.show) .modal-backdrop {
   &[data-wave-face='bottom'] {
     margin-bottom: -$hobby-wave-height;
   }
+}
+
+.glass-cta-btn {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 20px;
+  color: #fff !important;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.glass-cta-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Ensure the lightbox caption area allows HTML and spacing */
+.gdesc-inner {
+  padding: 20px !important;
 }
