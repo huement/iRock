@@ -3,6 +3,23 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Saira:wght@500..700&family=Jost:wght@300;400&family=Fira+Code:wght@400;500&display=swap');
 
+@property --icon-drift-x {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --icon-drift-y {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --icon-scale {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
 // ---------------------------------------------------------------------------
 // :root (CSS custom properties for JS / inline use)
 // ---------------------------------------------------------------------------
@@ -43,6 +60,9 @@ html {
   fill: var(--medium-dark) !important;
 }
 
+.fill-wave-dark {
+  fill: var(--bg-dark) !important;
+}
 // ---------------------------------------------------------------------------
 // Base
 // ---------------------------------------------------------------------------
@@ -132,67 +152,89 @@ pre {
   pointer-events: none;
 }
 
-// ---------------------------------------------------------------------------
-// Floating edge icons (drift effect) — full page height until About section
-// ---------------------------------------------------------------------------
-.floating-edge-icons {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: var(--floating-icons-height, 100vh);
-  pointer-events: none;
-  z-index: 9999;
-  transition: opacity 0.2s ease-out;
-
-  &.floating-edge-icons-hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-}
-
 .floating-icon {
   position: absolute;
   left: var(--x, 50%);
   top: var(--y, 50%);
-  transform: translate(-50%, -50%);
+  z-index: 1000;
+    // Set up default values for our variables
+    --icon-drift-x: 0px;
+    --icon-drift-y: 0px;
+    --icon-scale: 1;
+  
+    // Combine them into a single transform property that reads the variables
+    transform: translate(-50%, -50%) translate(var(--icon-drift-x), var(--icon-drift-y)) scale(var(--icon-scale));
   font-size: var(--size, 20px);
+
   @include gradient-text-animated($gradient-floating-icons, floating-icon-color, 7s, 400);
-  animation: icon-drift var(--dur, 6s) ease-in-out var(--delay, 0s) infinite,
+animation:
+    icon-drift var(--dur, 9s) ease-in-out var(--delay, 0s) infinite,
     floating-icon-color 7s ease-in-out infinite;
+transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1), filter 0.65s ease;
 }
 
+// Scroll state
+.floating-edge-icons.is-scrolling .floating-icon {
+  --icon-scale: 1.45 !important;
+  filter: brightness(1.15) drop-shadow(0 0 8px #000);
+}
+
+// Idle breathing
+.floating-edge-icons:not(.is-scrolling) .floating-icon {
+  animation:
+    icon-drift var(--dur, 9s) ease-in-out var(--delay, 0s) infinite,
+    floating-icon-color 7s ease-in-out infinite,
+    icon-breathe 8s ease-in-out infinite;
+}
+
+// ---------------------------------------------------------------------------
+// Keyframes (Animate the variables instead of the transform property)
+// ---------------------------------------------------------------------------
+
 @keyframes floating-icon-color {
-  0% {
-    background-position: 0% 50%;
-  }
 
-  50% {
-    background-position: 100% 50%;
-  }
-
+  0%,
   100% {
     background-position: 0% 50%;
   }
+50% {
+  background-position: 100% 50%;
+}
 }
 
 @keyframes icon-drift {
 
   0%,
   100% {
-    transform: translate(-50%, -50%) translate(0, 0);
+    --icon-drift-x: 0px;
+      --icon-drift-y: 0px;
   }
 
   25% {
-    transform: translate(-50%, -50%) translate(var(--drift, 3px), calc(var(--drift, 3px) * -0.5));
+    --icon-drift-x: var(--drift, 40px);
+      --icon-drift-y: calc(var(--drift, 40px) * -0.6);
   }
 
   50% {
-    transform: translate(-50%, -50%) translate(calc(var(--drift, 3px) * -0.3), var(--drift, 3px));
+    --icon-drift-x: calc(var(--drift, 40px) * -0.8);
+      --icon-drift-y: calc(var(--drift, 40px) * 0.7);
   }
 
   75% {
-    transform: translate(-50%, -50%) translate(calc(var(--drift, 3px) * 0.6), calc(var(--drift, 3px) * 0.4));
+    --icon-drift-x: calc(var(--drift, 40px) * 0.6);
+      --icon-drift-y: calc(var(--drift, 40px) * -0.5);
+    }
+    }
+    
+    @keyframes icon-breathe {
+    
+      0%,
+      100% {
+        --icon-scale: 1;
+      }
+    
+      50% {
+        --icon-scale: 1.12;
   }
 }
 
@@ -244,6 +286,7 @@ pre {
   height: 1px;
   opacity: 0;
   pointer-events: none;
+  z-index: 2000;
 }
 
 .site-header.section-nav {
@@ -254,11 +297,13 @@ pre {
   background: rgba(10, 10, 12, 0.85);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid $border-light;
+  border-bottom: 1px solid transparent;
   transition: padding 0.3s ease, box-shadow 0.3s ease;
+  z-index: 2001;
 
   // Pinned: scrolled past sentinel
   &.is-stuck {
+    border-bottom: 1px solid $border-light;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   }
 
@@ -371,14 +416,15 @@ pre {
 }
 
 #contact.content-block {
-  background: #1F1F1F;
-  background: -webkit-linear-gradient(318deg, rgba(31, 31, 31, 1) 0%, rgba(61, 61, 61, 1) 100%);
-  background: -moz-linear-gradient(318deg, rgba(31, 31, 31, 1) 0%, rgba(61, 61, 61, 1) 100%);
-  background: linear-gradient(318deg, rgba(31, 31, 31, 1) 0%, rgba(61, 61, 61, 1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1F1F1F",
-      endColorstr="#3D3D3D",
-      GradientType=0);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--medium-dark);
+    background: linear-gradient(180deg,
+        var(--medium-dark) 0px,
+        /* Starts at the very top */
+        var(--medium-dark) 10px,
+        /* Stays solid for the first 10px to pad the SVG */
+        rgba(31, 31, 31, 1) 100%
+        /* Smoothly transitions to dark at the bottom */
+      );
 }
 
 .transparent-block {
@@ -768,6 +814,18 @@ pre {
   transition: transform 0.3s ease;
 }
 
+.icon-nav {
+  font-size: 1rem;
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.75;
+}
+
+.active .icon-nav {
+  color: #FFF !important;
+  opacity: 1;
+}
 // ---------------------------------------------------------------------------
 // Hobbies carousel
 // ---------------------------------------------------------------------------
@@ -1122,6 +1180,25 @@ body:has(.modal.lightbox.show) .modal-backdrop {
   }
 }
 
+.nav-wave {
+  height: $hobby-wave-height;
+  width: 100%;
+  display: block;
+  position: relative;
+  z-index: 11;
+
+  &[data-wave-face='top'] {
+    margin-top: -$hobby-wave-height;
+  }
+
+  &[data-wave-face='bottom'] {
+    margin-bottom: -$hobby-wave-height;
+  }
+}
+
+.nav-wave-top {
+  margin-bottom: -5px !important;
+}
 .glass-cta-btn {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);

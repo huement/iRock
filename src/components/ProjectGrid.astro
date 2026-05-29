@@ -4,6 +4,7 @@ import { projects } from "../data/portfolio";
 
 import blogImg from "../assets/imgs/blog.png";
 import lumaImg from "../assets/imgs/luma.png";
+import lumaGif from "../assets/imgs/luma.gif";
 import youtubeImg from "../assets/imgs/youtube.png";
 import flightplanImg from "../assets/imgs/flightplan.png";
 import mapTextureImg from "../assets/imgs/map_texture.png";
@@ -15,13 +16,16 @@ import freshlime1Img from "../assets/imgs/freshlime1.png";
 import resultsImg from "../assets/imgs/results.png";
 import freshlime3Img from "../assets/imgs/freshlime3.png";
 import shopifyImg from "../assets/imgs/shopify.png";
+import shopifyImg2 from "../assets/imgs/shopify-2.png";
 import trendforgeImg from "../assets/imgs/trendforge.png";
 
 const projectImages: Record<string, typeof blogImg> = {
   "blog.png": blogImg,
   "shopify.png": shopifyImg,
+  "shopify-2.png": shopifyImg2,
   "youtube.png": youtubeImg,
   "luma.png": lumaImg,
+  "luma.gif": lumaGif,
   "flightplan.png": flightplanImg,
   "map_texture.png": mapTextureImg,
   "laanc.png": laancImg,
@@ -39,25 +43,44 @@ const THUMB_HEIGHT = 320;
 const LIGHTBOX_WIDTH = 1200;
 const LIGHTBOX_HEIGHT = 800;
 
+// 3. Update the data processing to handle lightboxImageKey
 const projectData = await Promise.all(
   projects.map(async (proj) => {
-    const img = projectImages[proj.imageKey];
-    if (!img) return null;
-    const [, full] = await Promise.all([
-      getImage({
-        src: img,
-        width: THUMB_WIDTH,
-        height: THUMB_HEIGHT,
-        format: "webp",
-      }),
-      getImage({
-        src: img,
+    const thumbImg = projectImages[proj.imageKey];
+    if (!thumbImg) return null;
+
+    let fullSrc = "";
+
+    // Check if this project has a specific custom lightbox image key
+    if (proj.lightboxImageKey && projectImages[proj.lightboxImageKey]) {
+      const lightboxImg = projectImages[proj.lightboxImageKey];
+
+      if (proj.lightboxImageKey.endsWith(".gif")) {
+        // Direct ESM imports of images return an object containing a .src string.
+        // Bypassing getImage() ensures the GIF retains its animation frames.
+        fullSrc = lightboxImg.src;
+      } else {
+        // If it's a custom lightbox image but NOT a gif, optimize it normally
+        const full = await getImage({
+          src: lightboxImg,
+          width: LIGHTBOX_WIDTH,
+          height: LIGHTBOX_HEIGHT,
+          format: "webp",
+        });
+        fullSrc = full.src;
+      }
+    } else {
+      // Fallback: If no lightboxImageKey is specified, use the optimized default thumbnail key
+      const full = await getImage({
+        src: thumbImg,
         width: LIGHTBOX_WIDTH,
         height: LIGHTBOX_HEIGHT,
         format: "webp",
-      }),
-    ]);
-    return { ...proj, fullSrc: full.src };
+      });
+      fullSrc = full.src;
+    }
+
+    return { ...proj, fullSrc };
   }),
 );
 
@@ -75,7 +98,10 @@ const validProjects = projectData.filter(
       <i class="bx bxs-star me-2"></i> Recent Projects
     </h2>
     <p class="text-muted mt-2 py-10">
-      Looking to learn more about me? Well, below is a 'lightbox' based masonry list that features my "<strong>Greatest Hits</strong>". Click each image to see a larger version, or the available Call to Action buttons to learn more about each project.
+      Looking to learn more about me? Well, below is a 'lightbox' based masonry
+      list that features my "<strong>Greatest Hits</strong>". Click each image
+      to see a larger version, or the available Call to Action buttons to learn
+      more about each project.
     </p>
   </div>
 

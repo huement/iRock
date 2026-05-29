@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 const SECTIONS = [
-  { id: 'work', label: 'Work' },
-  { id: 'timeline', label: 'Timeline' },
-  { id: 'hobbies', label: 'Hobbies' },
-  { id: 'contact', label: 'Contact' },
+  { id: "work", label: "Work", icon: "bxs-tv" },
+  { id: "timeline", label: "Timeline", icon: "bxs-time" },
+  { id: "hobbies", label: "Hobbies", icon: "bxs-dog" },
+  { id: "contact", label: "Contact", icon: "bxs-contact" },
 ] as const;
 
 /**
@@ -28,7 +28,9 @@ export default function SectionNav() {
     const links = nav.querySelectorAll<HTMLAnchorElement>('a[href^="#"]');
     if (!links.length) return;
 
-    const sections = SECTIONS.map(({ id }) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const sections = SECTIONS.map(({ id }) =>
+      document.getElementById(id),
+    ).filter(Boolean) as HTMLElement[];
     if (!sections.length) return;
 
     const setActiveFromScroll = () => {
@@ -49,9 +51,9 @@ export default function SectionNav() {
       }
       if (!activeId && sections[0]) activeId = sections[0].id;
       links.forEach((a) => {
-        const isActive = a.getAttribute('href') === `#${activeId}`;
-        a.classList.toggle('active', isActive);
-        a.setAttribute('aria-current', isActive ? 'page' : 'false');
+        const isActive = a.getAttribute("href") === `#${activeId}`;
+        a.classList.toggle("active", isActive);
+        a.setAttribute("aria-current", isActive ? "page" : "false");
       });
     };
 
@@ -61,39 +63,39 @@ export default function SectionNav() {
         const entry = entries[0];
         if (!entry) return;
         if (!entry.isIntersecting) {
-          nav.classList.add('is-stuck');
+          nav.classList.add("is-stuck");
         } else {
-          nav.classList.remove('is-stuck');
-          nav.classList.remove('scroll-down');
-          nav.classList.remove('scroll-up');
+          nav.classList.remove("is-stuck");
+          nav.classList.remove("scroll-down");
+          nav.classList.remove("scroll-up");
         }
       },
-      { threshold: 0, rootMargin: '0px' }
+      { threshold: 0, rootMargin: "0px" },
     );
     observer.observe(sentinel);
 
     // 2. Scroll direction (only when stuck)
     const onScroll = () => {
       setActiveFromScroll();
-      if (!nav.classList.contains('is-stuck')) return;
+      if (!nav.classList.contains("is-stuck")) return;
       const currentScrollY = window.scrollY;
       const last = lastScrollYRef.current;
       if (currentScrollY > last) {
-        nav.classList.remove('scroll-up');
-        nav.classList.add('scroll-down');
+        nav.classList.remove("scroll-up");
+        nav.classList.add("scroll-down");
       } else {
-        nav.classList.remove('scroll-down');
-        nav.classList.add('scroll-up');
+        nav.classList.remove("scroll-down");
+        nav.classList.add("scroll-up");
       }
       lastScrollYRef.current = currentScrollY;
     };
 
     lastScrollYRef.current = window.scrollY;
     setActiveFromScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       observer.disconnect();
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener("scroll", onScroll);
     };
   }, []);
 
@@ -105,15 +107,21 @@ export default function SectionNav() {
         className="header-sentinel"
         aria-hidden="true"
       />
-      <header id="site-header" ref={navRef} className="site-header section-nav" aria-label="Page sections">
+      <header
+        id="site-header"
+        ref={navRef}
+        className="site-header section-nav"
+        aria-label="Page sections"
+      >
         <div className="section-nav-inner">
-          {SECTIONS.map(({ id, label }) => (
+          {SECTIONS.map(({ id, label, icon }) => (
             <a
               key={id}
               href={`#${id}`}
               className="section-nav-link"
               aria-current="false"
             >
+              <i className={`bx ${icon} icon-nav me-2 text-info`}></i>
               {label}
             </a>
           ))}

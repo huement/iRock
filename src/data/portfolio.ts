@@ -20,6 +20,7 @@ export interface Project {
   description: string;
   /** Filename in src/assets/imgs/ for Astro Image optimization */
   imageKey: string;
+  lightboxImageKey?: string;
   tags: string[];
   gridClass: GridClass;
   cardClass: CardClass;
@@ -46,6 +47,7 @@ export const projects: Project[] = [
     description:
       "Sensory Game created for babies. It plays pleasing musical chords and offers bright shapes and fun animations upon interacting with the shapes and characters. I coded this game using Godot Engine, and it is available for Android devices. The pixel art was generated mostly through Higgsfield.ai.",
     imageKey: "luma.png",
+    lightboxImageKey: "luma.gif",
     tags: ["Godot", "Android", "Musical", "Pixel Art"],
     gridClass: "masonry-item--w4",
     ctaUrl:
@@ -71,6 +73,7 @@ export const projects: Project[] = [
     description:
       "Pull in Shopify API Storefront data and display it with React. Uses Next.js for server side component and rendering functionality.",
     imageKey: "shopify.png",
+    lightboxImageKey: "shopify-2.png",
     tags: ["React.js", "NextJS", "Shopify", "Ecommerce"],
     gridClass: "masonry-item--w6",
     cardClass: "card",

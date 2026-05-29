@@ -1,54 +1,86 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Starfield from '../components/Starfield';
-import FloatingEdgeIcons from '../components/FloatingEdgeIcons';
-import Hero from '../components/Hero';
-import FractalCanvas from '../components/FractalCanvas';
-import ProjectGrid from '../components/ProjectGrid.astro';
-import ProjectGridBehavior from '../components/ProjectGridBehavior';
-import LightboxBehavior from '../components/LightboxBehavior';
-import Timeline from '../components/Timeline';
-import HobbiesCarousel from '../components/HobbiesCarousel.astro';
-import HobbiesBehavior from '../components/HobbiesBehavior';
-import SectionNav from '../components/SectionNav';
-import Socials from '../components/Socials';
+import Layout from "../layouts/Layout.astro";
+import Starfield from "../components/Starfield";
+import FloatingEdgeIcons from "../components/FloatingEdgeIcons";
+import Hero from "../components/Hero";
+import FractalCanvas from "../components/FractalCanvas";
+import ProjectGrid from "../components/ProjectGrid.astro";
+import ProjectGridBehavior from "../components/ProjectGridBehavior";
+import LightboxBehavior from "../components/LightboxBehavior";
+import Timeline from "../components/Timeline";
+import HobbiesCarousel from "../components/HobbiesCarousel.astro";
+import HobbiesBehavior from "../components/HobbiesBehavior";
+import SectionNav from "../components/SectionNav";
+import Socials from "../components/Socials";
 
-const site = import.meta.env.SITE ?? 'https://huement.github.io/iRock/';
+const site = import.meta.env.SITE ?? "https://huement.github.io/iRock/";
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": "Derek Scott",
-  "jobTitle": "Full Stack Web Developer",
-  "description": "Full Stack RockStar Web Developer. Expert with TypeScript, PHP & Python. 11 years of experience building web applications, and over 5 years building Java based Android Applications. I focus on UI/UX as well as AI automation.",
-  "url": site,
-  "image": `${site}github-johnny13.png`,
-  "email": "admin@huement.com",
-  "knowsAbout": ["TypeScript", "PHP", "React", "Vue.js", "Laravel", "Node.js", "UI/UX"],
-  "sameAs": [
+  name: "Derek Scott",
+  jobTitle: "Full Stack Web Developer",
+  description:
+    "Full Stack RockStar Web Developer. Expert with TypeScript, PHP & Python. 11 years of experience building web applications, and over 5 years building Java based Android Applications. I focus on UI/UX as well as AI automation.",
+  url: site,
+  image: `${site}github-johnny13.png`,
+  email: "admin@huement.com",
+  knowsAbout: [
+    "TypeScript",
+    "PHP",
+    "React",
+    "Vue.js",
+    "Laravel",
+    "Node.js",
+    "UI/UX",
+  ],
+  sameAs: [
     "https://github.com/johnny13",
     "https://www.linkedin.com/in/derekscott13/",
-    "https://discordapp.com/users/johnnyfortune_21837"
+    "https://discordapp.com/users/johnnyfortune_21837",
   ],
-  "alumniOf": { "@type": "CollegeOrUniversity", "name": "University of North Dakota" }
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "University of North Dakota",
+  },
 };
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "Derek Scott | Developer Extraordinaire",
-  "url": site,
-  "description": "Full Stack RockStar Web Developer. Expert with TypeScript, PHP & Python. 11 years of experience building web applications, and over 5 years building Java based Android Applications. I focus on UI/UX as well as AI automation.",
-  "author": { "@type": "Person", "name": "Derek Scott", "url": site }
+  name: "Derek Scott | Developer Extraordinaire",
+  url: site,
+  description:
+    "Full Stack RockStar Web Developer. Expert with TypeScript, PHP & Python. 11 years of experience building web applications, and over 5 years building Java based Android Applications. I focus on UI/UX as well as AI automation.",
+  author: { "@type": "Person", name: "Derek Scott", url: site },
 };
-
 ---
 
-<Layout title="Derek Scott | Developer Extraordinaire" description="Full Stack RockStar Web Developer. Expert with TypeScript, PHP & Python. 11 years of experience building web applications, and over 5 years building Java based Android Applications. I focus on UI/UX as well as AI automation.">
+<Layout
+  title="Derek Scott | Developer Extraordinaire"
+  description="Full Stack RockStar Web Developer. Expert with TypeScript, PHP & Python. 11 years of experience building web applications, and over 5 years building Java based Android Applications. I focus on UI/UX as well as AI automation."
+>
   <Starfield client:only="react" />
   <FloatingEdgeIcons client:only="react" />
   <LightboxBehavior client:load />
 
   <Hero client:visible="react" />
+
+  <cosmic-wave
+    class="fill-wave-dark nav-wave nav-wave-top"
+    data-wave-points="7"
+    data-wave-variance="3"
+    data-wave-face="up"
+    data-wave-speed="5000"
+    data-wave-animate="true"></cosmic-wave>
+
   <SectionNav client:load />
+
+  <cosmic-wave
+    class="fill-wave-dark nav-wave nav-wave-bottom"
+    data-wave-points='9"'
+    data-wave-variance="2"
+    data-wave-face="bottom"
+    data-wave-speed="5000"
+    data-wave-animate="true"></cosmic-wave>
 
   <section id="work">
     <FractalCanvas client:only="react" />
@@ -64,8 +96,7 @@ const websiteSchema = {
     data-wave-variance="1"
     data-wave-face="top"
     data-wave-speed="5000"
-    data-wave-animate="true"
-  />
+    data-wave-animate="true"></cosmic-wave>
 
   <HobbiesCarousel />
   <HobbiesBehavior client:load />
@@ -76,10 +107,17 @@ const websiteSchema = {
     data-wave-variance="1"
     data-wave-face="bottom"
     data-wave-speed="5000"
-    data-wave-animate="true"
-  />
+    data-wave-animate="true"></cosmic-wave>
 
   <Socials client:visible="react" />
+
+  <cosmic-wave
+    class="fill-wave hobby-wave"
+    data-wave-points="8"
+    data-wave-variance="1"
+    data-wave-face="up"
+    data-wave-speed="5000"
+    data-wave-animate="true"></cosmic-wave>
 
   <section id="contact" class="content-block">
     <div class="container">
@@ -87,27 +125,125 @@ const websiteSchema = {
         <div class="col-lg-7 col-xl-6">
           <h2 class="display-4 mb-4 cool-title">Why Hire Me</h2>
           <p class="lead">
-            I bring a rare combination of rigorous math training and hands-on engineering—so I don’t just ship features; I design systems that behave correctly and scale.
+            I bring a rare combination of rigorous math training and hands-on
+            engineering—so I don’t just ship features; I design systems that
+            behave correctly and scale.
           </p>
           <p class="text-muted">
-            I care about iteration and evidence: A/B tests, metrics, and clear hypotheses. I’ve worked in regulated environments (U.S. Navy, government cloud) and high-velocity product teams, and I’m comfortable owning both the “why” and the “how” from data models to UI.
+            I care about iteration and evidence: A/B tests, metrics, and clear
+            hypotheses. I’ve worked in regulated environments (U.S. Navy,
+            government cloud) and high-velocity product teams, and I’m
+            comfortable owning both the “why” and the “how” from data models to
+            UI.
           </p>
-          <p class="text-muted">
-            I hold degrees in <strong>Statistics</strong> and <strong>Economics</strong> from the University of North Dakota, where I studied complex behavioral and financial models. That STEM and math background lets me iterate and test code in ways that make sense both behaviorally and financially—and a deep understanding of mathematics allows me to build complex applications that many of my peers are unable to match. I am the real deal, and if you have nakin art that you want brought to life, I am the developer you want leading the project.
-          </p>
+          <div class="bio">
+            <p>
+              I hold a <strong>B.S. in Statistics</strong> and a <strong
+                >B.A. in Economics</strong
+              > with a minor in Computer Science from the University of North Dakota.
+              While in college, I immersed myself in complex behavioral and financial
+              models, built a strong STEM foundation, and developed a deep passion
+              for creating software.
+            </p>
+
+            <p>
+              With over a decade of programming experience, I have a proven
+              track record of delivering iterative, test-driven solutions. My
+              unique background in economics and statistics allows me to build
+              applications that are not only technically excellent but also make
+              strong behavioral and financial sense. My advanced mathematical
+              understanding enables me to tackle complex problems that many
+              developers struggle with.
+            </p>
+
+            <p>
+              Great software, however, is more than just algorithms and code.
+              That’s where my design background shines. Before and during
+              college I worked as a graphic designer, and I’ve continued
+              refining those skills ever since. I specialize in creating
+              beautiful, responsive, high-performance user interfaces with
+              exceptional UX.
+            </p>
+
+            <p>
+              My YouTube channel further showcases my animation skills and
+              comedic timing. It’s rare to find a developer who can build a
+              GraphQL API to exact specifications while also being highly
+              proficient in design tools like Photoshop. I’m that versatile
+              professional — the diamond in the rough — who can take your napkin
+              sketch and turn it into a polished, functional, and visually
+              compelling product.
+            </p>
+          </div>
+
           <p class="small text-muted mb-3">Key technologies:</p>
           <div id="software-tags-wrap" class="d-flex flex-wrap gap-1 mt-2">
-            <span class="software-tag">PHP</span><span class="software-tag">Laravel</span><span class="software-tag">Symfony</span><span class="software-tag">SCSS</span><span class="software-tag">SASS</span><span class="software-tag">CSS</span><span class="software-tag">HTML</span><span class="software-tag">Svelte</span><span class="software-tag">LESS</span><span class="software-tag">Stylus</span><span class="software-tag">SQL</span><span class="software-tag">MySQL</span><span class="software-tag">GraphQL</span><span class="software-tag">MSSQL</span><span class="software-tag">PostgreSQL</span><span class="software-tag">PostGIS</span><span class="software-tag">MariaDB</span><span class="software-tag">SQLite</span><span class="software-tag">Python</span><span class="software-tag">Django</span><span class="software-tag">JavaScript</span><span class="software-tag">TypeScript</span><span class="software-tag">Vue.js</span><span class="software-tag">React.js</span><span class="software-tag">Next.js</span><span class="software-tag">Node.js</span><span class="software-tag">AngularJS</span><span class="software-tag">Ionic</span><span class="software-tag">Capacitor</span><span class="software-tag">Android</span><span class="software-tag">iOS</span><span class="software-tag">Java</span><span class="software-tag">Swift</span>
+            <span class="software-tag">PHP</span><span class="software-tag"
+              >Laravel</span
+            ><span class="software-tag">Symfony</span><span class="software-tag"
+              >SCSS</span
+            ><span class="software-tag">SASS</span><span class="software-tag"
+              >CSS</span
+            ><span class="software-tag">HTML</span><span class="software-tag"
+              >Svelte</span
+            ><span class="software-tag">LESS</span><span class="software-tag"
+              >Stylus</span
+            ><span class="software-tag">SQL</span><span class="software-tag"
+              >MySQL</span
+            ><span class="software-tag">GraphQL</span><span class="software-tag"
+              >MSSQL</span
+            ><span class="software-tag">PostgreSQL</span><span
+              class="software-tag">PostGIS</span
+            ><span class="software-tag">MariaDB</span><span class="software-tag"
+              >SQLite</span
+            ><span class="software-tag">Python</span><span class="software-tag"
+              >Django</span
+            ><span class="software-tag">JavaScript</span><span
+              class="software-tag">TypeScript</span
+            ><span class="software-tag">Vue.js</span><span class="software-tag"
+              >React.js</span
+            ><span class="software-tag">Next.js</span><span class="software-tag"
+              >Node.js</span
+            ><span class="software-tag">AngularJS</span><span
+              class="software-tag">Ionic</span
+            ><span class="software-tag">Capacitor</span><span
+              class="software-tag">Android</span
+            ><span class="software-tag">iOS</span><span class="software-tag"
+              >Java</span
+            ><span class="software-tag">Swift</span>
           </div>
         </div>
         <div class="col-lg-5 col-xl-4 offset-xl-1 text-center mt-5 mt-lg-0">
-          <div class="p-4 rounded-4" style="background: var(--card-bg); border: 1px solid #333;">
+          <div
+            class="p-4 rounded-4"
+            style="background: var(--card-bg); border: 1px solid #333;"
+          >
             <h3 class="h5 text-muted mb-3">Professional Contact Options</h3>
             <div class="d-grid gap-3">
-              <a href="https://github.com/johnny13" target="_blank" rel="noopener" class="btn btn-outline-light"><i class="bx bxl-github me-2" aria-hidden="true"></i> GitHub</a>
-              <a href="https://www.linkedin.com/in/derekscott13/" target="_blank" rel="noopener" class="btn btn-outline-light"><i class="bx bxl-linkedin me-2" aria-hidden="true"></i> LinkedIn</a>
-              <a href="mailto:admin@huement.com" class="btn btn-primary py-3"><i class="bx bxs-envelope me-2" aria-hidden="true"></i> Email Me</a>
-              <a href="https://drive.google.com/file/d/12iPY5GhldMc1_CVRw1VqAyNbo3dAn3t2/view?usp=sharing" target="_blank" rel="noopener" class="btn btn-success py-3"><i class="bx bxs-download me-2" aria-hidden="true"></i> Resume Download</a>
+              <a
+                href="https://github.com/johnny13"
+                target="_blank"
+                rel="noopener"
+                class="btn btn-outline-light"
+                ><i class="bx bxl-github me-2" aria-hidden="true"></i> GitHub</a
+              >
+              <a
+                href="https://www.linkedin.com/in/derekscott13/"
+                target="_blank"
+                rel="noopener"
+                class="btn btn-outline-light"
+                ><i class="bx bxl-linkedin me-2" aria-hidden="true"></i> LinkedIn</a
+              >
+              <a href="mailto:admin@huement.com" class="btn btn-primary py-3"
+                ><i class="bx bxs-envelope me-2" aria-hidden="true"></i> Email Me</a
+              >
+              <a
+                href="https://drive.google.com/file/d/12iPY5GhldMc1_CVRw1VqAyNbo3dAn3t2/view?usp=sharing"
+                target="_blank"
+                rel="noopener"
+                class="btn btn-success py-3"
+                ><i class="bx bxs-download me-2" aria-hidden="true"></i> Resume Download</a
+              >
             </div>
           </div>
         </div>
@@ -118,20 +254,23 @@ const websiteSchema = {
   <!-- Cycle .active on software tags for gradient flair -->
   <script>
     (function () {
-      const wrap = document.getElementById('software-tags-wrap');
+      const wrap = document.getElementById("software-tags-wrap");
       if (!wrap) return;
-      const tags = wrap.querySelectorAll('.software-tag');
+      const tags = wrap.querySelectorAll(".software-tag");
       if (!tags.length) return;
       const duration = 2500;
       let index = 0;
       function cycle() {
-        tags.forEach((t) => t.classList.remove('active'));
-        tags[index].classList.add('active');
+        tags.forEach((t) => t.classList.remove("active"));
+        tags[index].classList.add("active");
         index = (index + 1) % tags.length;
       }
       cycle();
       setInterval(cycle, duration);
     })();
   </script>
-  <script type="application/ld+json" set:html={JSON.stringify([personSchema, websiteSchema])} />
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify([personSchema, websiteSchema])}
+  />
 </Layout>

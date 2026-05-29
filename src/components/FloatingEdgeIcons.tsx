@@ -1,27 +1,52 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { floatingIcons } from '../data/floatingIcons';
 
 export default function FloatingEdgeIcons() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isScrollingRef = useRef(false);
+
+  const handleScroll = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    isScrollingRef.current = true;
+    container.classList.add('is-scrolling');
+
+    // Clear previous timeout
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    // After scrolling stops, return to idle state
+    timeoutRef.current = setTimeout(() => {
+      isScrollingRef.current = false;
+      container.classList.remove('is-scrolling');
+    }, 180); // Adjust feel here
+  }, []);
 
   useEffect(() => {
     const updateHeight = () => {
-      const aboutSection = document.getElementById('contact');
+      const contactSection = document.getElementById('contact');
       const container = containerRef.current;
-      if (!aboutSection || !container) return;
-      const top = aboutSection.getBoundingClientRect().top + window.scrollY;
+      if (!contactSection || !container) return;
+
+      const top = contactSection.getBoundingClientRect().top + window.scrollY;
       container.style.setProperty('--floating-icons-height', `${top}px`);
-      requestAnimationFrame(() => container.classList.remove('floating-edge-icons-hidden'));
     };
 
     updateHeight();
     window.addEventListener('resize', updateHeight);
-    return () => window.removeEventListener('resize', updateHeight);
-  }, []);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+      window.removeEventListener('scroll', handleScroll);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [handleScroll]);
 
   return (
     <div
-      className="floating-edge-icons floating-edge-icons-hidden"
+      className="floating-edge-icons"
       id="floatingEdgeIcons"
       aria-hidden="true"
       ref={containerRef}
