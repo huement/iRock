@@ -4,7 +4,10 @@
 // ---------------------------------------------------------------------------
 // Projects (portfolio grid)
 // ---------------------------------------------------------------------------
-export type GridClass = "masonry-item--w4" | "masonry-item--w4-double";
+export type GridClass =
+  | "masonry-item--w4"
+  | "masonry-item--w4-double"
+  | "masonry-item--w6";
 export type CardClass =
   | "card"
   | "card card-featured"
@@ -29,50 +32,26 @@ export const projects: Project[] = [
     id: "blog",
     title: "huement.com Blog",
     description:
-      "Laravel Livewire site—I coded it, did all the artwork, and wrote every article. Statamic CMS with a Digital Ocean CI/CD pipeline.",
+      "Statamic CMS based, using the latest Laravel Livewire as a foundation, its my cutting edge tech focused blog. All the artwork, every article, and anything else you see was either coded, created, or written by me. It uses the latest SEO practices, and is optimized for speed and performance.",
     imageKey: "blog.png",
-    tags: [
-      "Laravel",
-      "Livewire",
-      "Statamic CMS",
-      "PHP",
-      "Digital Ocean",
-      "CI/CD",
-    ],
+    tags: ["Laravel Livewire", "Statamic CMS", "PHP 8.3+", "CI/CD"],
     gridClass: "masonry-item--w4-double",
     cardClass: "card card-featured",
     ctaUrl: "https://huement.com/blog", // Button will show for this one
     ctaText: "Read Blog",
   },
   {
-    id: "map",
-    title: "Map Data",
-    description: "Spatial data visualization and mapping.",
-    imageKey: "map.png",
-    tags: ["PostGIS", "PHP", "SQL", "HTML5"],
-    gridClass: "masonry-item--w4",
-    cardClass: "card",
-  },
-  {
-    id: "map-texture",
-    title: "Map Texture",
-    description: "Custom map textures and rendering.",
-    imageKey: "map_texture.png",
-    tags: ["PostGIS", "GeoJSON", "PHP"],
-    gridClass: "masonry-item--w4",
-    cardClass: "card",
-  },
-  {
-    id: "shopify",
-    title: "NextJS Shopify Storefront React App",
+    id: "luma",
+    title: "Luma Shapes",
     description:
-      "Pull in Shopify API Storefront data and display it with React. Uses Next.js for server side component and rendering functionality.",
-    imageKey: "shopify.png",
-    tags: ["React.js", "NextJS", "Shopify", "Ecommerce"],
-    gridClass: "masonry-item--w4-double",
+      "Sensory Game created for babies. It plays pleasing musical chords and offers bright shapes and fun animations upon interacting with the shapes and characters. I coded this game using Godot Engine, and it is available for Android devices. The pixel art was generated mostly through Higgsfield.ai.",
+    imageKey: "luma.png",
+    tags: ["Godot", "Android", "Musical", "Pixel Art"],
+    gridClass: "masonry-item--w4",
+    ctaUrl:
+      "https://play.google.com/store/apps/details?id=com.huement.lumashapes&hl=en_US",
+    ctaText: "Google PlayStore",
     cardClass: "card",
-    ctaUrl: "https://github.com/huement/shopify-react-demo", // Button will show for this one
-    ctaText: "Goto Repository",
   },
   {
     id: "youtube",
@@ -81,10 +60,34 @@ export const projects: Project[] = [
       "My YouTube channel about tech—videos with heavy animation and voiceovers. I handle all editing and animations.",
     imageKey: "youtube.png",
     tags: ["YouTube", "Video", "Animation", "Voiceover"],
-    gridClass: "masonry-item--w4-double",
+    gridClass: "masonry-item--w6",
     cardClass: "card card-highlight",
     ctaUrl: "https://youtube.com/@barebonescode",
     ctaText: "Visit Channel",
+  },
+  {
+    id: "shopify",
+    title: "NextJS Shopify Storefront React App",
+    description:
+      "Pull in Shopify API Storefront data and display it with React. Uses Next.js for server side component and rendering functionality.",
+    imageKey: "shopify.png",
+    tags: ["React.js", "NextJS", "Shopify", "Ecommerce"],
+    gridClass: "masonry-item--w6",
+    cardClass: "card",
+    ctaUrl: "https://github.com/huement/shopify-react-demo", // Button will show for this one
+    ctaText: "Goto Repository",
+  },
+  {
+    id: "trend",
+    title: "TrendForge",
+    description:
+      "A web application for visualizing and analyzing trends. We call it 'Narrative Arbitrage', and TrendForge uses the latest Tailwind v4, React 18, Typescript, PHP and various AI tools, including LLAMA, XAI, OpenAI's GPT-4, HuggingFace Models, and much more. It features a user-friendly interface for visualizing trends, and generating insights. It also has a Wordpress plugin, which allows users to easily pull story suggestions based of current trends, directly into their WordPress site. For a backend it heavily relies on PGVector, based on PostGreSQL, and outputs OpenAPI standard endpoints.",
+    imageKey: "trendforge.png",
+    tags: ["AI Analytics", "Docker", "PGVector", "Volt", "Tailwind"],
+    gridClass: "masonry-item--w4-double",
+    cardClass: "card",
+    ctaUrl: "https://trendforge.huement.com",
+    ctaText: "Goto TF Website",
   },
   {
     id: "flightplan",
@@ -96,14 +99,13 @@ export const projects: Project[] = [
     gridClass: "masonry-item--w4",
     cardClass: "card",
   },
-
   {
     id: "laanc",
     title: "LAANC Map Layers",
     description: "Generating complex maps and layers from PostGIS GeoJSON.",
     imageKey: "laanc.png",
     tags: ["PostGIS", "GeoJSON", "PHP", "SQL"],
-    gridClass: "masonry-item--w4-double",
+    gridClass: "masonry-item--w4",
     cardClass: "card card-laanc",
   },
   {
@@ -139,25 +141,6 @@ export const projects: Project[] = [
     description: "Hybrid mobile applications; ReactJS since its earliest days.",
     imageKey: "freshlime1.png",
     tags: ["React.js", "Python", "Django", "AWS", "AngularJS"],
-    gridClass: "masonry-item--w4",
-    cardClass: "card",
-  },
-  {
-    id: "results",
-    title: "AI Analytics",
-    description:
-      "Loading statistics and AI compiled results as mapped data layers.",
-    imageKey: "results.png",
-    tags: ["Vue.js", "TypeScript", "GraphQL", "Node.js", "PostGIS"],
-    gridClass: "masonry-item--w4",
-    cardClass: "card",
-  },
-  {
-    id: "freshlime3",
-    title: "FreshLime App",
-    description: "Business management suite and hybrid mobile experience.",
-    imageKey: "freshlime3.png",
-    tags: ["React.js", "Django", "Python", "AWS"],
     gridClass: "masonry-item--w4",
     cardClass: "card",
   },
@@ -320,12 +303,6 @@ export const hobbies: Hobby[] = [
       "I take pride in having an overclocked, unlocked and ready to rock mac :D",
       "I wrote the code that runs the system stats LED screen. ",
     ],
-  },
-  {
-    title: "Leah",
-    imageKey: "leah.png",
-    description:
-      "Personal photo—balance between life and code. Someone who keeps the ship steady.",
   },
   {
     title: "Overworld",
