@@ -25,13 +25,14 @@
 // ---------------------------------------------------------------------------
 :root {
   --bg-dark: #{$bg-dark};
+  --bg-medium: #{$bg-medium};
   --accent-color: #{$accent-color};
   --text-main: #{$text-main};
   --glass-bg: #{$glass-bg};
   --glass-bg-light: #{$glass-bg-light};
   --card-bg: #{$card-bg};
   --bs-heading-color: #{$accent-color};
-  --medium-dark: #303030;
+  --medium-dark: #{$bg-medium};
 }
 
 html {
@@ -63,6 +64,10 @@ html {
 .fill-wave-dark {
   fill: var(--bg-dark) !important;
 }
+
+.fill-wave-medium {
+  fill: var(--bg-medium) !important;
+}
 // ---------------------------------------------------------------------------
 // Base
 // ---------------------------------------------------------------------------
@@ -74,6 +79,29 @@ body {
   margin: 0;
   overflow-x: hidden;
   font-weight: 300;
+}
+
+/* Add to page container or body */
+body::before, body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  pointer-events: none;
+  z-index: 99;
+}
+
+body::before {
+  left: 0;
+  background: linear-gradient(180deg, transparent, #ff4757, transparent);
+  box-shadow: 4px 0 20px rgba(255, 71, 87, 0.5);
+}
+
+body::after {
+  right: 0;
+  background: linear-gradient(180deg, transparent, #54a0ff, transparent);
+  box-shadow: -4px 0 20px rgba(84, 160, 255, 0.5);
 }
 
 // Contain scroll: About is the last section; no extra space below.
@@ -108,6 +136,8 @@ pre {
 // ---------------------------------------------------------------------------
 .cool-title {
   @include gradient-text-animated($gradient-cool-title, text-flow, 6s, 700);
+  -webkit-text-stroke: 1px #000;
+  text-stroke: 1px #000; /* Standard fallback */
 }
 
 @keyframes text-flow {
@@ -151,40 +181,65 @@ pre {
   z-index: -2;
   pointer-events: none;
 }
-
 .floating-icon {
   position: absolute;
   left: var(--x, 50%);
   top: var(--y, 50%);
-  z-index: 1000;
-    // Set up default values for our variables
-    --icon-drift-x: 0px;
-    --icon-drift-y: 0px;
-    --icon-scale: 1;
-  
-    // Combine them into a single transform property that reads the variables
-    transform: translate(-50%, -50%) translate(var(--icon-drift-x), var(--icon-drift-y)) scale(var(--icon-scale));
   font-size: var(--size, 20px);
 
+  /* CRITICAL FIXES: Keep behind content & don't block clicks */
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.35; /* Subtle background feel */
+
+  /* Default CSS Variables */
+  --icon-drift-x: 0px;
+  --icon-drift-y: 0px;
+  --icon-scale: 1;
+
+  transform: translate(-50%, -50%)
+             translate(var(--icon-drift-x), var(--icon-drift-y))
+             scale(var(--icon-scale));
+
+  /* Your custom gradient mixin */
   @include gradient-text-animated($gradient-floating-icons, floating-icon-color, 7s, 400);
-animation:
+
+  animation:
     icon-drift var(--dur, 9s) ease-in-out var(--delay, 0s) infinite,
     floating-icon-color 7s ease-in-out infinite;
-transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1), filter 0.65s ease;
+
+  transition:
+    transform 0.65s cubic-bezier(0.23, 1, 0.32, 1),
+    filter 0.65s ease,
+    opacity 0.4s ease;
 }
 
-// Scroll state
+/* 1. Scroll state: Smoother scale & glowing effect */
 .floating-edge-icons.is-scrolling .floating-icon {
-  --icon-scale: 1.45 !important;
-  filter: brightness(1.15) drop-shadow(0 0 8px #000);
+  --icon-scale: 1.2 !important; /* Reduced from 1.45 for a cleaner feel */
+  opacity: 0.85;                /* Brighten up slightly when scrolling */
+  filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
 }
 
-// Idle breathing
+/* 2. Idle state: Keep your breathing animation */
 .floating-edge-icons:not(.is-scrolling) .floating-icon {
   animation:
     icon-drift var(--dur, 9s) ease-in-out var(--delay, 0s) infinite,
     floating-icon-color 7s ease-in-out infinite,
     icon-breathe 8s ease-in-out infinite;
+}
+
+/* When scrolling, streak the icons downwards like speed lines */
+.floating-edge-icons.is-scrolling .floating-icon {
+  transform: translateY(80px) scaleY(1.4);
+  opacity: 0.8;
+  transition: transform 0.2s ease-out;
+}
+
+.floating-edge-icons {
+
+  pointer-events: none;
+  z-index: 10;
 }
 
 // ---------------------------------------------------------------------------
@@ -225,14 +280,14 @@ transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1), filter 0.65s ease;
       --icon-drift-y: calc(var(--drift, 40px) * -0.5);
     }
     }
-    
+
     @keyframes icon-breathe {
-    
+
       0%,
       100% {
         --icon-scale: 1;
       }
-    
+
       50% {
         --icon-scale: 1.12;
   }
@@ -258,6 +313,22 @@ transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1), filter 0.65s ease;
   max-width: $hero-card-max-width;
   text-align: center;
   z-index: 10;
+}
+
+.card-box {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border: 1px solid rgba(0, 0, 0, 0.75);
+  padding: 1rem;
+  border-radius: 0.5rem;
+
+  &.center-box {
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px;
+  }
 }
 
 @media (max-width: 767px) {
@@ -294,29 +365,32 @@ transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1), filter 0.65s ease;
   top: 0;
   z-index: 100;
   padding: 1rem;
-  background: rgba(10, 10, 12, 0.85);
+  background: var(--bg-medium);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid transparent;
-  transition: padding 0.3s ease, box-shadow 0.3s ease;
+  transition: padding 0.3s ease, box-shadow 0.3s ease, background 0.4s linear;
   z-index: 2001;
 
   // Pinned: scrolled past sentinel
   &.is-stuck {
     border-bottom: 1px solid $border-light;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    background: rgba(10, 10, 12, 0.7);
   }
 
   // Pinned + scrolling down → skinny
   &.is-stuck.scroll-down {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+    background: rgba(10, 10, 12, 0.45);
   }
 
   // Pinned + scrolling up → full
   &.is-stuck.scroll-up {
     padding-top: 1rem;
     padding-bottom: 1rem;
+    background: rgba(10, 10, 12, 0.85);
   }
 }
 
@@ -1172,7 +1246,7 @@ body:has(.modal.lightbox.show) .modal-backdrop {
   z-index: 11;
 
   &[data-wave-face='top'] {
-    margin-top: -$hobby-wave-height;
+    margin-top: calc(($hobby-wave-height * -1.25));
   }
 
   &[data-wave-face='bottom'] {

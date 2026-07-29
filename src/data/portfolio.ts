@@ -46,7 +46,7 @@ export const projects: Project[] = [
     title: "Luma Shapes",
     description:
       "Sensory Game created for babies. It plays pleasing musical chords and offers bright shapes and fun animations upon interacting with the shapes and characters. I coded this game using Godot Engine, and it is available for Android devices. The pixel art was generated mostly through Higgsfield.ai.",
-    imageKey: "luma.png",
+    imageKey: "luma.gif",
     lightboxImageKey: "luma.gif",
     tags: ["Godot", "Android", "Musical", "Pixel Art"],
     gridClass: "masonry-item--w4",
@@ -211,9 +211,9 @@ SELECT c.action, s.revenue_hr, s.revenue_yr, a.abandonment_rate
 FROM Career c
 JOIN SalesData s ON s.company = c.company AND s.duration = c.duration
 LEFT JOIN CartAbandonment a ON a.company = c.company
-WHERE c.company = 'RealTruck' 
+WHERE c.company = 'RealTruck'
   AND c.duration = '2012-2014';
-  
+
 -- revenue_hr > 5000; revenue_yr > 10e6
 -- PHP/MSSQL · mobile web app · modernized legacy codebase
 -- Cart abandonment flows & sales reporting · strict audit requirements`,
@@ -284,9 +284,26 @@ export const hobbies: Hobby[] = [
   {
     title: "Godot",
     imageKey: "godot.png",
+    videoKey: "shooter-preview.mp4",
     description: [
       "Classic 2D shooter in Godot—GDScript, movement, shooting, and screen wrap.",
       "Rapid-fire bullets, spread patterns, and Asteroids-style gameplay.",
+    ],
+  },
+  {
+    title: "Video",
+    imageKey: "video-gen.png",
+    videoKey: "bones-intro.mp4",
+    description:
+      "Video editing and motion—Premiere Pro, starfield backgrounds, and bringing ideas to the timeline.",
+  },
+  {
+    title: "Music Visualizer (ViveWorld)",
+    imageKey: "vizualizer.gif",
+    videoKey: "vizualizer.mp4",
+    description: [
+      "Music Visuals are something I can not get enough of. I have contributed to a few different VJ's sets.",
+      "I currently have an upcoming project coming out on HTC Viveworld showcasing a three.js based music experience.",
     ],
   },
   {
@@ -319,12 +336,7 @@ export const hobbies: Hobby[] = [
     description:
       "This little guy has been by my side for many years. He is my best friend and is often at my feet or watching me from the bed while I work.",
   },
-  {
-    title: "Video",
-    imageKey: "video-gen.png",
-    description:
-      "Video editing and motion—Premiere Pro, starfield backgrounds, and bringing ideas to the timeline.",
-  },
+
   {
     title: "The End",
     imageKey: "the-end.png",

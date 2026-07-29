@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react';
 import Prism from 'prismjs';
-import 'prismjs/components/prism-markup-templating'; // required by prism-php
+import 'prismjs/components/prism-markup-templating';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-php';
 import 'prismjs/components/prism-sql';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-markdown';
 import { timeline } from '../data/portfolio';
+import NoiseBackground from './NoiseBackground';
 
 export default function Timeline() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,15 +37,30 @@ export default function Timeline() {
   }, []);
 
   return (
-    <section id="timeline" className="content-block wave-block-top">
-      <div className="container">
-        <h2 className="display-4 mb-2 cool-title">
-          <i className="bx bxs-circle me-2"></i>Professional Timeline
-        </h2>
-        <p className="text-muted mb-5">Employment history parsed as valid logic.</p>
+    <section
+      id="timeline"
+      className="content-block wave-block-top"
+      style={{ position: 'relative', overflow: 'hidden' }} /* Ensures background stays contained */
+    >
+      {/* 1. noise canvas */}
+      <NoiseBackground />
+
+      {/* 2. content layered above the background using relative z-index */}
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="card-box">
+          <h2 className="display-4 mb-2 cool-title">
+            <i className="bx bxs-circle me-2"></i>Professional Timeline
+          </h2>
+          <p className="text-muted mb-5 lead fw-bold">My employment and education history displayed as psuedo-code logic. Each item uses the dominate language used at that time, clever right?</p>
+        </div>
       </div>
 
-      <div className="timeline-container" ref={containerRef} suppressHydrationWarning>
+      <div
+        className="timeline-container"
+        ref={containerRef}
+        suppressHydrationWarning
+        style={{ position: 'relative', zIndex: 1 }}
+      >
         <div className="timeline-wrapper">
           {timeline.map((item) => (
             <div key={item.filename} className="code-card">

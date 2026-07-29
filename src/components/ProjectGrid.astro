@@ -1,73 +1,73 @@
 ---
-import { Image, getImage } from "astro:assets";
-import { projects } from "../data/portfolio";
+import { Image, getImage } from 'astro:assets'
+import { projects } from '../data/portfolio'
 
-import blogImg from "../assets/imgs/blog.png";
-import lumaImg from "../assets/imgs/luma.png";
-import lumaGif from "../assets/imgs/luma.gif";
-import youtubeImg from "../assets/imgs/youtube.png";
-import flightplanImg from "../assets/imgs/flightplan.png";
-import mapTextureImg from "../assets/imgs/map_texture.png";
-import laancImg from "../assets/imgs/laanc.png";
-import sitesImg from "../assets/imgs/sites.png";
-import imageImg from "../assets/imgs/image.png";
-import printedImg from "../assets/imgs/printed.png";
-import freshlime1Img from "../assets/imgs/freshlime1.png";
-import resultsImg from "../assets/imgs/results.png";
-import freshlime3Img from "../assets/imgs/freshlime3.png";
-import shopifyImg from "../assets/imgs/shopify.png";
-import shopifyImg2 from "../assets/imgs/shopify-2.png";
-import trendforgeImg from "../assets/imgs/trendforge.png";
+import blogImg from '../assets/imgs/blog.png'
+import lumaImg from '../assets/imgs/luma.png'
+import lumaGif from '../assets/imgs/luma.gif'
+import youtubeImg from '../assets/imgs/youtube.png'
+import flightplanImg from '../assets/imgs/flightplan.png'
+import mapTextureImg from '../assets/imgs/map_texture.png'
+import laancImg from '../assets/imgs/laanc.png'
+import sitesImg from '../assets/imgs/sites.png'
+import imageImg from '../assets/imgs/image.png'
+import printedImg from '../assets/imgs/printed.png'
+import freshlime1Img from '../assets/imgs/freshlime1.png'
+import resultsImg from '../assets/imgs/results.png'
+import freshlime3Img from '../assets/imgs/freshlime3.png'
+import shopifyImg from '../assets/imgs/shopify.png'
+import shopifyImg2 from '../assets/imgs/shopify-2.png'
+import trendforgeImg from '../assets/imgs/trendforge.png'
 
 const projectImages: Record<string, typeof blogImg> = {
-  "blog.png": blogImg,
-  "shopify.png": shopifyImg,
-  "shopify-2.png": shopifyImg2,
-  "youtube.png": youtubeImg,
-  "luma.png": lumaImg,
-  "luma.gif": lumaGif,
-  "flightplan.png": flightplanImg,
-  "map_texture.png": mapTextureImg,
-  "laanc.png": laancImg,
-  "trendforge.png": trendforgeImg,
-  "sites.png": sitesImg,
-  "image.png": imageImg,
-  "printed.png": printedImg,
-  "freshlime1.png": freshlime1Img,
-  "results.png": resultsImg,
-  "freshlime3.png": freshlime3Img,
-};
+  'blog.png': blogImg,
+  'shopify.png': shopifyImg,
+  'shopify-2.png': shopifyImg2,
+  'youtube.png': youtubeImg,
+  'luma.png': lumaImg,
+  'luma.gif': lumaGif,
+  'flightplan.png': flightplanImg,
+  'map_texture.png': mapTextureImg,
+  'laanc.png': laancImg,
+  'trendforge.png': trendforgeImg,
+  'sites.png': sitesImg,
+  'image.png': imageImg,
+  'printed.png': printedImg,
+  'freshlime1.png': freshlime1Img,
+  'results.png': resultsImg,
+  'freshlime3.png': freshlime3Img
+}
 
-const THUMB_WIDTH = 480;
-const THUMB_HEIGHT = 320;
-const LIGHTBOX_WIDTH = 1200;
-const LIGHTBOX_HEIGHT = 800;
+const THUMB_WIDTH = 480
+const THUMB_HEIGHT = 320
+const LIGHTBOX_WIDTH = 1200
+const LIGHTBOX_HEIGHT = 800
 
 // 3. Update the data processing to handle lightboxImageKey
 const projectData = await Promise.all(
   projects.map(async (proj) => {
-    const thumbImg = projectImages[proj.imageKey];
-    if (!thumbImg) return null;
+    const thumbImg = projectImages[proj.imageKey]
+    if (!thumbImg) return null
 
-    let fullSrc = "";
+    let fullSrc = ''
 
     // Check if this project has a specific custom lightbox image key
     if (proj.lightboxImageKey && projectImages[proj.lightboxImageKey]) {
-      const lightboxImg = projectImages[proj.lightboxImageKey];
+      const lightboxImg = projectImages[proj.lightboxImageKey]
 
-      if (proj.lightboxImageKey.endsWith(".gif")) {
+      if (proj.lightboxImageKey.endsWith('.gif')) {
         // Direct ESM imports of images return an object containing a .src string.
         // Bypassing getImage() ensures the GIF retains its animation frames.
-        fullSrc = lightboxImg.src;
+        fullSrc = lightboxImg.src
       } else {
         // If it's a custom lightbox image but NOT a gif, optimize it normally
         const full = await getImage({
           src: lightboxImg,
           width: LIGHTBOX_WIDTH,
           height: LIGHTBOX_HEIGHT,
-          format: "webp",
-        });
-        fullSrc = full.src;
+          format: 'webp'
+        })
+        fullSrc = full.src
       }
     } else {
       // Fallback: If no lightboxImageKey is specified, use the optimized default thumbnail key
@@ -75,67 +75,67 @@ const projectData = await Promise.all(
         src: thumbImg,
         width: LIGHTBOX_WIDTH,
         height: LIGHTBOX_HEIGHT,
-        format: "webp",
-      });
-      fullSrc = full.src;
+        format: 'webp'
+      })
+      fullSrc = full.src
     }
 
-    return { ...proj, fullSrc };
-  }),
-);
+    return { ...proj, fullSrc }
+  })
+)
 
-const validProjects = projectData.filter(
-  (p): p is NonNullable<typeof p> => p != null,
-);
+const validProjects = projectData.filter((p): p is NonNullable<typeof p> => p != null)
 ---
 
-<div class="container py-5" style="z-index: 5; position: relative">
+<div
+  class='container py-5'
+  style='z-index: 5; position: relative'>
   <div
-    class="glass-bg p-4 rounded-4 mb-5 border border-secondary border-opacity-25"
-    style="background: rgba(0,0,0,0.6); backdrop-filter: blur(5px)"
-  >
-    <h2 class="display-4 cool-title">
-      <i class="bx bxs-star me-2"></i> Recent Projects
+    class='card-box center-box mb-5'
+    style='background: rgba(0,0,0,0.6); backdrop-filter: blur(5px)'>
+    <h2 class='display-4 cool-title'>
+      <i class='bx bxs-star me-2'></i> Recent Projects
     </h2>
-    <p class="text-muted mt-2 py-10">
-      Looking to learn more about me? Well, below is a 'lightbox' based masonry
-      list that features my "<strong>Greatest Hits</strong>". Click each image
-      to see a larger version, or the available Call to Action buttons to learn
-      more about each project.
+    <p class='text-muted mt-2 py-10'>
+      Looking to learn more about me? Well, below is a 'lightbox' based masonry list that features my "<strong
+        >Greatest Hits</strong
+      >". Click each image to see a larger version, or the available Call to Action buttons to learn more about each
+      project.
     </p>
   </div>
 
-  <div class="masonry-grid">
+  <div class='masonry-grid'>
     {
       validProjects.map((proj) => {
         const ctaHtml = proj.ctaUrl
-          ? `<br/><a href="${proj.ctaUrl}" target="_blank" class="glass-cta-btn mt-3 d-inline-block">${proj.ctaText || "Visit Project"} <i class='bx bx-right-arrow-alt'></i></a>`
-          : "";
+          ? `<br/><a href="${proj.ctaUrl}" target="_blank" class="glass-cta-btn mt-3 d-inline-block">${proj.ctaText || 'Visit Project'} <i class='bx bx-right-arrow-alt'></i></a>`
+          : ''
 
         return (
           <div class={`masonry-item ${proj.gridClass}`}>
             <div class={`${proj.cardClass} h-100`}>
               <a
-                class="lightbox-toggle"
+                class='lightbox-toggle'
                 href={proj.fullSrc}
-                data-caption={`${proj.description}`}
-              >
+                data-caption={`${proj.description}`}>
                 <Image
                   src={projectImages[proj.imageKey]}
                   alt={proj.title}
                   width={THUMB_WIDTH}
                   height={THUMB_HEIGHT}
-                  format="webp"
+                  format='webp'
                   densities={[1.5, 2]}
-                  class="rounded card-img-top"
+                  class='rounded card-img-top'
                 />
               </a>
-              <div class="card-body">
-                <h5 class="card-title">{proj.title}</h5>
-                <p class="card-text small text-muted">{proj.description}</p>
-                <ul class="list-group list-group-flush">
+              <div class='card-body'>
+                <h5 class='card-title'>{proj.title}</h5>
+                <p class='card-text small text-muted'>{proj.description}</p>
+                <ul class='list-group list-group-flush'>
                   {proj.tags.map((tag) => (
-                    <li key={tag} class="list-group-item">
+                    <li
+                      key={tag}
+                      class='list-group-item'>
                       {tag}
                     </li>
                   ))}
@@ -144,7 +144,7 @@ const validProjects = projectData.filter(
               </div>
             </div>
           </div>
-        );
+        )
       })
     }
   </div>

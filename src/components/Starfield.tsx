@@ -1,14 +1,28 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const BASE_SPEED = 0.6;
-const MAX_SPEED = 1.8;
+const BASE_SPEED = 0.5;
+const MAX_SPEED = 3.2;
 const LINE_THRESHOLD = 0.85;
-const STRETCH_FACTOR = 18;
-const NUM_STARS = 6000;
+const STRETCH_FACTOR = 28;
+const NUM_STARS = 5000;
 const RANGE = 300;
 
-const MIN_HYPERSPACE_TIME = 3000; // 3 seconds minimum
+// Generates a soft glowing star sprite in memory (No network fetch delay!)
+function createStarTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 32;
+  canvas.height = 32;
+  const ctx = canvas.getContext('2d')!;
+  const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+  gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+  gradient.addColorStop(0.25, 'rgba(210, 230, 255, 0.8)');
+  gradient.addColorStop(0.6, 'rgba(150, 180, 255, 0.2)');
+  gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 32, 32);
+  return new THREE.CanvasTexture(canvas);
+}
 
 export default function Starfield() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -22,9 +36,7 @@ export default function Starfield() {
 
   const starPositionsRef = useRef<Float32Array>(new Float32Array(NUM_STARS * 3));
   const currentSpeedRef = useRef(BASE_SPEED);
-  const targetSpeedRef = useRef(BASE_SPEED);
-
-  const hyperspaceEndTimeRef = useRef(0); // timestamp when we must turn off hyperspace
+  const scrollVelocityRef = useRef(0);
   const lastScrollYRef = useRef(0);
 
   useEffect(() => {
@@ -41,36 +53,43 @@ export default function Starfield() {
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     rendererRef.current = renderer;
 
-    // === Stars Setup ===
+    // === 1. Uniform Star Distribution ===
     const starPositions = new Float32Array(NUM_STARS * 3);
-    for (let i = 0; i < NUM_STARS * 3; i++) {
-      starPositions[i] = Math.random() * (RANGE * 2) - RANGE;
+    for (let i = 0; i < NUM_STARS; i++) {
+      const i3 = i * 3;
+      starPositions[i3] = (Math.random() - 0.5) * RANGE * 2;     // X
+      starPositions[i3 + 1] = (Math.random() - 0.5) * RANGE * 2; // Y
+      starPositions[i3 + 2] = (Math.random() - 0.5) * RANGE * 2; // Z
     }
     starPositionsRef.current = starPositions;
 
+    // === 2. Points (Star) Setup ===
     const pointGeo = new THREE.BufferGeometry();
-    pointGeo.setAttribute('position', new THREE.BufferAttribute(starPositions.slice(), 3));
+    pointGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
 
-    const sprite = new THREE.TextureLoader().load(
-      'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/sprites/circle.png'
-    );
+    const starTexture = createStarTexture();
 
     const stars = new THREE.Points(
       pointGeo,
       new THREE.PointsMaterial({
-        color: 0xaaaaaa,
-        size: 0.8,
-        map: sprite,
+        color: 0xffffff,
+        size: 1.2,
+        map: starTexture,
         transparent: true,
+        opacity: 0.9,
         depthTest: false,
+        blending: THREE.AdditiveBlending,
       })
     );
+    // FIX 1: Disable frustum culling so stars never vanish when moving!
+    stars.frustumCulled = false;
     scene.add(stars);
     starsRef.current = stars;
 
-    // === Lines Setup ===
+    // === 3. Line (Hyperspace Streak) Setup ===
     const linePositions = new Float32Array(NUM_STARS * 6);
     const lineGeo = new THREE.BufferGeometry();
     lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
@@ -78,56 +97,59 @@ export default function Starfield() {
     const starLines = new THREE.LineSegments(
       lineGeo,
       new THREE.LineBasicMaterial({
-        color: 0xaaaaaa,
+        color: 0xd0e0ff,
         transparent: true,
         opacity: 0.85,
+        blending: THREE.AdditiveBlending,
       })
     );
+    // FIX 2: Disable frustum culling for warp lines
+    starLines.frustumCulled = false;
     starLines.visible = false;
     scene.add(starLines);
     starLinesRef.current = starLines;
 
-    let lastTime = Date.now();
+    let lastTime = performance.now();
 
-    function animate() {
-      const now = Date.now();
-      const delta = (now - lastTime) / 16; // normalize roughly to 60fps
+    function animate(now: number) {
+      // Delta time normalized to 60fps
+      const delta = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
 
-      const currentSpeed = currentSpeedRef.current;
-      let targetSpeed = targetSpeedRef.current;
+      // Smooth momentum decay
+      scrollVelocityRef.current *= 0.91;
+      if (scrollVelocityRef.current < 0.001) scrollVelocityRef.current = 0;
 
-      // Smooth speed interpolation
-      currentSpeedRef.current += (targetSpeed - currentSpeed) * 0.12;
+      const targetSpeed = Math.min(BASE_SPEED + scrollVelocityRef.current, MAX_SPEED);
 
-      // Natural decay
-      targetSpeedRef.current += (BASE_SPEED - targetSpeed) * 0.04;
-
+      // Smooth framerate-independent speed lerp
+      currentSpeedRef.current += (targetSpeed - currentSpeedRef.current) * Math.min(delta * 12, 1);
       const speed = currentSpeedRef.current;
 
-      // === Hyperspace Timer Logic ===
-      const isInHyperspace = now < hyperspaceEndTimeRef.current || speed > LINE_THRESHOLD;
-
-      if (speed > LINE_THRESHOLD && hyperspaceEndTimeRef.current < now) {
-        hyperspaceEndTimeRef.current = now + MIN_HYPERSPACE_TIME;
-      }
-
-      // Move stars
       const positions = starPositionsRef.current;
+
+      // Move stars & re-randomize wrapped stars for infinite density
       for (let i = 0; i < NUM_STARS; i++) {
         const i3 = i * 3;
-        positions[i3 + 1] -= speed * delta;
-        if (positions[i3 + 1] < -RANGE) positions[i3 + 1] = RANGE;
+        positions[i3 + 1] -= speed * 60 * delta;
+
+        // Wrap star back to top when it falls past bottom
+        if (positions[i3 + 1] < -RANGE) {
+          positions[i3 + 1] = RANGE;
+          // Re-randomize X and Z slightly so star field always stays dynamic
+          positions[i3] = (Math.random() - 0.5) * RANGE * 2;
+          positions[i3 + 2] = (Math.random() - 0.5) * RANGE * 2;
+        }
       }
 
-      const showLines = isInHyperspace;
+      const isStreaking = speed > LINE_THRESHOLD;
 
-      if (starsRef.current) starsRef.current.visible = !showLines;
-      if (starLinesRef.current) starLinesRef.current.visible = showLines;
+      if (starsRef.current) starsRef.current.visible = !isStreaking;
+      if (starLinesRef.current) starLinesRef.current.visible = isStreaking;
 
-      if (showLines) {
-        const streakLength = Math.min(speed * STRETCH_FACTOR, 95);
-        const linePos = starLinesRef.current!.geometry.attributes.position.array as Float32Array;
+      if (isStreaking && starLinesRef.current) {
+        const streakLength = Math.min((speed - BASE_SPEED) * STRETCH_FACTOR + 4, 110);
+        const linePos = starLinesRef.current.geometry.attributes.position.array as Float32Array;
 
         for (let i = 0; i < NUM_STARS; i++) {
           const i3 = i * 3;
@@ -143,10 +165,10 @@ export default function Starfield() {
           linePos[i6 + 4] = y - streakLength;
           linePos[i6 + 5] = z;
         }
-        starLinesRef.current!.geometry.attributes.position.needsUpdate = true;
-      } else {
-        const pointGeo = starsRef.current!.geometry;
-        pointGeo.attributes.position.array.set(positions);
+        starLinesRef.current.geometry.attributes.position.needsUpdate = true;
+      } else if (starsRef.current) {
+        const pointGeo = starsRef.current.geometry;
+        (pointGeo.attributes.position.array as Float32Array).set(positions);
         pointGeo.attributes.position.needsUpdate = true;
       }
 
@@ -154,20 +176,18 @@ export default function Starfield() {
       frameRef.current = requestAnimationFrame(animate);
     }
 
-    animate();
+    frameRef.current = requestAnimationFrame(animate);
 
-    // === Scroll Handler ===
+    // === Scroll Handler with Smooth Momentum ===
     const onScroll = () => {
-      const newScrollY = window.scrollY;
-      const scrollDelta = newScrollY - lastScrollYRef.current;
+      const currentScrollY = window.scrollY;
+      const scrollDelta = Math.abs(currentScrollY - lastScrollYRef.current);
 
-      if (scrollDelta > 12) {
-        targetSpeedRef.current = Math.min(BASE_SPEED + scrollDelta * 0.22, MAX_SPEED);
-      } else if (scrollDelta < -5) {
-        targetSpeedRef.current = BASE_SPEED;
+      if (scrollDelta > 0) {
+        scrollVelocityRef.current += scrollDelta * 0.04;
       }
 
-      lastScrollYRef.current = newScrollY;
+      lastScrollYRef.current = currentScrollY;
     };
 
     const onResize = () => {
@@ -185,6 +205,7 @@ export default function Starfield() {
       cancelAnimationFrame(frameRef.current);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
+      starTexture.dispose();
       renderer.dispose();
     };
   }, []);
