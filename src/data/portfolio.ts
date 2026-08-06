@@ -26,6 +26,8 @@ export interface Project {
   cardClass: CardClass;
   ctaUrl?: string; // Added: Optional link URL
   ctaText?: string; // Added: Optional button label
+  thumbWidth?: number; // Added: Optional thumbnail width
+  thumbHeight?: number; // Added: Optional thumbnail height
 }
 
 export const projects: Project[] = [
@@ -40,6 +42,8 @@ export const projects: Project[] = [
     cardClass: "card card-featured",
     ctaUrl: "https://huement.com/blog", // Button will show for this one
     ctaText: "Read Blog",
+    thumbWidth: 850,
+    thumbHeight: 400,
   },
   {
     id: "luma",
@@ -66,6 +70,8 @@ export const projects: Project[] = [
     cardClass: "card card-highlight",
     ctaUrl: "https://youtube.com/@barebonescode",
     ctaText: "Visit Channel",
+    thumbWidth: 850,
+    thumbHeight: 400,
   },
   {
     id: "shopify",
@@ -91,6 +97,19 @@ export const projects: Project[] = [
     cardClass: "card",
     ctaUrl: "https://trendforge.huement.com",
     ctaText: "Goto TF Website",
+    thumbWidth: 850,
+    thumbHeight: 400,
+  },
+  {
+    id: "cosmic",
+    title: "Cosmic Wave",
+    description: "An dynamic SVG generation library for creating cosmic waveforms and visualizations. It uses advanced algorithms to generate unique and mesmerizing patterns based on user input or predefined parameters.",
+    imageKey: "cosmic.png",
+    tags: ["SVG", "Javascript", "UI/UX", "Visualization"],
+    gridClass: "masonry-item--w4",
+    cardClass: "card",
+    thumbWidth: 800,
+    thumbHeight: 600,
   },
   {
     id: "flightplan",
@@ -110,6 +129,8 @@ export const projects: Project[] = [
     tags: ["PostGIS", "GeoJSON", "PHP", "SQL"],
     gridClass: "masonry-item--w4",
     cardClass: "card card-laanc",
+    thumbWidth: 700,
+    thumbHeight: 400,
   },
   {
     id: "sites",

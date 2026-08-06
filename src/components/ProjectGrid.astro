@@ -3,12 +3,14 @@ import { Image, getImage } from 'astro:assets'
 import { projects } from '../data/portfolio'
 
 import blogImg from '../assets/imgs/blog.png'
+import cosmicImg from '../assets/imgs/cosmic.png'
 import lumaImg from '../assets/imgs/luma.png'
 import lumaGif from '../assets/imgs/luma.gif'
 import youtubeImg from '../assets/imgs/youtube.png'
 import flightplanImg from '../assets/imgs/flightplan.png'
 import mapTextureImg from '../assets/imgs/map_texture.png'
 import laancImg from '../assets/imgs/laanc.png'
+import laancSqImg from '../assets/imgs/laanc-sq.png'
 import sitesImg from '../assets/imgs/sites.png'
 import imageImg from '../assets/imgs/image.png'
 import printedImg from '../assets/imgs/printed.png'
@@ -21,6 +23,7 @@ import trendforgeImg from '../assets/imgs/trendforge.png'
 
 const projectImages: Record<string, typeof blogImg> = {
   'blog.png': blogImg,
+  'cosmic.png': cosmicImg,
   'shopify.png': shopifyImg,
   'shopify-2.png': shopifyImg2,
   'youtube.png': youtubeImg,
@@ -29,6 +32,7 @@ const projectImages: Record<string, typeof blogImg> = {
   'flightplan.png': flightplanImg,
   'map_texture.png': mapTextureImg,
   'laanc.png': laancImg,
+  'laanc-sq.png': laancSqImg,
   'trendforge.png': trendforgeImg,
   'sites.png': sitesImg,
   'image.png': imageImg,
@@ -38,7 +42,7 @@ const projectImages: Record<string, typeof blogImg> = {
   'freshlime3.png': freshlime3Img
 }
 
-const THUMB_WIDTH = 480
+const THUMB_WIDTH = 750
 const THUMB_HEIGHT = 320
 const LIGHTBOX_WIDTH = 1200
 const LIGHTBOX_HEIGHT = 800
@@ -49,18 +53,26 @@ const projectData = await Promise.all(
     const thumbImg = projectImages[proj.imageKey]
     if (!thumbImg) return null
 
+    // 1. Set max bounding box constraints
+    const maxW = proj.thumbWidth ?? THUMB_WIDTH
+    const maxH = proj.thumbHeight ?? THUMB_HEIGHT
+
+    // 2. Calculate scale factor to fit within max bounds
+    // (Optional: add `, 1` to Math.min if you don't want small images upscaled)
+    const scale = Math.min(maxW / thumbImg.width, maxH / thumbImg.height)
+
+    // 3. Derive proportional target width and height
+    const width = Math.round(thumbImg.width * scale)
+    const height = Math.round(thumbImg.height * scale)
+
     let fullSrc = ''
 
-    // Check if this project has a specific custom lightbox image key
     if (proj.lightboxImageKey && projectImages[proj.lightboxImageKey]) {
       const lightboxImg = projectImages[proj.lightboxImageKey]
 
       if (proj.lightboxImageKey.endsWith('.gif')) {
-        // Direct ESM imports of images return an object containing a .src string.
-        // Bypassing getImage() ensures the GIF retains its animation frames.
         fullSrc = lightboxImg.src
       } else {
-        // If it's a custom lightbox image but NOT a gif, optimize it normally
         const full = await getImage({
           src: lightboxImg,
           width: LIGHTBOX_WIDTH,
@@ -70,7 +82,6 @@ const projectData = await Promise.all(
         fullSrc = full.src
       }
     } else {
-      // Fallback: If no lightboxImageKey is specified, use the optimized default thumbnail key
       const full = await getImage({
         src: thumbImg,
         width: LIGHTBOX_WIDTH,
@@ -80,7 +91,7 @@ const projectData = await Promise.all(
       fullSrc = full.src
     }
 
-    return { ...proj, fullSrc }
+    return { ...proj, fullSrc, width, height }
   })
 )
 
@@ -94,13 +105,12 @@ const validProjects = projectData.filter((p): p is NonNullable<typeof p> => p !=
     class='card-box center-box mb-5'
     style='background: rgba(0,0,0,0.6); backdrop-filter: blur(5px)'>
     <h2 class='display-4 cool-title'>
-      <i class='bx bxs-star me-2'></i> Recent Projects
+      <i class='bx bxs-star me-2'></i> Shipped Projects
     </h2>
     <p class='text-muted mt-2 py-10'>
-      Looking to learn more about me? Well, below is a 'lightbox' based masonry list that features my "<strong
-        >Greatest Hits</strong
-      >". Click each image to see a larger version, or the available Call to Action buttons to learn more about each
-      project.
+      Looking to learn more about my work history? Below is a list that features my "<strong>Professional Hits</strong
+      >", things that I've shipped over the course of my career. Some of them are over a decade old. Click each image to
+      see a larger version, or the available Call to Action buttons to learn more about each project.
     </p>
   </div>
 
