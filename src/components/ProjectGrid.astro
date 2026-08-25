@@ -4,9 +4,12 @@ import { projects } from '../data/portfolio'
 
 import blogImg from '../assets/imgs/blog.png'
 import cosmicImg from '../assets/imgs/cosmic.png'
+import cosmicSqImg from '../assets/imgs/cosmic-sq.png'
 import lumaImg from '../assets/imgs/luma.png'
 import lumaGif from '../assets/imgs/luma.gif'
-import youtubeImg from '../assets/imgs/youtube.png'
+import bareGif from '../assets/imgs/bare-thumb.gif'
+import bare600Gif from '../assets/imgs/bare-600.gif'
+// import youtubeImg from '../assets/imgs/youtube.png'
 import flightplanImg from '../assets/imgs/flightplan.png'
 import mapTextureImg from '../assets/imgs/map_texture.png'
 import laancImg from '../assets/imgs/laanc.png'
@@ -17,6 +20,8 @@ import printedImg from '../assets/imgs/printed.png'
 import freshlime1Img from '../assets/imgs/freshlime1.png'
 import resultsImg from '../assets/imgs/results.png'
 import freshlime3Img from '../assets/imgs/freshlime3.png'
+import cookieImg from '../assets/imgs/cookie.png'
+import cookieGifImg from '../assets/imgs/cookie-sq2.gif'
 import shopifyImg from '../assets/imgs/shopify.png'
 import shopifyImg2 from '../assets/imgs/shopify-2.png'
 import trendforgeImg from '../assets/imgs/trendforge.png'
@@ -24,9 +29,13 @@ import trendforgeImg from '../assets/imgs/trendforge.png'
 const projectImages: Record<string, typeof blogImg> = {
   'blog.png': blogImg,
   'cosmic.png': cosmicImg,
+  'cosmic-sq.png': cosmicSqImg,
   'shopify.png': shopifyImg,
   'shopify-2.png': shopifyImg2,
-  'youtube.png': youtubeImg,
+  'cookie.png': cookieImg,
+  'cookie-sq2.gif': cookieGifImg,
+  'bare-thumb.gif': bareGif,
+  'bare-600.gif': bare600Gif,
   'luma.png': lumaImg,
   'luma.gif': lumaGif,
   'flightplan.png': flightplanImg,
@@ -131,10 +140,10 @@ const validProjects = projectData.filter((p): p is NonNullable<typeof p> => p !=
                 <Image
                   src={projectImages[proj.imageKey]}
                   alt={proj.title}
-                  width={THUMB_WIDTH}
-                  height={THUMB_HEIGHT}
+                  width={proj.width}
+                  height={proj.height}
                   format='webp'
-                  densities={[1.5, 2]}
+                  densities={[1, 2]}
                   class='rounded card-img-top'
                 />
               </a>

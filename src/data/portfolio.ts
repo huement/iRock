@@ -21,6 +21,7 @@ export interface Project {
   /** Filename in src/assets/imgs/ for Astro Image optimization */
   imageKey: string;
   lightboxImageKey?: string;
+  lightboxDetails?: string;
   tags: string[];
   gridClass: GridClass;
   cardClass: CardClass;
@@ -60,31 +61,35 @@ export const projects: Project[] = [
     cardClass: "card",
   },
   {
-    id: "youtube",
-    title: "Barebones Code",
+    id: "cookie",
+    title: "Cookie Sleuth Browser Extension",
     description:
-      "My YouTube channel about tech—videos with heavy animation and voiceovers. I handle all editing and animations.",
-    imageKey: "youtube.png",
-    tags: ["YouTube", "Video", "Animation", "Voiceover"],
-    gridClass: "masonry-item--w6",
-    cardClass: "card card-highlight",
-    ctaUrl: "https://youtube.com/@barebonescode",
-    ctaText: "Visit Channel",
-    thumbWidth: 850,
+      "Affiliate Marketing Fraud detection",
+    lightboxDetails: "Cookie Sleuth works by separating Affiliate Identification from Unsolicited Attribution Suspicion, introducing Lempel-Ziv (LZ) Navigation Novelty, tracking Early Timing (<500ms), suppressing Programmatic Ad-Tech Cookie Syncs, and applying a Normalized Multi-Signal Scoring Engine.",
+    imageKey: "cookie-sq2.gif",
+    lightboxImageKey: "cookie.png",
+    tags: ["React.js", "Marketing"],
+    gridClass: "masonry-item--w4",
+    cardClass: "card",
+    ctaUrl: "https://github.com/huement/cookie_sleuth", // Button will show for this one
+    ctaText: "Goto Repository",
+    thumbWidth: 400,
     thumbHeight: 400,
   },
   {
-    id: "shopify",
-    title: "NextJS Shopify Storefront React App",
+    id: "youtube",
+    title: "Barebones Code",
     description:
-      "Pull in Shopify API Storefront data and display it with React. Uses Next.js for server side component and rendering functionality.",
-    imageKey: "shopify.png",
-    lightboxImageKey: "shopify-2.png",
-    tags: ["React.js", "NextJS", "Shopify", "Ecommerce"],
-    gridClass: "masonry-item--w6",
-    cardClass: "card",
-    ctaUrl: "https://github.com/huement/shopify-react-demo", // Button will show for this one
-    ctaText: "Goto Repository",
+      "My YouTube channel, powered by my animation skills and a good bit of AI. Each video focuses on a tech or coding topic, such as React features, AI IDE reviews, software deep dives, image / video / audio generation, or anything else going on in the tech space.",
+    imageKey: "bare-thumb.gif",
+    lightboxImageKey: "bare-600.gif",
+    tags: ["YouTube", "Video", "Animation", "Voiceover"],
+    gridClass: "masonry-item--w4-double",
+    cardClass: "card card-highlight",
+    ctaUrl: "https://youtube.com/@barebonescode",
+    ctaText: "Visit Channel",
+    thumbWidth: 600,
+    thumbHeight: 340,
   },
   {
     id: "trend",
@@ -104,22 +109,26 @@ export const projects: Project[] = [
     id: "cosmic",
     title: "Cosmic Wave",
     description: "An dynamic SVG generation library for creating cosmic waveforms and visualizations. It uses advanced algorithms to generate unique and mesmerizing patterns based on user input or predefined parameters.",
-    imageKey: "cosmic.png",
+    imageKey: "cosmic-sq.png",
+    lightboxImageKey: "cosmic.png",
     tags: ["SVG", "Javascript", "UI/UX", "Visualization"],
     gridClass: "masonry-item--w4",
     cardClass: "card",
-    thumbWidth: 800,
-    thumbHeight: 600,
+    thumbWidth: 400,
+    thumbHeight: 400,
   },
+
   {
     id: "flightplan",
     title: "FlightPlan App",
     description:
-      "Building & flying drone flightplans via hybrid Android application.",
+      "Project I worked on from the planning stage to the client hand-off. Involved building & then flying drones via flightplans users generated on the Web and Android versions of the application.",
     imageKey: "flightplan.png",
     tags: ["Vue.js", "TypeScript", "GraphQL", "Node.js", "Android"],
-    gridClass: "masonry-item--w4",
+    gridClass: "masonry-item--w4-double",
     cardClass: "card",
+    thumbWidth: 700,
+    thumbHeight: 400,
   },
   {
     id: "laanc",
@@ -129,8 +138,19 @@ export const projects: Project[] = [
     tags: ["PostGIS", "GeoJSON", "PHP", "SQL"],
     gridClass: "masonry-item--w4",
     cardClass: "card card-laanc",
-    thumbWidth: 700,
-    thumbHeight: 400,
+  },
+  {
+    id: "shopify",
+    title: "NextJS Shopify Storefront React App",
+    description:
+      "Pull in Shopify API Storefront data and display it with React. Uses Next.js for server side component and rendering functionality.",
+    imageKey: "shopify.png",
+    lightboxImageKey: "shopify-2.png",
+    tags: ["React.js", "NextJS", "Shopify", "Ecommerce"],
+    gridClass: "masonry-item--w6",
+    cardClass: "card",
+    ctaUrl: "https://github.com/huement/shopify-react-demo", // Button will show for this one
+    ctaText: "Goto Repository",
   },
   {
     id: "sites",
@@ -138,8 +158,10 @@ export const projects: Project[] = [
     description: "Asset and site management interface.",
     imageKey: "sites.png",
     tags: ["Vue.js", "TypeScript", "GraphQL", "Node.js"],
-    gridClass: "masonry-item--w4",
+    gridClass: "masonry-item--w6",
     cardClass: "card",
+    thumbWidth: 700,
+    thumbHeight: 400,
   },
   {
     id: "image",
