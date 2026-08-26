@@ -6,7 +6,8 @@ import Hero from '../components/Hero'
 import FractalCanvas from '../components/FractalCanvas'
 import ProjectGrid from '../components/ProjectGrid.astro'
 import ProjectGridBehavior from '../components/ProjectGridBehavior'
-import LightboxBehavior from '../components/LightboxBehavior'
+// import LightboxBehavior from '../components/LightboxBehavior'
+import LightboxDrawer from '../components/LightboxDrawer'
 import Timeline from '../components/Timeline'
 import HobbiesCarousel from '../components/HobbiesCarousel.astro'
 import HobbiesBehavior from '../components/HobbiesBehavior'
@@ -51,7 +52,8 @@ const websiteSchema = {
   description='Full Stack RockStar Web Developer. Expert with TypeScript, PHP & Python. 11 years of experience building web applications, and over 5 years building Java based Android Applications. I focus on UI/UX as well as AI automation.'>
   <Starfield client:only='react' />
   <FloatingEdgeIcons client:only='react' />
-  <LightboxBehavior client:load />
+  <!-- <LightboxBehavior client:load /> -->
+  <LightboxDrawer client:load />
 
   <Hero client:only='react' />
 

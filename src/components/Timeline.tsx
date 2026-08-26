@@ -6,6 +6,7 @@ import 'prismjs/components/prism-php';
 import 'prismjs/components/prism-sql';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-markdown';
+import 'prismjs/components/prism-typescript';
 import { timeline } from '../data/portfolio';
 import NoiseBackground from './NoiseBackground';
 

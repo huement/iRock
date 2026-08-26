@@ -1,5 +1,7 @@
 ---
 import { Image, getImage } from 'astro:assets'
+import { marked } from 'marked'
+
 import { projects } from '../data/portfolio'
 
 import blogImg from '../assets/imgs/blog.png'
@@ -76,6 +78,10 @@ const projectData = await Promise.all(
 
     let fullSrc = ''
 
+    // Parse markdown string into HTML
+    const markdownContent = proj.lightboxDetails || proj.description
+    const detailsHtml = await marked.parse(markdownContent)
+
     if (proj.lightboxImageKey && projectImages[proj.lightboxImageKey]) {
       const lightboxImg = projectImages[proj.lightboxImageKey]
 
@@ -100,7 +106,7 @@ const projectData = await Promise.all(
       fullSrc = full.src
     }
 
-    return { ...proj, fullSrc, width, height }
+    return { ...proj, fullSrc, width, height, detailsHtml }
   })
 )
 
@@ -127,16 +133,19 @@ const validProjects = projectData.filter((p): p is NonNullable<typeof p> => p !=
     {
       validProjects.map((proj) => {
         const ctaHtml = proj.ctaUrl
-          ? `<br/><a href="${proj.ctaUrl}" target="_blank" class="glass-cta-btn mt-3 d-inline-block">${proj.ctaText || 'Visit Project'} <i class='bx bx-right-arrow-alt'></i></a>`
+          ? `<a href="${proj.ctaUrl}" target="_blank" class="glass-cta-btn mt-3 d-inline-block">${proj.ctaText || 'Visit Project'} <i class='bx bx-right-arrow-alt'></i></a>`
           : ''
 
         return (
           <div class={`masonry-item ${proj.gridClass}`}>
             <div class={`${proj.cardClass} h-100`}>
               <a
-                class='lightbox-toggle'
+                class='lightbox-toggle cursor-pointer'
                 href={proj.fullSrc}
-                data-caption={`${proj.description}`}>
+                data-title={proj.title}
+                data-details={proj.detailsHtml}
+                data-cta-url={proj.ctaUrl || ''}
+                data-cta-text={proj.ctaText || ''}>
                 <Image
                   src={projectImages[proj.imageKey]}
                   alt={proj.title}
