@@ -40,55 +40,58 @@ export default function Timeline() {
 
   return (
     <section
-      id="timeline"
       className="content-block wave-block-top"
       style={{
         position: "relative",
         overflow: "hidden",
       }} /* Ensures background stays contained */
     >
-      {/* 1. noise canvas */}
-      <NoiseBackground />
+      <div id="timeline">
+        {/* 1. noise canvas */}
+        <NoiseBackground />
 
-      {/* 2. content layered above the background using relative z-index */}
-      <div className="timeline-hero-wrap">
-        {/* Giant Artsy Text Bleeding Off Screen */}
-        <div className="giant-bleed-text" aria-hidden="true">
-          <span>MY</span>
-          <span className="stroke-text">HISTORY</span>
+        {/* 2. content layered above the background using relative z-index */}
+        <div className="timeline-hero-wrap">
+          {/* Giant Artsy Text Bleeding Off Screen */}
+          <div className="giant-bleed-text" aria-hidden="true">
+            <span>MY</span>
+            <span className="stroke-text">HISTORY</span>
+          </div>
+
+          {/* Floating Detail Card Overlapping the Typography */}
+          <div className="floating-detail-box">
+            <p className="description-text">
+              <strong>Employment</strong> and <strong>education</strong> history
+              expressed as pseudo-code using the primary stack from that era.
+            </p>
+          </div>
         </div>
 
-        {/* Floating Detail Card Overlapping the Typography */}
-        <div className="floating-detail-box">
-          <p className="description-text">
-            <strong>Employment</strong> and <strong>education</strong> history
-            expressed as pseudo-code using the primary stack from that era.
-          </p>
-        </div>
-      </div>
-
-      <div
-        className="timeline-container"
-        ref={containerRef}
-        suppressHydrationWarning
-        style={{ position: "relative", zIndex: 1 }}
-      >
-        <div className="timeline-wrapper">
-          {timeline.map((item) => (
-            <div key={item.filename} className="code-card">
-              <div className="code-header">
-                <div className="dot dot-r"></div>
-                <div className="dot dot-y"></div>
-                <div className="dot dot-g"></div>
-                <span className="text-secondary ms-2 small">
-                  {item.filename}
-                </span>
+        <div
+          className="timeline-container"
+          ref={containerRef}
+          suppressHydrationWarning
+          style={{ position: "relative", zIndex: 1 }}
+        >
+          <div className="timeline-wrapper">
+            {timeline.map((item) => (
+              <div key={item.filename} className="code-card">
+                <div className="code-header">
+                  <div className="dot dot-r"></div>
+                  <div className="dot dot-y"></div>
+                  <div className="dot dot-g"></div>
+                  <span className="text-secondary ms-2 small">
+                    {item.filename}
+                  </span>
+                </div>
+                <pre suppressHydrationWarning>
+                  <code className={`language-${item.language}`}>
+                    {item.code}
+                  </code>
+                </pre>
               </div>
-              <pre suppressHydrationWarning>
-                <code className={`language-${item.language}`}>{item.code}</code>
-              </pre>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
