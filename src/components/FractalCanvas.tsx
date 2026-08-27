@@ -1,64 +1,71 @@
-import { useEffect, useRef } from 'react';
-import p5 from 'p5';
-
-const FRACTAL_COOLDOWN_MS = 5000;
+import { useEffect, useRef } from "react";
+import p5 from "p5";
 
 function correctRotation(deg: number): number {
-  if (deg > 360) return deg - 360;
-  if (deg < 0) return deg + 360;
+  if (deg > 360) return deg % 360;
+  if (deg < 0) return (deg % 360) + 360;
   return deg;
 }
 
 export default function FractalCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
   const p5InstanceRef = useRef<p5 | null>(null);
-  const lastPastHalfwayRef = useRef<boolean | null>(null);
-  const lastTriggerRef = useRef(0);
+  const lastStepRef = useRef<number | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const sketch = (p: p5) => {
-      let hue: number;
       let bgHue: p5.Vector;
       let circleHue: p5.Vector;
-      let initialSize: number;
 
-      function getCircleHue() {
-        if (bgHue) {
-          circleHue = p.createVector(
-            correctRotation(bgHue.x + p.random(100, 120)),
-            70,
-            80
-          );
-        }
+      function updateColorVectors(h: number) {
+        const normHue = correctRotation(h);
+        bgHue = p.createVector(normHue, 50, 10);
+        circleHue = p.createVector(correctRotation(normHue + 110), 75, 85);
       }
 
       function fractal(x: number, y: number, d: number, i: number) {
-        if (!circleHue || typeof circleHue.x === 'undefined') return;
+        if (!circleHue || typeof circleHue.x === "undefined") return;
+
         p.fill(
-          correctRotation(circleHue.x + p.random(-20, 20)),
-          circleHue.y,
-          circleHue.z + p.random(-20, 20)
+          correctRotation(circleHue.x + p.random(-25, 25)),
+          circleHue.y + p.random(-15, 15),
+          circleHue.z + p.random(-15, 15),
         );
         p.noStroke();
         p.ellipse(x, y, d, d);
-        if (d > 4) {
+
+        // Increased cutoff threshold from d > 3 to d > 14 to draw ~80% fewer circles
+        if (d > 14) {
           const mix = 100;
-          fractal(x + d + p.random(-2 * mix, mix) / i, y + p.random(-mix, mix) / i, d / i, i);
-          fractal(x - d + p.random(-mix, mix) / i, y + p.random(-mix, mix) / i, d / i, i);
+          const xSpread = p.random(-1.3 * mix, 1.3 * mix) / i;
+          const ySpread = p.random(-1.3 * mix, 1.3 * mix) / i;
+
+          fractal(x + d * 0.6 + xSpread, y + ySpread, d / i, i);
+          fractal(x - d * 0.6 + xSpread, y + ySpread, d / i, i);
         }
       }
 
-      function draw() {
+      function drawCanvas() {
         if (!bgHue || !circleHue) return;
         p.clear();
         p.background(bgHue.x, bgHue.y, bgHue.z);
-        const base = initialSize * 0.85;
-        fractal(p.width / 2, p.height * 0.22, p.random(base, initialSize), 1.5);
-        fractal(p.width / 2, p.height * 0.5, p.random(base, initialSize), 1.5);
-        fractal(p.width / 2, p.height * 0.78, p.random(base, initialSize), 1.5);
+
+        const baseSize = Math.max(p.width, p.height) * 0.32;
+
+        // 3 Staggered origin points for cleaner distribution
+        const origins = [
+          { x: p.width * 0.22, y: p.height * 0.28 },
+          { x: p.width * 0.78, y: p.height * 0.5 },
+          { x: p.width * 0.25, y: p.height * 0.78 },
+        ];
+
+        origins.forEach((point) => {
+          const size = p.random(baseSize * 0.85, baseSize * 1.1);
+          fractal(point.x, point.y, size, 1.55); // Slightly faster decay factor (1.55)
+        });
       }
 
       p.setup = () => {
@@ -66,59 +73,73 @@ export default function FractalCanvas() {
         const h = container.offsetHeight || window.innerHeight;
         p.createCanvas(w, h).parent(container);
         p.colorMode(p.HSB);
+        p.noLoop(); // Keep rendering off to preserve CPU/GPU
 
-        hue = p.random(0, 360);
-        bgHue = p.createVector(correctRotation(hue), 50, 10);
-        getCircleHue();
-        initialSize = Math.max(p.width, p.height) / 3;
+        updateColorVectors(0);
+        drawCanvas();
 
-        p.noLoop();
-        draw();
-
-        const fractalUpdateHandler = () => {
-          hue = p.random(0, 360);
-          bgHue = p.createVector(correctRotation(hue), 50, 10);
-          getCircleHue();
+        const fractalUpdateHandler = (e: Event) => {
+          const customEv = e as CustomEvent<{ targetHue?: number }>;
+          const newHue = customEv.detail?.targetHue ?? p.random(0, 360);
+          updateColorVectors(newHue);
           p.redraw();
         };
-        window.addEventListener('fractalUpdateColors', fractalUpdateHandler);
-        (window as unknown as { __fractalRemoveUpdateListener?: () => void }).__fractalRemoveUpdateListener = () =>
-          window.removeEventListener('fractalUpdateColors', fractalUpdateHandler);
+
+        window.addEventListener("fractalUpdateColors", fractalUpdateHandler);
+        (
+          window as unknown as { __fractalRemoveUpdateListener?: () => void }
+        ).__fractalRemoveUpdateListener = () =>
+          window.removeEventListener(
+            "fractalUpdateColors",
+            fractalUpdateHandler,
+          );
       };
 
-      p.draw = draw;
+      p.draw = drawCanvas;
 
       p.mousePressed = () => {
-        if (p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height) {
-          hue = p.random(0, 360);
-          bgHue = p.createVector(correctRotation(hue), 50, 10);
-          getCircleHue();
+        if (
+          p.mouseX > 0 &&
+          p.mouseX < p.width &&
+          p.mouseY > 0 &&
+          p.mouseY < p.height
+        ) {
+          updateColorVectors(p.random(0, 360));
           p.redraw();
         }
       };
-
     };
 
     const p5Instance = new p5(sketch, container);
     p5InstanceRef.current = p5Instance;
 
     const checkFractalScrollTrigger = () => {
-      const workSection = document.getElementById('work');
+      const workSection = document.getElementById("work");
       if (!workSection) return;
+
       const rect = workSection.getBoundingClientRect();
-      const sectionMidpoint = rect.top + rect.height / 2;
-      const viewportCenter = window.innerHeight / 2;
-      const pastHalfway = sectionMidpoint <= viewportCenter;
-      if (
-        lastPastHalfwayRef.current !== null &&
-        pastHalfway !== lastPastHalfwayRef.current
-      ) {
-        if (Date.now() - lastTriggerRef.current >= FRACTAL_COOLDOWN_MS) {
-          window.dispatchEvent(new CustomEvent('fractalUpdateColors'));
-          lastTriggerRef.current = Date.now();
-        }
+      const windowHeight = window.innerHeight;
+
+      if (rect.bottom < 0 || rect.top > windowHeight) return;
+
+      const totalRange = rect.height + windowHeight;
+      const progress = Math.max(
+        0,
+        Math.min(1, (windowHeight - rect.top) / totalRange),
+      );
+
+      // Reduced to 4 trigger steps across the scroll distance for less frequent updates
+      const STEPS = 4;
+      const currentStep = Math.floor(progress * STEPS);
+
+      if (lastStepRef.current !== currentStep) {
+        lastStepRef.current = currentStep;
+        const targetHue = (currentStep / STEPS) * 360;
+
+        window.dispatchEvent(
+          new CustomEvent("fractalUpdateColors", { detail: { targetHue } }),
+        );
       }
-      lastPastHalfwayRef.current = pastHalfway;
     };
 
     const onScroll = () => checkFractalScrollTrigger();
@@ -130,14 +151,16 @@ export default function FractalCanvas() {
       p5InstanceRef.current.redraw();
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
     checkFractalScrollTrigger();
 
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onResize);
-      (window as unknown as { __fractalRemoveUpdateListener?: () => void }).__fractalRemoveUpdateListener?.();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      (
+        window as unknown as { __fractalRemoveUpdateListener?: () => void }
+      ).__fractalRemoveUpdateListener?.();
       p5Instance.remove();
       p5InstanceRef.current = null;
     };

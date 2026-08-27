@@ -1,18 +1,18 @@
 ---
-import { Image, getImage } from 'astro:assets'
-import { hobbies } from '../data/portfolio'
+import { Image, getImage } from 'astro:assets';
+import { hobbies } from '../data/portfolio';
 
 // Import hobby images from src/assets so Astro can optimize (WebP, resize) at build time
-import gameartPreview from '../assets/imgs/gameart-preview.png'
-import godotImg from '../assets/imgs/godot.png'
-import godotGif from '../assets/imgs/shooter.gif'
-import vizGif from '../assets/imgs/vizualizer.gif'
-import hackintoshOc from '../assets/imgs/hackintosh-oc.png'
-import hackintoshImg from '../assets/imgs/hackintosh.png'
-import overworldPreview from '../assets/imgs/overworld-preview.png'
-import pacoImg from '../assets/imgs/paco.png'
-import videoGen from '../assets/imgs/video-gen.png'
-import theEnd from '../assets/imgs/the-end.png'
+import gameartPreview from '../assets/imgs/gameart-preview.png';
+import godotImg from '../assets/imgs/godot.png';
+import godotGif from '../assets/imgs/shooter.gif';
+import vizGif from '../assets/imgs/vizualizer.gif';
+import hackintoshOc from '../assets/imgs/hackintosh-oc.png';
+import hackintoshImg from '../assets/imgs/hackintosh.png';
+import overworldPreview from '../assets/imgs/overworld-preview.png';
+import pacoImg from '../assets/imgs/paco.png';
+import videoGen from '../assets/imgs/video-gen.png';
+import theEnd from '../assets/imgs/the-end.png';
 
 const hobbyImages: Record<string, ImageMetadata> = {
   'gameart-preview.png': gameartPreview,
@@ -24,39 +24,41 @@ const hobbyImages: Record<string, ImageMetadata> = {
   'overworld-preview.png': overworldPreview,
   'paco.png': pacoImg,
   'video-gen.png': videoGen,
-  'the-end.png': theEnd
-}
+  'the-end.png': theEnd,
+};
 
 // Carousel slide: larger to fill 12 cols; thumbnail: 120×120 with retina. Full-size for image lightbox.
-const SLIDE_WIDTH = 1100
-const SLIDE_HEIGHT = 520
-const THUMB_SIZE = 240
-const LIGHTBOX_WIDTH = 1200
-const LIGHTBOX_HEIGHT = 675
+const SLIDE_WIDTH = 1100;
+const SLIDE_HEIGHT = 520;
+const THUMB_SIZE = 240;
+const LIGHTBOX_WIDTH = 1200;
+const LIGHTBOX_HEIGHT = 675;
 
 const hobbyData = await Promise.all(
   hobbies.map(async (hobby) => {
-    const img = hobbyImages[hobby.imageKey]
-    if (!img) return { ...hobby, imageHref: null }
-    const full = await getImage({ src: img, width: LIGHTBOX_WIDTH, height: LIGHTBOX_HEIGHT, format: 'webp' })
-    return { ...hobby, imageHref: full.src }
+    const img = hobbyImages[hobby.imageKey];
+    if (!img) return { ...hobby, imageHref: null };
+    const full = await getImage({ src: img, width: LIGHTBOX_WIDTH, height: LIGHTBOX_HEIGHT, format: 'webp' });
+    return { ...hobby, imageHref: full.src };
   })
-)
+);
 ---
 
 <section
   id='hobbies'
   class='content-block wave-block'>
   <div class='container'>
-    <h2 class='display-4 mb-2 cool-title'>
-      <i class='bx bxs-chip me-2'></i>Hobby Projects
-    </h2>
-    <p class='text-muted mb-5'>
-      Open source, Godot, Arduino, Raspberry Pi, and HomeLab. Technology isnt just a job for me, its my passion, on or
-      off the clock I love to tinker, code, and build. Below are some of my personal hobby projects that I've worked on
-      over the years. Some of them are still in progress, some are just for fun, and some are just plain weird. Click
-      each image to see a larger version, or the available Call to Action buttons to learn more about each project.
-    </p>
+    <div class='giant-hobby-header'>
+      <!-- Glowing Icon Badge -->
+      <div class='giant-chip-wrap'>
+        <i class='bx bxs-chip giant-chip-icon'></i>
+      </div>
+
+      <!-- Giant Fluid Title -->
+      <h2 class='giant-hobby-title'>
+        HOBBY <span class='title-highlight'>PROJECTS</span>
+      </h2>
+    </div>
     <div class='row justify-content-center'>
       <div class='col-12'>
         <div
@@ -69,16 +71,16 @@ const hobbyData = await Promise.all(
             style='background: var(--card-bg); border: 1px solid #333;'>
             {
               hobbyData.map((hobby, index) => {
-                const img = hobbyImages[hobby.imageKey]
-                if (!img) return null
-                const isVideo = hobby.videoKey
-                const href = isVideo ? 'javascript:void(0)' : (hobby.imageHref ?? 'javascript:void(0)')
+                const img = hobbyImages[hobby.imageKey];
+                if (!img) return null;
+                const isVideo = hobby.videoKey;
+                const href = isVideo ? 'javascript:void(0)' : (hobby.imageHref ?? 'javascript:void(0)');
                 return (
                   <div class={`carousel-item ${index === 0 ? 'active' : ''}`}>
                     <div class='row g-0 hobby-slide-row'>
                       <div class='col-12 col-md-8 hobby-img-wrap position-relative'>
                         <a
-                          class='lightbox-toggle position-relative d-block'
+                          class='centerbox-toggle position-relative d-block'
                           href={href}
                           data-video-src={isVideo ? `${import.meta.env.BASE_URL}videos/${hobby.videoKey}` : undefined}
                           data-video-title={isVideo ? hobby.title : undefined}
@@ -164,7 +166,7 @@ const hobbyData = await Promise.all(
                       </div>
                     </div>
                   </div>
-                )
+                );
               })
             }
           </div>
@@ -196,8 +198,8 @@ const hobbyData = await Promise.all(
           id='hobbyThumbnails'>
           {
             hobbies.map((hobby, index) => {
-              const img = hobbyImages[hobby.imageKey]
-              if (!img) return null
+              const img = hobbyImages[hobby.imageKey];
+              if (!img) return null;
               return (
                 <button
                   type='button'
@@ -215,7 +217,7 @@ const hobbyData = await Promise.all(
                     style='object-fit: cover; border-radius: 6px; display: block;'
                   />
                 </button>
-              )
+              );
             })
           }
         </div>

@@ -1,7 +1,7 @@
 @use 'variables' as *;
 @use 'mixins' as *;
 
-@import url('https://fonts.googleapis.com/css2?family=Saira:wght@500..700&family=Jost:wght@300;400&family=Fira+Code:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Saira:wght@500..900&family=Jost:wght@300;400&family=Fira+Code:wght@400;500&display=swap');
 
 @property --icon-drift-x {
   syntax: '<length>';
@@ -82,7 +82,8 @@ body {
 }
 
 /* Add to page container or body */
-body::before, body::after {
+body::before,
+body::after {
   content: '';
   position: fixed;
   top: 0;
@@ -129,6 +130,14 @@ code,
 pre {
   font-family: $font-fira !important;
   font-size: 0.85rem !important;
+}
+
+.monospaced {
+  font-family: 'Fira Code', monospace;
+}
+
+.fs-sm {
+  font-size: 0.8rem;
 }
 
 // ---------------------------------------------------------------------------
@@ -197,9 +206,7 @@ pre {
   --icon-drift-y: 0px;
   --icon-scale: 1;
 
-  transform: translate(-50%, -50%)
-             translate(var(--icon-drift-x), var(--icon-drift-y))
-             scale(var(--icon-scale));
+  transform: translate(-50%, -50%) translate(var(--icon-drift-x), var(--icon-drift-y)) scale(var(--icon-scale));
 
   /* Your custom gradient mixin */
   @include gradient-text-animated($gradient-floating-icons, floating-icon-color, 7s, 400);
@@ -217,7 +224,7 @@ pre {
 /* 1. Scroll state: Smoother scale & glowing effect */
 .floating-edge-icons.is-scrolling .floating-icon {
   --icon-scale: 1.2 !important; /* Reduced from 1.45 for a cleaner feel */
-  opacity: 0.85;                /* Brighten up slightly when scrolling */
+  opacity: 0.85; /* Brighten up slightly when scrolling */
   filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
 }
 
@@ -237,7 +244,6 @@ pre {
 }
 
 .floating-edge-icons {
-
   pointer-events: none;
   z-index: 10;
 }
@@ -247,49 +253,58 @@ pre {
 // ---------------------------------------------------------------------------
 
 @keyframes floating-icon-color {
-
   0%,
   100% {
     background-position: 0% 50%;
   }
-50% {
-  background-position: 100% 50%;
-}
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes icon-drift {
-
   0%,
   100% {
     --icon-drift-x: 0px;
-      --icon-drift-y: 0px;
+    --icon-drift-y: 0px;
   }
 
   25% {
     --icon-drift-x: var(--drift, 40px);
-      --icon-drift-y: calc(var(--drift, 40px) * -0.6);
+    --icon-drift-y: calc(var(--drift, 40px) * -0.6);
   }
 
   50% {
     --icon-drift-x: calc(var(--drift, 40px) * -0.8);
-      --icon-drift-y: calc(var(--drift, 40px) * 0.7);
+    --icon-drift-y: calc(var(--drift, 40px) * 0.7);
   }
 
   75% {
     --icon-drift-x: calc(var(--drift, 40px) * 0.6);
-      --icon-drift-y: calc(var(--drift, 40px) * -0.5);
-    }
-    }
+    --icon-drift-y: calc(var(--drift, 40px) * -0.5);
+  }
+}
 
-    @keyframes icon-breathe {
+@keyframes icon-breathe {
+  0%,
+  100% {
+    --icon-scale: 1;
+  }
 
-      0%,
-      100% {
-        --icon-scale: 1;
-      }
+  50% {
+    --icon-scale: 1.12;
+  }
+}
 
-      50% {
-        --icon-scale: 1.12;
+@keyframes icon-pulse {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.43) rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
   }
 }
 
@@ -369,7 +384,10 @@ pre {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid transparent;
-  transition: padding 0.3s ease, box-shadow 0.3s ease, background 0.4s linear;
+  transition:
+    padding 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.4s linear;
   z-index: 900;
 
   // Pinned: scrolled past sentinel
@@ -415,7 +433,9 @@ pre {
   color: $text-muted;
   text-decoration: none;
   border-radius: $radius-tag;
-  transition: color 0.2s ease, background 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
 
   &:hover {
     color: $text-main;
@@ -491,14 +511,13 @@ pre {
 
 #contact.content-block {
   background: var(--medium-dark);
-    background: linear-gradient(180deg,
-        var(--medium-dark) 0px,
-        /* Starts at the very top */
-        var(--medium-dark) 10px,
-        /* Stays solid for the first 10px to pad the SVG */
-        rgba(31, 31, 31, 1) 100%
-        /* Smoothly transitions to dark at the bottom */
-      );
+  background: linear-gradient(
+    180deg,
+    var(--medium-dark) 0px,
+    /* Starts at the very top */ var(--medium-dark) 10px,
+    /* Stays solid for the first 10px to pad the SVG */ rgba(31, 31, 31, 1) 100%
+      /* Smoothly transitions to dark at the bottom */
+  );
 }
 
 .transparent-block {
@@ -507,8 +526,364 @@ pre {
 }
 
 // ---------------------------------------------------------------------------
+// Projects Title
+// ---------------------------------------------------------------------------
+
+/* Hero CTA Buttons */
+.hero-cta-primary,
+.hero-cta-secondary {
+  font-family: 'Jost', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.75rem 1.75rem;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none !important;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+// Primary Button (Gradient + Purple Glow)
+.hero-cta-primary {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+
+  &:hover {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 28px rgba(168, 85, 247, 0.55);
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+}
+
+// Secondary Button (Frosted Glass + Cyan Glow)
+.hero-cta-secondary {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+
+  i {
+    transition:
+      transform 0.3s ease,
+      color 0.3s ease;
+  }
+
+  &:hover {
+    color: #00d2ff !important; /* Prevents black-on-black hover collision */
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(0, 210, 255, 0.6);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 210, 255, 0.3);
+
+    i {
+      color: #00d2ff;
+      transform: translateY(-2px);
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+}
+
+// Full viewport width breakout container
+.shipped-hero-section {
+  position: relative;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding: 3rem 1.5rem 6rem 1.5rem;
+  overflow: hidden;
+}
+
+.hero-content-wrapper {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Giant Saira Typography Block
+.giant-text-block {
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  width: 100%;
+}
+
+.text-shipped,
+.text-projects {
+  font-family: 'Saira', sans-serif;
+  font-weight: 900;
+  font-variation-settings: 'wght' 900;
+  /* Fluid sizing so text stretches fully across screen widths */
+  font-size: clamp(3.8rem, 15.5vw, 15rem);
+  line-height: 0.81;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  white-space: nowrap;
+}
+
+// Colors matched to graphic
+.text-shipped {
+  background:
+    /* Layer 1: Horizontal pinstripe lines (2px line, 2px gap) */
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.8) 0px,
+      rgba(255, 255, 255, 0.1) 4px,
+      transparent 2px,
+      transparent 4px
+    ),
+    /* Layer 2: White to light-silver vertical gradient */ linear-gradient(180deg, #eeeeee 0%, #52525b 100%);
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-projects {
+  margin-top: -0.02em;
+  background:
+    /* Layer 1: Subtler horizontal pinstripes */
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.5) 0px,
+      rgba(255, 255, 255, 0.5) 2px,
+      transparent 2px,
+      transparent 4px
+    ),
+    /* Layer 2: Silver to slate-grey vertical gradient */ linear-gradient(180deg, #d4d4d8 0%, #52525b 100%);
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+// Floating Information Card Overlapping Text
+.floating-info-box {
+  position: absolute;
+  right: 1.5%;
+  bottom: 18%;
+  width: 100%;
+  border-radius: 0.5rem;
+  max-width: 620px;
+  background: rgba(10, 10, 13, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+
+  @media (max-width: 991px) {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    margin-top: 1.5rem;
+    max-width: 100%;
+  }
+
+  .icon-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin-top: -40px;
+    margin-bottom: -20px;
+
+    .bx {
+      font-size: 80px;
+      animation: icon-pulse 8s ease-in-out infinite;
+    }
+  }
+}
+
+.info-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  font-family: 'Jost', sans-serif;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+.col-text {
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0;
+  font-weight: 300;
+
+  strong {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  &.text-muted-custom {
+    font-color: rgba(200, 200, 200, 0.25);
+    line-height: 1.5;
+  }
+
+  &.fs-sm {
+    font-size: 0.8rem;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Timeline / career as code
 // ---------------------------------------------------------------------------
+
+.timeline-hero-wrap {
+  position: relative;
+  // Break out of parent constraints to span full viewport width
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding: 7rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ---------------------------------------------------------------------------
+// Full-Width Giant Bleed Typography
+// ---------------------------------------------------------------------------
+.giant-bleed-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-3deg);
+  font-family: 'Saira', sans-serif;
+  font-weight: 900;
+  // Massively scaled typography that intentionally clips on mobile/desktop
+  font-size: clamp(6.5rem, 22vw, 22rem);
+  line-height: 0.8;
+  white-space: nowrap;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  user-select: none;
+  pointer-events: none;
+  display: flex;
+  gap: 3rem;
+  z-index: 0;
+
+  span:first-child {
+    background: linear-gradient(180deg, rgba(55, 55, 55, 0.75) 0%, rgba(55, 55, 55, 0.03) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: rgba(255, 255, 255, 0.65);
+    -webkit-text-stroke: 1px rgba(99, 99, 99, 0.65);
+  }
+
+  .stroke-text {
+    color: rgba(255, 255, 255, 0.75);
+    -webkit-text-stroke: 1px rgba(99, 99, 99, 0.85);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Floating Overlapping Glass Card
+// ---------------------------------------------------------------------------
+.floating-detail-box {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto -100px;
+  background: rgba(12, 12, 16, 0.38);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.5rem;
+  padding: 0.5rem 0.75rem;
+  letter-spacing: -0.1px;
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(99, 102, 241, 0.15);
+
+  @media (max-width: 768px) {
+    padding: 1.75rem 1.25rem;
+  }
+
+  strong {
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #000;
+    font-weight: bold;
+  }
+}
+
+.code-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  color: #a855f7;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.title-text {
+  font-family: 'Saira', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.8rem, 4vw, 2.75rem);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+
+  .glowing-dot {
+    width: 12px;
+    height: 12px;
+    background-color: #6366f1;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #6366f1;
+    display: inline-block;
+  }
+}
+
+.description-text {
+  font-family: 'Jost', sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  font-weight: 400;
+}
+
 .timeline-container {
   overflow-x: auto;
   padding: 100px 0;
@@ -626,19 +1001,17 @@ pre {
       /* FIX: Allow height to scale dynamically up to 75% instead of fixed 30% */
       height: auto;
       max-height: 75%;
-      background: linear-gradient(
-        to top,
-        rgba(0, 0, 0, 0.7) 0%,
-        rgba(0, 0, 0, 0.8) 95%,
-        transparent 100%
-      );
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.8) 95%, transparent 100%);
       color: $text-main;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       padding: 1rem 1rem 2.25rem 1rem;
       cursor: pointer;
-      transition: height 0.3s ease, top 0.3s ease, overflow 0.3s ease;
+      transition:
+        height 0.3s ease,
+        top 0.3s ease,
+        overflow 0.3s ease;
 
       &::after {
         content: 'Tap to read more';
@@ -734,7 +1107,9 @@ pre {
   background: var(--card-bg);
   border: none;
   border-radius: $radius-card;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.4s ease;
 
   &:hover {
     transform: translateY(-6px);
@@ -789,21 +1164,19 @@ pre {
   margin: 0.2rem;
   font-size: 0.9rem;
   border: 1px solid $border-light;
-  transition: color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+  transition:
+    color 0.4s ease,
+    background 0.4s ease,
+    box-shadow 0.4s ease;
 
   &.active {
     position: relative;
     border-color: transparent;
     color: transparent;
-    background: linear-gradient(90deg,
-        #6366f1,
-        #a855f7,
-        #ec4899,
-        #14b8a6,
-        #0ea5e9,
-        #6366f1),
-      $card-bg;
-    background-size: 300% 100%, auto;
+    background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899, #14b8a6, #0ea5e9, #6366f1), $card-bg;
+    background-size:
+      300% 100%,
+      auto;
     background-clip: text, padding-box;
     -webkit-background-clip: text, padding-box;
     animation: software-tag-text 2.5s ease-in-out infinite;
@@ -814,13 +1187,7 @@ pre {
       inset: -2px;
       z-index: -1;
       border-radius: $radius-tag;
-      background: linear-gradient(90deg,
-          #6366f1,
-          #a855f7,
-          #ec4899,
-          #14b8a6,
-          #0ea5e9,
-          #6366f1);
+      background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899, #14b8a6, #0ea5e9, #6366f1);
       background-size: 300% 100%;
       animation: software-tag-border 2.5s ease-in-out infinite;
     }
@@ -828,7 +1195,6 @@ pre {
 }
 
 @keyframes software-tag-border {
-
   0%,
   100% {
     background-position: 0% 50%;
@@ -840,14 +1206,17 @@ pre {
 }
 
 @keyframes software-tag-text {
-
   0%,
   100% {
-    background-position: 0% 50%, 0 0;
+    background-position:
+      0% 50%,
+      0 0;
   }
 
   50% {
-    background-position: 100% 50%, 0 0;
+    background-position:
+      100% 50%,
+      0 0;
   }
 }
 
@@ -859,7 +1228,10 @@ pre {
   backdrop-filter: blur(6px) !important;
   -webkit-backdrop-filter: blur(6px) !important;
   border: none !important;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease, box-shadow 0.4s ease;
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.4s ease,
+    box-shadow 0.4s ease;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
 
   &:hover {
@@ -876,7 +1248,6 @@ pre {
 }
 
 @keyframes social-icon-wiggle {
-
   0%,
   100% {
     transform: scale(1.2) rotate(0deg);
@@ -910,12 +1281,102 @@ pre {
 }
 
 .active .icon-nav {
-  color: #FFF !important;
+  color: #fff !important;
   opacity: 1;
 }
 // ---------------------------------------------------------------------------
-// Hobbies carousel
+// Hobbies
 // ---------------------------------------------------------------------------
+.giant-hobby-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  margin-bottom: 3.5rem;
+  padding: 2rem 1rem;
+}
+
+// ---------------------------------------------------------------------------
+// Oversized Glowing Icon
+// ---------------------------------------------------------------------------
+.giant-chip-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+
+  // Soft Ambient Radial Glow Behind Icon
+  &::before {
+    content: '';
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, transparent 70%);
+    filter: blur(20px);
+    border-radius: 50%;
+    z-index: 0;
+  }
+}
+
+.giant-chip-icon {
+  position: relative;
+  z-index: 1;
+  /* Scales dynamically from 4.5rem (mobile) to 9rem (desktop) */
+  font-size: clamp(4.5rem, 12vw, 9rem);
+  line-height: 1;
+  display: block;
+
+  /* Animated Gradient Clip (Synchronized with cool-title) */
+  background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899, #14b8a6, #0ea5e9, #6366f1);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation:
+    text-flow 6s linear infinite,
+    chip-pulse 3s ease-in-out infinite;
+
+  filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.35));
+}
+
+// ---------------------------------------------------------------------------
+// Giant Fluid Title
+// ---------------------------------------------------------------------------
+.giant-hobby-title {
+  font-family: 'Saira', sans-serif;
+  font-weight: 900;
+  font-variation-settings: 'wght' 900;
+  /* Fluid typography: scales dynamically between 3.2rem and 7.5rem */
+  font-size: clamp(3.2rem, 9.5vw, 7.5rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  margin: 0;
+  color: #ffffff;
+
+  .title-highlight {
+    display: inline-block;
+    background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899, #14b8a6, #0ea5e9, #6366f1);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: text-flow 6s linear infinite;
+  }
+}
+
+// Subtle idle float effect for the icon
+@keyframes chip-pulse {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.04);
+  }
+}
+
 #hobbyCarousel {
   .carousel-item {
     min-height: $carousel-img-height;
@@ -1051,7 +1512,9 @@ pre {
       height: 2rem;
       opacity: 0.6;
       filter: invert(1) grayscale(100);
-      transition: opacity 0.25s ease, filter 0.25s ease;
+      transition:
+        opacity 0.25s ease,
+        filter 0.25s ease;
 
       &::before {
         content: '';
@@ -1100,7 +1563,10 @@ pre {
     background: transparent;
     cursor: pointer;
     opacity: 0.6;
-    transition: border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+    transition:
+      border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.35s ease;
     min-width: 44px;
     min-height: 44px;
 
@@ -1127,7 +1593,6 @@ pre {
     height: 90px;
   }
 }
-
 
 @media (max-width: 575px) {
   .hobby-thumbnails {

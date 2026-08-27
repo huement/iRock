@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 declare global {
   interface Window {
@@ -6,8 +6,8 @@ declare global {
   }
 }
 
-const VIDEO_MODAL_ID = 'videoLightboxModal';
-const VIDEO_PLAYER_ID = 'videoLightboxPlayer';
+const VIDEO_MODAL_ID = "videoLightboxModal";
+const VIDEO_PLAYER_ID = "videoLightboxPlayer";
 
 /**
  * Attaches lightbox behavior: image (bs5-lightbox) or video (Bootstrap modal).
@@ -18,48 +18,50 @@ const VIDEO_PLAYER_ID = 'videoLightboxPlayer';
 export default function LightboxBehavior() {
   useEffect(() => {
     const videoModalEl = document.getElementById(VIDEO_MODAL_ID);
-    const videoPlayerEl = document.getElementById(VIDEO_PLAYER_ID) as HTMLVideoElement | null;
+    const videoPlayerEl = document.getElementById(
+      VIDEO_PLAYER_ID,
+    ) as HTMLVideoElement | null;
 
     const handler = (e: Event) => {
-      const link = (e.target as HTMLElement)?.closest?.('.lightbox-toggle');
+      const link = (e.target as HTMLElement)?.closest?.(".centerbox-toggle");
       if (!link) return;
       e.preventDefault();
       e.stopPropagation();
 
-      const videoSrc = link.getAttribute('data-video-src');
-      const videoTitle = link.getAttribute('data-video-title');
+      const videoSrc = link.getAttribute("data-video-src");
+      const videoTitle = link.getAttribute("data-video-title");
 
       if (videoSrc && videoModalEl && videoPlayerEl) {
         videoPlayerEl.pause();
-        videoPlayerEl.removeAttribute('src');
+        videoPlayerEl.removeAttribute("src");
         videoPlayerEl.load();
         videoPlayerEl.src = videoSrc;
-        const labelEl = document.getElementById('videoLightboxModalLabel');
-        if (labelEl) labelEl.textContent = videoTitle ?? 'Video';
-        const trigger = document.getElementById('videoLightboxModalTrigger');
+        const labelEl = document.getElementById("videoLightboxModalLabel");
+        if (labelEl) labelEl.textContent = videoTitle ?? "Video";
+        const trigger = document.getElementById("videoLightboxModalTrigger");
         trigger?.click();
         return;
       }
 
-      if (typeof window.Lightbox !== 'undefined') {
+      if (typeof window.Lightbox !== "undefined") {
         window.Lightbox.initialize.call(link, e);
       }
     };
 
-    document.addEventListener('click', handler, true);
+    document.addEventListener("click", handler, true);
 
     const onModalHidden = () => {
       if (videoPlayerEl) {
         videoPlayerEl.pause();
-        videoPlayerEl.removeAttribute('src');
+        videoPlayerEl.removeAttribute("src");
         videoPlayerEl.load();
       }
     };
-    videoModalEl?.addEventListener('hidden.bs.modal', onModalHidden);
+    videoModalEl?.addEventListener("hidden.bs.modal", onModalHidden);
 
     return () => {
-      document.removeEventListener('click', handler, true);
-      videoModalEl?.removeEventListener('hidden.bs.modal', onModalHidden);
+      document.removeEventListener("click", handler, true);
+      videoModalEl?.removeEventListener("hidden.bs.modal", onModalHidden);
     };
   }, []);
 

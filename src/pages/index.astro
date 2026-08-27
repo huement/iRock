@@ -1,20 +1,20 @@
 ---
-import Layout from '../layouts/Layout.astro'
-import Starfield from '../components/Starfield'
-import FloatingEdgeIcons from '../components/FloatingEdgeIcons'
-import Hero from '../components/Hero'
-import FractalCanvas from '../components/FractalCanvas'
-import ProjectGrid from '../components/ProjectGrid.astro'
-import ProjectGridBehavior from '../components/ProjectGridBehavior'
-// import LightboxBehavior from '../components/LightboxBehavior'
-import LightboxDrawer from '../components/LightboxDrawer'
-import Timeline from '../components/Timeline'
-import HobbiesCarousel from '../components/HobbiesCarousel.astro'
-import HobbiesBehavior from '../components/HobbiesBehavior'
-import SectionNav from '../components/SectionNav'
-import Socials from '../components/Socials'
+import Layout from '../layouts/Layout.astro';
+import Starfield from '../components/Starfield';
+import FloatingEdgeIcons from '../components/FloatingEdgeIcons';
+import Hero from '../components/Hero';
+import FractalCanvas from '../components/FractalCanvas';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import ProjectGridBehavior from '../components/ProjectGridBehavior';
+import LightboxBehavior from '../components/LightboxBehavior';
+import LightboxDrawer from '../components/LightboxDrawer';
+import Timeline from '../components/Timeline';
+import HobbiesCarousel from '../components/HobbiesCarousel.astro';
+import HobbiesBehavior from '../components/HobbiesBehavior';
+import SectionNav from '../components/SectionNav';
+import Socials from '../components/Socials';
 
-const site = import.meta.env.SITE ?? 'https://huement.github.io/iRock/'
+const site = import.meta.env.SITE ?? 'https://huement.github.io/iRock/';
 const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
@@ -29,13 +29,13 @@ const personSchema = {
   'sameAs': [
     'https://github.com/johnny13',
     'https://www.linkedin.com/in/derekscott13/',
-    'https://discordapp.com/users/johnnyfortune_21837'
+    'https://discordapp.com/users/johnnyfortune_21837',
   ],
   'alumniOf': {
     '@type': 'CollegeOrUniversity',
-    'name': 'University of North Dakota'
-  }
-}
+    'name': 'University of North Dakota',
+  },
+};
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -43,8 +43,8 @@ const websiteSchema = {
   'url': site,
   'description':
     'Full Stack RockStar Web Developer. Expert with TypeScript, PHP & Python. 11 years of experience building web applications, and over 5 years building Java based Android Applications. I focus on UI/UX as well as AI automation.',
-  'author': { '@type': 'Person', 'name': 'Derek Scott', 'url': site }
-}
+  'author': { '@type': 'Person', 'name': 'Derek Scott', 'url': site },
+};
 ---
 
 <Layout
@@ -52,7 +52,7 @@ const websiteSchema = {
   description='Full Stack RockStar Web Developer. Expert with TypeScript, PHP & Python. 11 years of experience building web applications, and over 5 years building Java based Android Applications. I focus on UI/UX as well as AI automation.'>
   <Starfield client:only='react' />
   <FloatingEdgeIcons client:only='react' />
-  <!-- <LightboxBehavior client:load /> -->
+  <LightboxBehavior client:load />
   <LightboxDrawer client:load />
 
   <Hero client:only='react' />
@@ -244,21 +244,21 @@ const websiteSchema = {
 
   <!-- Cycle .active on software tags for gradient flair -->
   <script>
-    ;(function () {
-      const wrap = document.getElementById('software-tags-wrap')
-      if (!wrap) return
-      const tags = wrap.querySelectorAll('.software-tag')
-      if (!tags.length) return
-      const duration = 2500
-      let index = 0
+    (function () {
+      const wrap = document.getElementById('software-tags-wrap');
+      if (!wrap) return;
+      const tags = wrap.querySelectorAll('.software-tag');
+      if (!tags.length) return;
+      const duration = 2500;
+      let index = 0;
       function cycle() {
-        tags.forEach((t) => t.classList.remove('active'))
-        tags[index].classList.add('active')
-        index = (index + 1) % tags.length
+        tags.forEach((t) => t.classList.remove('active'));
+        tags[index].classList.add('active');
+        index = (index + 1) % tags.length;
       }
-      cycle()
-      setInterval(cycle, duration)
-    })()
+      cycle();
+      setInterval(cycle, duration);
+    })();
   </script>
   <script
     type='application/ld+json'

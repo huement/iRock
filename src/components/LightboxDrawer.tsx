@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 interface DrawerState {
   isOpen: boolean;
@@ -13,30 +13,42 @@ interface DrawerState {
 export default function LightboxDrawer() {
   const [drawer, setDrawer] = useState<DrawerState>({
     isOpen: false,
-    title: '',
-    mediaSrc: '',
+    title: "",
+    mediaSrc: "",
     isVideo: false,
-    detailsHtml: '',
+    detailsHtml: "",
   });
 
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
+    if (drawer.isOpen && !isClosing) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [drawer.isOpen, isClosing]);
+
+  useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      const link = target.closest<HTMLAnchorElement>('.lightbox-toggle');
+      const link = target.closest<HTMLAnchorElement>(".lightbox-toggle");
       if (!link) return;
 
       e.preventDefault();
       e.stopPropagation();
 
-      const videoSrc = link.getAttribute('data-video-src');
-      const videoTitle = link.getAttribute('data-video-title');
-      const title = videoTitle || link.getAttribute('data-title') || '';
-      const mediaSrc = videoSrc || link.getAttribute('href') || '';
-      const detailsHtml = link.getAttribute('data-details') || '';
-      const ctaUrl = link.getAttribute('data-cta-url') || undefined;
-      const ctaText = link.getAttribute('data-cta-text') || undefined;
+      const videoSrc = link.getAttribute("data-video-src");
+      const videoTitle = link.getAttribute("data-video-title");
+      const title = videoTitle || link.getAttribute("data-title") || "";
+      const mediaSrc = videoSrc || link.getAttribute("href") || "";
+      const detailsHtml = link.getAttribute("data-details") || "";
+      const ctaUrl = link.getAttribute("data-cta-url") || undefined;
+      const ctaText = link.getAttribute("data-cta-text") || undefined;
 
       setIsClosing(false);
       setDrawer({
@@ -51,15 +63,15 @@ export default function LightboxDrawer() {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeDrawer();
+      if (e.key === "Escape") closeDrawer();
     };
 
-    document.addEventListener('click', handleClick, true);
-    window.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("click", handleClick, true);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('click', handleClick, true);
-      window.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("click", handleClick, true);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
@@ -111,9 +123,9 @@ export default function LightboxDrawer() {
 
       {/* Dimmed Overlay Backdrop */}
       <div
-        className={`fixed-top w-100 h-100 ${isClosing ? 'animate-overlay-out' : 'animate-overlay-in'}`}
+        className={`fixed-top w-100 h-100 ${isClosing ? "animate-overlay-out" : "animate-overlay-in"}`}
         style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.75)',
+          backgroundColor: "rgba(0, 0, 0, 0.75)",
           zIndex: 1045,
         }}
         onClick={closeDrawer}
@@ -122,15 +134,15 @@ export default function LightboxDrawer() {
       {/* Slide-in Drawer Container */}
       <div
         className={`offcanvas offcanvas-end show text-light border-start border-secondary shadow-lg ${
-          isClosing ? 'animate-drawer-out' : 'animate-drawer-in'
+          isClosing ? "animate-drawer-out" : "animate-drawer-in"
         }`}
         tabIndex={-1}
         style={{
-          visibility: 'visible',
+          visibility: "visible",
           zIndex: 1050,
-          width: '100%',
-          maxWidth: '650px',
-          backgroundColor: '#0f1117',
+          width: "100%",
+          maxWidth: "650px",
+          backgroundColor: "#0f1117",
         }}
       >
         {/* Header */}
@@ -154,14 +166,14 @@ export default function LightboxDrawer() {
                 controls
                 autoPlay
                 className="img-fluid rounded"
-                style={{ maxHeight: '50vh', objectFit: 'contain' }}
+                style={{ maxHeight: "50vh", objectFit: "contain" }}
               />
             ) : (
               <img
                 src={drawer.mediaSrc}
                 alt={drawer.title}
                 className="img-fluid rounded"
-                style={{ maxHeight: '50vh', objectFit: 'contain' }}
+                style={{ maxHeight: "50vh", objectFit: "contain" }}
               />
             )}
           </div>
@@ -181,7 +193,7 @@ export default function LightboxDrawer() {
                 rel="noopener noreferrer"
                 className="btn btn-outline-info"
               >
-                {drawer.ctaText || 'Visit Project'}{' '}
+                {drawer.ctaText || "Visit Project"}{" "}
                 <i className="bx bx-right-arrow-alt ms-1"></i>
               </a>
             </div>

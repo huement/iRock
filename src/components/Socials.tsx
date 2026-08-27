@@ -4,7 +4,7 @@ export default function Socials() {
   return (
     <section className="content-block wave-block-bottom content-block--starfield-visible">
       <div className="container">
-        <h2 className="display-4 mb-5 cool-title">
+        <h2 className="display-4 mb-5 cool-title" id="social-media">
           <i className="bx bxs-planet me-2"></i>Digital Frontier
         </h2>
         <div className="row g-4">

@@ -1,32 +1,32 @@
 ---
-import { Image, getImage } from 'astro:assets'
-import { marked } from 'marked'
+import { Image, getImage } from 'astro:assets';
+import { marked } from 'marked';
 
-import { projects } from '../data/portfolio'
+import { projects } from '../data/portfolio';
 
-import blogImg from '../assets/imgs/blog.png'
-import cosmicImg from '../assets/imgs/cosmic.png'
-import cosmicSqImg from '../assets/imgs/cosmic-sq.png'
-import lumaImg from '../assets/imgs/luma.png'
-import lumaGif from '../assets/imgs/luma.gif'
-import bareGif from '../assets/imgs/bare-thumb.gif'
-import bare600Gif from '../assets/imgs/bare-600.gif'
+import blogImg from '../assets/imgs/blog.png';
+import cosmicImg from '../assets/imgs/cosmic.png';
+import cosmicSqImg from '../assets/imgs/cosmic-sq.png';
+import lumaImg from '../assets/imgs/luma.png';
+import lumaGif from '../assets/imgs/luma.gif';
+import bareGif from '../assets/imgs/bare-thumb.gif';
+import bare600Gif from '../assets/imgs/bare-600.gif';
 // import youtubeImg from '../assets/imgs/youtube.png'
-import flightplanImg from '../assets/imgs/flightplan.png'
-import mapTextureImg from '../assets/imgs/map_texture.png'
-import laancImg from '../assets/imgs/laanc.png'
-import laancSqImg from '../assets/imgs/laanc-sq.png'
-import sitesImg from '../assets/imgs/sites.png'
-import imageImg from '../assets/imgs/image.png'
-import printedImg from '../assets/imgs/printed.png'
-import freshlime1Img from '../assets/imgs/freshlime1.png'
-import resultsImg from '../assets/imgs/results.png'
-import freshlime3Img from '../assets/imgs/freshlime3.png'
-import cookieImg from '../assets/imgs/cookie.png'
-import cookieGifImg from '../assets/imgs/cookie-sq2.gif'
-import shopifyImg from '../assets/imgs/shopify.png'
-import shopifyImg2 from '../assets/imgs/shopify-2.png'
-import trendforgeImg from '../assets/imgs/trendforge.png'
+import flightplanImg from '../assets/imgs/flightplan.png';
+import mapTextureImg from '../assets/imgs/map_texture.png';
+import laancImg from '../assets/imgs/laanc.png';
+import laancSqImg from '../assets/imgs/laanc-sq.png';
+import sitesImg from '../assets/imgs/sites.png';
+import imageImg from '../assets/imgs/image.png';
+import printedImg from '../assets/imgs/printed.png';
+import freshlime1Img from '../assets/imgs/freshlime1.png';
+import resultsImg from '../assets/imgs/results.png';
+import freshlime3Img from '../assets/imgs/freshlime3.png';
+import cookieImg from '../assets/imgs/cookie.png';
+import cookieGifImg from '../assets/imgs/cookie-sq2.gif';
+import shopifyImg from '../assets/imgs/shopify.png';
+import shopifyImg2 from '../assets/imgs/shopify-2.png';
+import trendforgeImg from '../assets/imgs/trendforge.png';
 
 const projectImages: Record<string, typeof blogImg> = {
   'blog.png': blogImg,
@@ -50,83 +50,104 @@ const projectImages: Record<string, typeof blogImg> = {
   'printed.png': printedImg,
   'freshlime1.png': freshlime1Img,
   'results.png': resultsImg,
-  'freshlime3.png': freshlime3Img
-}
+  'freshlime3.png': freshlime3Img,
+};
 
-const THUMB_WIDTH = 750
-const THUMB_HEIGHT = 320
-const LIGHTBOX_WIDTH = 1200
-const LIGHTBOX_HEIGHT = 800
+const THUMB_WIDTH = 750;
+const THUMB_HEIGHT = 320;
+const LIGHTBOX_WIDTH = 1200;
+const LIGHTBOX_HEIGHT = 800;
 
 // 3. Update the data processing to handle lightboxImageKey
 const projectData = await Promise.all(
   projects.map(async (proj) => {
-    const thumbImg = projectImages[proj.imageKey]
-    if (!thumbImg) return null
+    const thumbImg = projectImages[proj.imageKey];
+    if (!thumbImg) return null;
 
     // 1. Set max bounding box constraints
-    const maxW = proj.thumbWidth ?? THUMB_WIDTH
-    const maxH = proj.thumbHeight ?? THUMB_HEIGHT
+    const maxW = proj.thumbWidth ?? THUMB_WIDTH;
+    const maxH = proj.thumbHeight ?? THUMB_HEIGHT;
 
     // 2. Calculate scale factor to fit within max bounds
     // (Optional: add `, 1` to Math.min if you don't want small images upscaled)
-    const scale = Math.min(maxW / thumbImg.width, maxH / thumbImg.height)
+    const scale = Math.min(maxW / thumbImg.width, maxH / thumbImg.height);
 
     // 3. Derive proportional target width and height
-    const width = Math.round(thumbImg.width * scale)
-    const height = Math.round(thumbImg.height * scale)
+    const width = Math.round(thumbImg.width * scale);
+    const height = Math.round(thumbImg.height * scale);
 
-    let fullSrc = ''
+    let fullSrc = '';
 
     // Parse markdown string into HTML
-    const markdownContent = proj.lightboxDetails || proj.description
-    const detailsHtml = await marked.parse(markdownContent)
+    const markdownContent = proj.lightboxDetails || proj.description;
+    const detailsHtml = await marked.parse(markdownContent);
 
     if (proj.lightboxImageKey && projectImages[proj.lightboxImageKey]) {
-      const lightboxImg = projectImages[proj.lightboxImageKey]
+      const lightboxImg = projectImages[proj.lightboxImageKey];
 
       if (proj.lightboxImageKey.endsWith('.gif')) {
-        fullSrc = lightboxImg.src
+        fullSrc = lightboxImg.src;
       } else {
         const full = await getImage({
           src: lightboxImg,
           width: LIGHTBOX_WIDTH,
           height: LIGHTBOX_HEIGHT,
-          format: 'webp'
-        })
-        fullSrc = full.src
+          format: 'webp',
+        });
+        fullSrc = full.src;
       }
     } else {
       const full = await getImage({
         src: thumbImg,
         width: LIGHTBOX_WIDTH,
         height: LIGHTBOX_HEIGHT,
-        format: 'webp'
-      })
-      fullSrc = full.src
+        format: 'webp',
+      });
+      fullSrc = full.src;
     }
 
-    return { ...proj, fullSrc, width, height, detailsHtml }
+    return { ...proj, fullSrc, width, height, detailsHtml };
   })
-)
+);
 
-const validProjects = projectData.filter((p): p is NonNullable<typeof p> => p != null)
+const validProjects = projectData.filter((p): p is NonNullable<typeof p> => p != null);
 ---
 
 <div
   class='container py-5'
   style='z-index: 5; position: relative'>
-  <div
-    class='card-box center-box mb-5'
-    style='background: rgba(0,0,0,0.6); backdrop-filter: blur(5px)'>
-    <h2 class='display-4 cool-title'>
-      <i class='bx bxs-star me-2'></i> Shipped Projects
-    </h2>
-    <p class='text-muted mt-2 py-10'>
-      Looking to learn more about my work history? Below is a list that features my "<strong>Professional Hits</strong
-      >", things that I've shipped over the course of my career. Some of them are over a decade old. Click each image to
-      see a larger version, or the available Call to Action buttons to learn more about each project.
-    </p>
+  <div class='shipped-hero-section'>
+    <div class='hero-content-wrapper'>
+      <!-- Giant Edge-to-Edge Typography -->
+      <div class='giant-text-block'>
+        <h1 class='text-shipped'>SHIPPED</h1>
+        <h1 class='text-projects'>PROJECTS</h1>
+      </div>
+
+      <!-- Floating Glass Card Overlapping Text -->
+      <div class='floating-info-box'>
+        <div class="icon-wrapper">
+          <i class='bx bxs-rocket'></i>
+        </div>
+
+        <!-- Content Columns -->
+        <div class='info-columns'>
+          <div class='col-item'>
+            <p class='col-text fs-5'>
+              Below is my
+              <strong>"Greatest Hits"</strong>, things I've shipped over the course of my career.
+            </p>
+          </div>
+
+          <div class='col-item'>
+            <p class='col-text monospaced text-muted-custom fs-sm'>
+              Click any image to trigger the expanded markdown view, or launch live projects and repositories via the
+              direct links.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class='masonry-grid'>
@@ -134,7 +155,7 @@ const validProjects = projectData.filter((p): p is NonNullable<typeof p> => p !=
       validProjects.map((proj) => {
         const ctaHtml = proj.ctaUrl
           ? `<a href="${proj.ctaUrl}" target="_blank" class="glass-cta-btn mt-3 d-inline-block">${proj.ctaText || 'Visit Project'} <i class='bx bx-right-arrow-alt'></i></a>`
-          : ''
+          : '';
 
         return (
           <div class={`masonry-item ${proj.gridClass}`}>
@@ -172,7 +193,7 @@ const validProjects = projectData.filter((p): p is NonNullable<typeof p> => p !=
               </div>
             </div>
           </div>
-        )
+        );
       })
     }
   </div>

@@ -5,14 +5,9 @@
 // Projects (portfolio grid)
 // ---------------------------------------------------------------------------
 export type GridClass =
-  | "masonry-item--w4"
-  | "masonry-item--w4-double"
-  | "masonry-item--w6";
+  "masonry-item--w4" | "masonry-item--w4-double" | "masonry-item--w6";
 export type CardClass =
-  | "card"
-  | "card card-featured"
-  | "card card-highlight"
-  | "card card-laanc";
+  "card" | "card card-featured" | "card card-highlight" | "card card-laanc";
 
 export interface Project {
   id: string;
@@ -84,8 +79,7 @@ A interactive sensory mobile game tailored for infants and toddlers.
   {
     id: "cookie",
     title: "Cookie Sleuth Browser Extension",
-    description:
-      "Affiliate Marketing Fraud detection",
+    description: "Affiliate Marketing Fraud detection",
     lightboxDetails: `
 # Cookie Sleuth
 
@@ -160,7 +154,8 @@ Real-time trend analysis platform leveraging modern AI models for **Narrative Ar
   {
     id: "cosmic",
     title: "Cosmic Wave",
-    description: "An dynamic SVG generation library for creating cosmic waveforms and visualizations.",
+    description:
+      "An dynamic SVG generation library for creating cosmic waveforms and visualizations.",
     lightboxDetails: `
 # Cosmic Wave
 
@@ -405,14 +400,13 @@ class MyriadMobile extends Agency {
 }`,
   },
   {
-  filename: "RealTruck.sql",
-  language: "sql",
-  code: `/* High-Volume E-Commerce Platform · Legacy Modernization & Mobile Overhaul */
+    filename: "RealTruck.sql",
+    language: "sql",
+    code: `/* High-Volume E-Commerce Platform · Legacy Modernization & Mobile Overhaul */
 WITH ModernizationMetrics AS (
     SELECT
-        company_name,
-        duration = '2014 - 2016',
         stack = 'PHP/MSSQL · Mobile-First UI · Asset Pipelines',
+        duration = '2014 - 2016',
         AVG(page_load_ms) AS fast_load_time,
         SUM(cart_conversions) AS recovered_revenue
     FROM ECommerceLegacy
@@ -427,11 +421,8 @@ SELECT
 FROM ModernizationMetrics m
 JOIN SalesData s ON s.company = m.company_name
 JOIN CartAbandonment a ON a.company = m.company_name
-WHERE s.hourly_revenue > 5000 AND s.annual_revenue > 10000000;
-
--- Rewrote legacy monolithic codebases into responsive, mobile-first templates
--- Overhauled asset pipeline & build tools to reduce page load times and enhance web security`
-},
+WHERE s.hourly_revenue > 5000 AND s.annual_revenue > 10000000;`,
+  },
   {
     filename: "RigMapper.php",
     language: "php",
@@ -455,9 +446,19 @@ class RigMapper {
     code: `# A Journey Begins · 2015
 ## University of North Dakota
 
-- Bachelor of Science | Statistics
-- Bachelor of Arts | Economics
-- Focus: user and financial mathematics`,
+### Degrees & Credentials
+- **Bachelor of Science** | Statistics (Minor in Computer Science)
+- **Bachelor of Arts** | Economics
+
+### Key Coursework
+- Data Structures & Algorithms
+- Linear Algebra & Applied Mathematics
+- Econometrics & Statistical Computing
+- Game Theory & Probability Theory
+
+### Academic Focus & Research
+- **Predictive Modeling**: Applied computing software and algorithms to simulate market trends, asset pricing, and financial forecasts.
+- **Empirical Problem Solving**: Combined data-driven statistical analysis with software logic to model complex decision frameworks and economic systems.`,
   },
 ];
 
@@ -560,24 +561,6 @@ export interface Social {
 
 export const socials: Social[] = [
   {
-    icon: "bxl-codepen",
-    iconColorClass: "text-success",
-    title: "CodePen",
-    description:
-      "Pens, prototypes, and front-end experiments—CSS, SVG, and interactive snippets.",
-    buttonText: "View Pens",
-    href: "https://codepen.io/johnny13",
-  },
-  {
-    icon: "bxl-github",
-    iconColorClass: "text-light",
-    title: "GitHub",
-    description:
-      "Repos, open source, and code—RepRasp, Count-S3, MMCV, and more.",
-    buttonText: "View Profile",
-    href: "https://github.com/johnny13",
-  },
-  {
     icon: "bxl-linkedin",
     iconColorClass: "text-info",
     title: "LinkedIn",
@@ -589,7 +572,7 @@ export const socials: Social[] = [
   {
     icon: "bxl-youtube",
     iconColorClass: "text-danger",
-    title: "Tech Vlog",
+    title: "YouTube",
     description:
       "Deep dives into new tech stacks, hardware teardowns, and live coding sessions.",
     buttonText: "Watch Now",
@@ -612,6 +595,24 @@ export const socials: Social[] = [
       "Long-form articles on internet culture, software architecture, and future tech.",
     buttonText: "Read More",
     href: "https://huement.com/blog",
+  },
+  {
+    icon: "bxl-github",
+    iconColorClass: "text-light",
+    title: "GitHub",
+    description:
+      "Repos, open source, and code—RepRasp, Count-S3, MMCV, and more.",
+    buttonText: "View Profile",
+    href: "https://github.com/johnny13",
+  },
+  {
+    icon: "bxl-codepen",
+    iconColorClass: "text-success",
+    title: "CodePen",
+    description:
+      "Pens, prototypes, and front-end experiments—CSS, SVG, and interactive snippets.",
+    buttonText: "View Pens",
+    href: "https://codepen.io/johnny13",
   },
 ];
 

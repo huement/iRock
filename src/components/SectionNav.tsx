@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
 
 const SECTIONS = [
-  { id: "work", label: "Work", icon: "bxs-tv" },
-  { id: "timeline", label: "Timeline", icon: "bxs-time" },
+  { id: "work", label: "Projects", icon: "bxs-tv" },
+  { id: "timeline", label: "Employment", icon: "bxs-time" },
   { id: "hobbies", label: "Hobbies", icon: "bxs-dog" },
+  { id: "social-media", label: "Social", icon: "bxs-star" },
   { id: "contact", label: "Contact", icon: "bxs-contact" },
 ] as const;
 
