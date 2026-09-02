@@ -26,10 +26,12 @@
     "three": "^0.169.0"
   },
   "devDependencies": {
+    "@types/bootstrap": "^5.2.11",
     "@types/p5": "^1.7.7",
     "@types/prismjs": "^1.26.6",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@types/rellax": "^1.7.8",
     "@types/three": "^0.169.0",
     "gh-pages": "^6.2.0",
     "prettier": "^3.9.6",

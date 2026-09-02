@@ -51,6 +51,9 @@ importers:
         specifier: ^0.169.0
         version: 0.169.0
     devDependencies:
+      '@types/bootstrap':
+        specifier: ^5.2.11
+        version: 5.2.11
       '@types/p5':
         specifier: ^1.7.7
         version: 1.7.7
@@ -63,6 +66,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.1
         version: 18.3.7(@types/react@18.3.31)
+      '@types/rellax':
+        specifier: ^1.7.8
+        version: 1.7.8
       '@types/three':
         specifier: ^0.169.0
         version: 0.169.0
@@ -935,6 +941,9 @@ packages:
   '@types/babel__traverse@7.28.0':
     resolution: {integrity: sha512-8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q==}
 
+  '@types/bootstrap@5.2.11':
+    resolution: {integrity: sha512-69ykbLiNzQxi6Q/y/aYJLrlzI5QkLQjhIYW2U+cxujBxAmaBtmXKtxnFes59Ttfpt936as6xJU0dYnmVpcwIwg==}
+
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
 
@@ -975,6 +984,9 @@ packages:
 
   '@types/react@18.3.31':
     resolution: {integrity: sha512-vfEqpXTvwT91yhmwdfouStN2hSKwTvyRs8qpLfADyrq/kxDw0hZM7Wk9Ug1FELj8hIby+S/+kQCSRFF32nv2Qw==}
+
+  '@types/rellax@1.7.8':
+    resolution: {integrity: sha512-VVX2RG3pGgNn6OERLjlD7cAJho53emGFsz7KBaxwe8iugCFHnXGPH14rNOfi6h7LLU6H57zvz61cLYSCUulfbg==}
 
   '@types/sax@1.2.7':
     resolution: {integrity: sha512-rO73L89PJxeYM3s3pPPjiPgVVcymqU490g0YO5n5By0k2Erzj6tay/4lr1CHAAU4JyOWd1rpQ8bCf6cZfHU96A==}
@@ -2970,6 +2982,10 @@ snapshots:
     dependencies:
       '@babel/types': 7.29.7
 
+  '@types/bootstrap@5.2.11':
+    dependencies:
+      '@popperjs/core': 2.11.8
+
   '@types/cookie@0.6.0': {}
 
   '@types/debug@4.1.13':
@@ -3010,6 +3026,8 @@ snapshots:
     dependencies:
       '@types/prop-types': 15.7.15
       csstype: 3.2.3
+
+  '@types/rellax@1.7.8': {}
 
   '@types/sax@1.2.7':
     dependencies:

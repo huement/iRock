@@ -1,14 +1,14 @@
-import { useEffect, useRef } from "react";
-import Prism from "prismjs";
-import "prismjs/components/prism-markup-templating";
-import "prismjs/components/prism-javascript";
-import "prismjs/components/prism-php";
-import "prismjs/components/prism-sql";
-import "prismjs/components/prism-python";
-import "prismjs/components/prism-markdown";
-import "prismjs/components/prism-typescript";
-import { timeline } from "../data/portfolio";
-import NoiseBackground from "./NoiseBackground";
+import { useEffect, useRef } from 'react';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-markup-templating';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-php';
+import 'prismjs/components/prism-sql';
+import 'prismjs/components/prism-python';
+import 'prismjs/components/prism-markdown';
+import 'prismjs/components/prism-typescript';
+import { timeline } from '../data/portfolio';
+import NoiseBackground from './NoiseBackground';
 
 export default function Timeline() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -21,7 +21,7 @@ export default function Timeline() {
   }, [timeline]);
 
   useEffect(() => {
-    const timelineContainer = document.querySelector(".timeline-container");
+    const timelineContainer = document.querySelector('.timeline-container');
     timelineContainerRef.current = timelineContainer as HTMLDivElement;
     if (!timelineContainer) return;
 
@@ -34,16 +34,16 @@ export default function Timeline() {
       if (e.deltaX < 0 && atLeftEdge) e.preventDefault();
     };
 
-    timelineContainer.addEventListener("wheel", onWheel, { passive: false });
-    return () => timelineContainer.removeEventListener("wheel", onWheel);
+    timelineContainer.addEventListener('wheel', onWheel, { passive: false });
+    return () => timelineContainer.removeEventListener('wheel', onWheel);
   }, []);
 
   return (
     <section
       className="content-block wave-block-top"
       style={{
-        position: "relative",
-        overflow: "hidden",
+        position: 'relative',
+        overflow: 'hidden',
       }} /* Ensures background stays contained */
     >
       <div id="timeline">
@@ -60,6 +60,10 @@ export default function Timeline() {
 
           {/* Floating Detail Card Overlapping the Typography */}
           <div className="floating-detail-box">
+            <div className="hud-meta">
+              <span className="hud-status-dot"></span>
+              <span className="hud-tag">// SYSTEM_LOG :: CAREER_TIMELINE</span>
+            </div>
             <p className="description-text">
               <strong>Employment</strong> and <strong>education</strong> history
               expressed as pseudo-code using the primary stack from that era.
@@ -71,7 +75,7 @@ export default function Timeline() {
           className="timeline-container"
           ref={containerRef}
           suppressHydrationWarning
-          style={{ position: "relative", zIndex: 1 }}
+          style={{ position: 'relative', zIndex: 1 }}
         >
           <div className="timeline-wrapper">
             {timeline.map((item) => (

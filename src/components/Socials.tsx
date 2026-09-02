@@ -1,11 +1,11 @@
-import { socials } from "../data/portfolio";
+import { socials } from '../data/portfolio';
 
 export default function Socials() {
   return (
     <section className="content-block wave-block-bottom content-block--starfield-visible">
       <div className="container">
         <h2 className="display-4 mb-5 layered-title" id="socialmedia">
-          <i className="bx bxs-planet me-2"></i>Reach Out
+          <i className="bx bxs-planet me-2" aria-hidden="true"></i>Reach Out
         </h2>
         <div className="row g-4">
           {socials.map((s) => (

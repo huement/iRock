@@ -5,7 +5,6 @@ import FloatingEdgeIcons from '../components/FloatingEdgeIcons';
 import Hero from '../components/Hero';
 import FractalCanvas from '../components/FractalCanvas';
 import ProjectGrid from '../components/ProjectGrid.astro';
-import ProjectGridBehavior from '../components/ProjectGridBehavior';
 import LightboxBehavior from '../components/LightboxBehavior';
 import LightboxDrawer from '../components/LightboxDrawer';
 import Timeline from '../components/Timeline';
@@ -80,7 +79,6 @@ const websiteSchema = {
   <section id='work'>
     <FractalCanvas client:only='react' />
     <ProjectGrid />
-    <ProjectGridBehavior client:only='react' />
   </section>
 
   <Timeline client:only='react' />

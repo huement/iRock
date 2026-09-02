@@ -1,21 +1,21 @@
-import { useEffect, useState, useRef } from "react";
-import Rellax from "rellax";
-import { heroData } from "../data/portfolio";
+import { useEffect, useState, useRef } from 'react';
+import Rellax from 'rellax';
+import { heroData } from '../data/portfolio';
 
 interface ScrambleTextProps {
   text: string;
   className?: string;
 }
 
-const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 const generateScramble = (targetText: string) =>
   targetText
-    .split("")
+    .split('')
     .map((char) =>
-      char === " " ? " " : LETTERS[Math.floor(Math.random() * LETTERS.length)],
+      char === ' ' ? ' ' : LETTERS[Math.floor(Math.random() * LETTERS.length)]
     )
-    .join("");
+    .join('');
 
 export function ScrambleText({ text, className }: ScrambleTextProps) {
   const [displayText, setDisplayText] = useState(() => generateScramble(text));
@@ -30,14 +30,14 @@ export function ScrambleText({ text, className }: ScrambleTextProps) {
     intervalRef.current = setInterval(() => {
       setDisplayText(
         text
-          .split("")
+          .split('')
           .map((char, index) => {
             // Preserve spaces in multi-word names
-            if (char === " ") return " ";
+            if (char === ' ') return ' ';
             if (index < iteration) return text[index];
             return LETTERS[Math.floor(Math.random() * LETTERS.length)];
           })
-          .join(""),
+          .join('')
       );
 
       if (iteration >= text.length) {
@@ -60,7 +60,7 @@ export function ScrambleText({ text, className }: ScrambleTextProps) {
 
   return (
     <h1
-      className={`${className || ""} scramble-text ${isReady ? "is-visible" : ""}`}
+      className={`${className || ''} scramble-text ${isReady ? 'is-visible' : ''}`}
       onMouseOver={startScramble}
     >
       {displayText}
@@ -98,12 +98,12 @@ export default function Hero() {
         <p className="lead text-summary px-lg-5">{heroData.intro}</p>
         <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
           <a href="#work" className="hero-cta-secondary">
-            <i className="bx bxs-rocket me-2"></i>
+            <i className="bx bxs-rocket me-2" aria-hidden="true"></i>
             {heroData.ctaWork}
           </a>
 
           <a href="#contact" className="hero-cta-primary">
-            <i className="bx bxs-paper-plane me-2"></i>
+            <i className="bx bxs-paper-plane me-2" aria-hidden="true"></i>
             {heroData.ctaContact}
           </a>
         </div>

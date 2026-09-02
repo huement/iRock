@@ -20,6 +20,7 @@
   inherits: false;
   initial-value: 1;
 }
+
 // ---------------------------------------------------------------------------
 // :root (CSS custom properties for JS / inline use)
 // ---------------------------------------------------------------------------
@@ -68,6 +69,7 @@ html {
 .fill-wave-medium {
   fill: var(--bg-medium) !important;
 }
+
 // ---------------------------------------------------------------------------
 // Base
 // ---------------------------------------------------------------------------
@@ -146,7 +148,8 @@ pre {
 .cool-title {
   @include gradient-text-animated($gradient-cool-title, text-flow, 6s, 700);
   -webkit-text-stroke: 1px #000;
-  text-stroke: 1px #000; /* Standard fallback */
+  text-stroke: 1px #000;
+  /* Standard fallback */
 }
 
 @keyframes text-flow {
@@ -163,10 +166,6 @@ pre {
   }
 }
 
-.card .card-title {
-  @include gradient-text-animated($gradient-card-title, card-title-flow, 8s, 600);
-}
-
 @keyframes card-title-flow {
   0% {
     background-position: 0% 50%;
@@ -181,6 +180,152 @@ pre {
   }
 }
 
+// Cyberpunk HUD Tag Badges
+.cyber-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.725rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #00f0ff; // Neon Cyan
+  background: rgba(10, 10, 15, 0.85);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+
+  // Cut-off corner clip-path for high-tech HUD geometry
+  clip-path: polygon(0 0,
+      calc(100% - 6px) 0,
+      100% 6px,
+      100% 100%,
+      6px 100%,
+      0 calc(100% - 6px));
+
+  transition: all 0.2s ease-in-out;
+  user-select: none;
+
+  .cyber-tag-prefix {
+    color: #ff0055; // Neon Pink code comment prefix
+    font-weight: 800;
+  }
+
+  &:hover {
+    color: #ffffff;
+    background: rgba(0, 240, 255, 0.2);
+    border-color: #00f0ff;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+    transform: translateY(-2px);
+
+    .cyber-tag-prefix {
+      color: #00f0ff;
+    }
+  }
+}
+
+.cyber-cta-btn {
+  position: relative;
+  display: inline-block;
+  padding: 0.65rem 1.4rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.825rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid #00f0ff;
+  overflow: hidden;
+
+  // Asymmetrical slanted cut on top-right edge
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+  .cyber-btn-text {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #0a0a0f; // Dark text over initial solid fill
+    transition: color 0.3s ease;
+
+    i {
+      font-size: 1.1rem;
+      transition: transform 0.25s ease, color 0.25s ease;
+    }
+  }
+
+  // Top 50% background panel
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: #00f0ff;
+    z-index: 1;
+    transform-origin: top;
+    transition: transform 0.35s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  // Bottom 50% background panel
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: #00f0ff;
+    z-index: 1;
+    transform-origin: bottom;
+    transition: transform 0.35s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  // HOVER STATE: 50/50 Vertical Wipe Open
+  &:hover {
+    border-color: #ff0055;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+
+    .cyber-btn-text {
+      color: #00f0ff; // Text glows neon cyan when background clears
+
+      i {
+        color: #ff0055;
+        transform: translateX(4px);
+      }
+    }
+
+    // Top half retracts upward
+    &::before {
+      transform: scaleY(0);
+    }
+
+    // Bottom half retracts downward
+    &::after {
+      transform: scaleY(0);
+    }
+  }
+}
+
+.proj-title {
+  font-size: 2rem;
+  line-height: 1;
+  font-family: $font-saira;
+  @include gradient-text-animated($gradient-card-title, card-title-flow, 8s, 600);
+  -webkit-text-stroke: 0.5px #0a0a0f; // Dark border outline
+  paint-order: stroke fill; // Places stroke BEHIND fill so letters don't get thin
+}
+
+.proj-desc {
+  font-size: 1rem;
+  line-height: 1.4;
+  font-family: $font-jost;
+}
+
 // ---------------------------------------------------------------------------
 // Starfield
 // ---------------------------------------------------------------------------
@@ -190,6 +335,7 @@ pre {
   z-index: -2;
   pointer-events: none;
 }
+
 .floating-icon {
   position: absolute;
   left: var(--x, 50%);
@@ -199,7 +345,8 @@ pre {
   /* CRITICAL FIXES: Keep behind content & don't block clicks */
   z-index: 0;
   pointer-events: none;
-  opacity: 0.35; /* Subtle background feel */
+  opacity: 0.35;
+  /* Subtle background feel */
 
   /* Default CSS Variables */
   --icon-drift-x: 0px;
@@ -223,8 +370,10 @@ pre {
 
 /* 1. Scroll state: Smoother scale & glowing effect */
 .floating-edge-icons.is-scrolling .floating-icon {
-  --icon-scale: 1.2 !important; /* Reduced from 1.45 for a cleaner feel */
-  opacity: 0.85; /* Brighten up slightly when scrolling */
+  --icon-scale: 1.2 !important;
+  /* Reduced from 1.45 for a cleaner feel */
+  opacity: 0.85;
+  /* Brighten up slightly when scrolling */
   filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
 }
 
@@ -253,16 +402,19 @@ pre {
 // ---------------------------------------------------------------------------
 
 @keyframes floating-icon-color {
+
   0%,
   100% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
 }
 
 @keyframes icon-drift {
+
   0%,
   100% {
     --icon-drift-x: 0px;
@@ -286,6 +438,7 @@ pre {
 }
 
 @keyframes icon-breathe {
+
   0%,
   100% {
     --icon-scale: 1;
@@ -300,9 +453,11 @@ pre {
   0% {
     transform: scale(1) rotate(0deg);
   }
+
   50% {
     transform: scale(1.43) rotate(180deg);
   }
+
   100% {
     transform: scale(1) rotate(360deg);
   }
@@ -390,10 +545,9 @@ pre {
   z-index: 1000;
   width: 100%;
   padding: 0.75rem 0;
-  background: rgba(10, 10, 14, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-medium);
+  backdrop-filter: none;
+  border-bottom: none;
   transition:
     transform 0.3s ease,
     padding 0.3s ease,
@@ -402,7 +556,11 @@ pre {
 
   // Pinned States
   &.is-stuck {
+    background: rgba(10, 10, 14, 0.85);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 
     // Scroll Down -> Skinny (hidden on mobile)
     &.scroll-down {
@@ -536,6 +694,32 @@ pre {
 
   &.wave-block-top {
     padding-bottom: calc(100px + #{$hobby-wave-height});
+    position: relative;
+    overflow: hidden;
+
+    // 1. Neon Top Seam with Multi-Layer Glow
+    border-top: 1px solid #00f0ff;
+    box-shadow: 0 -2px 12px rgba(0, 240, 255, 0.7),
+      // Upward cyan glow onto the black section
+      inset 0 2px 10px rgba(255, 0, 85, 0.5),
+      // Pink under-glow right beneath the laser edge
+      inset 0 35px 35px rgba(10, 10, 12, 0.85); // Dark drop-shadow blending down into the canvas
+
+    // 2. Smooth Shadow Overlay (Bridges solid black into animated canvas)
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(to bottom,
+          rgba(10, 10, 12, 1) 0%,
+          rgba(10, 10, 12, 0.6) 40%,
+          rgba(10, 10, 12, 0) 100%);
+      z-index: 1;
+      pointer-events: none; // Ensures clicks pass through to interactive canvas elements
+    }
   }
 
   &.wave-block-bottom {
@@ -549,15 +733,17 @@ pre {
   }
 }
 
+
 #contact.content-block {
   background: var(--medium-dark);
-  background: linear-gradient(
-    180deg,
-    var(--medium-dark) 0px,
-    /* Starts at the very top */ var(--medium-dark) 10px,
-    /* Stays solid for the first 10px to pad the SVG */ rgba(31, 31, 31, 1) 100%
+  background: linear-gradient(180deg,
+      var(--medium-dark) 0px,
+      /* Starts at the very top */
+      var(--medium-dark) 10px,
+      /* Stays solid for the first 10px to pad the SVG */
+      rgba(31, 31, 31, 1) 100%
       /* Smoothly transitions to dark at the bottom */
-  );
+    );
 }
 
 .transparent-block {
@@ -622,7 +808,8 @@ pre {
   }
 
   &:hover {
-    color: #00d2ff !important; /* Prevents black-on-black hover collision */
+    color: #00d2ff !important;
+    /* Prevents black-on-black hover collision */
     background: rgba(255, 255, 255, 0.14);
     border-color: rgba(0, 210, 255, 0.6);
     transform: translateY(-3px) scale(1.02);
@@ -687,14 +874,13 @@ pre {
 .text-shipped {
   background:
     /* Layer 1: Horizontal pinstripe lines (2px line, 2px gap) */
-    repeating-linear-gradient(
-      0deg,
+    repeating-linear-gradient(0deg,
       rgba(255, 255, 255, 0.8) 0px,
       rgba(255, 255, 255, 0.1) 4px,
       transparent 2px,
-      transparent 4px
-    ),
-    /* Layer 2: White to light-silver vertical gradient */ linear-gradient(180deg, #eeeeee 0%, #52525b 100%);
+      transparent 4px),
+    /* Layer 2: White to light-silver vertical gradient */
+    linear-gradient(180deg, #eeeeee 0%, #52525b 100%);
 
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -706,14 +892,13 @@ pre {
   margin-top: -0.02em;
   background:
     /* Layer 1: Subtler horizontal pinstripes */
-    repeating-linear-gradient(
-      0deg,
+    repeating-linear-gradient(0deg,
       rgba(255, 255, 255, 0.5) 0px,
       rgba(255, 255, 255, 0.5) 2px,
       transparent 2px,
-      transparent 4px
-    ),
-    /* Layer 2: Silver to slate-grey vertical gradient */ linear-gradient(180deg, #d4d4d8 0%, #52525b 100%);
+      transparent 4px),
+    /* Layer 2: Silver to slate-grey vertical gradient */
+    linear-gradient(180deg, #d4d4d8 0%, #52525b 100%);
 
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -851,32 +1036,78 @@ pre {
 // ---------------------------------------------------------------------------
 // Floating Overlapping Glass Card
 // ---------------------------------------------------------------------------
+// Floating Overlapping Cyberpunk Panel
 .floating-detail-box {
   position: relative;
   z-index: 2;
   max-width: 1100px;
   width: 100%;
   margin: 0 auto -100px;
-  background: rgba(12, 12, 16, 0.38);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 1.5rem;
-  padding: 0.5rem 0.75rem;
-  letter-spacing: -0.1px;
+
+  // Increased opacity (0.82) so shifting light/dark backgrounds never bleed through and break text legibility
+  background: rgba(10, 10, 16, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  // Chamfered HUD polygon corners replacing smooth border-radius
+  clip-path: polygon(0 0,
+      calc(100% - 18px) 0,
+      100% 18px,
+      100% 100%,
+      18px 100%,
+      0 calc(100% - 18px));
+
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  padding: 1rem 1.5rem;
+  font-family: 'Fira Code', 'Courier New', monospace;
+
   box-shadow:
-    0 30px 60px rgba(0, 0, 0, 0.7),
-    0 0 40px rgba(99, 102, 241, 0.15);
+    0 20px 50px rgba(0, 0, 0, 0.85),
+    0 0 30px rgba(0, 240, 255, 0.25),
+    inset 0 0 15px rgba(0, 240, 255, 0.08);
 
   @media (max-width: 768px) {
-    padding: 1.75rem 1.25rem;
+    padding: 1.25rem 1rem;
+    margin-bottom: -60px;
   }
 
-  strong {
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: #000;
-    font-weight: bold;
+  // Top HUD Status Bar
+  .hud-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+
+    .hud-status-dot {
+      width: 6px;
+      height: 6px;
+      background-color: #ff0055; // Pulsing Neon Red
+      border-radius: 50%;
+      box-shadow: 0 0 8px #ff0055;
+    }
+
+    .hud-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: rgba(0, 240, 255, 0.7);
+      text-transform: uppercase;
+    }
+  }
+
+  .description-text {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #d1f4ff; // Soft cyan base body text
+
+    strong {
+      color: #00f0ff; // Neon Cyan replacement for black #000
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
   }
 }
 
@@ -984,8 +1215,10 @@ pre {
 
   .card-img-top {
     width: 100%;
-    height: 240px; /* Fixed height baseline */
-    object-fit: cover; /* Prevents aspect-ratio stretching */
+    height: 240px;
+    /* Fixed height baseline */
+    object-fit: cover;
+    /* Prevents aspect-ratio stretching */
     display: block;
   }
 }
@@ -997,15 +1230,19 @@ pre {
 .masonry-item--w6 {
   grid-column: span 3;
 }
+
 .masonry-item--w4 {
   grid-column: span 2;
 }
+
 .masonry-item--w4-double {
   grid-column: span 4;
 }
+
 .masonry-item--w2 {
   grid-column: span 2;
 }
+
 .masonry-item--w1 {
   grid-column: span 1;
 }
@@ -1263,6 +1500,7 @@ pre {
 }
 
 @keyframes software-tag-border {
+
   0%,
   100% {
     background-position: 0% 50%;
@@ -1274,6 +1512,7 @@ pre {
 }
 
 @keyframes software-tag-text {
+
   0%,
   100% {
     background-position:
@@ -1316,6 +1555,7 @@ pre {
 }
 
 @keyframes social-icon-wiggle {
+
   0%,
   100% {
     transform: scale(1.2) rotate(0deg);
@@ -1529,10 +1769,12 @@ pre {
 
 // Subtle idle float effect for the icon
 @keyframes chip-pulse {
+
   0%,
   100% {
     transform: translateY(0) scale(1);
   }
+
   50% {
     transform: translateY(-8px) scale(1.04);
   }
@@ -1925,6 +2167,7 @@ body:has(.modal.lightbox.show) .modal-backdrop {
 .nav-wave-top {
   margin-bottom: -5px !important;
 }
+
 .glass-cta-btn {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -1965,12 +2208,14 @@ body:has(.modal.lightbox.show) .modal-backdrop {
 
   /* Non-interactive background rules */
   pointer-events: none;
-  z-index: 0; /* Kept at 0 so it stays visible over dark section backgrounds */
+  z-index: 0;
+  /* Kept at 0 so it stays visible over dark section backgrounds */
   opacity: 0.6;
 
   /* Zero-G Float Animation */
   animation: float-in-space 14s ease-in-out infinite;
-  will-change: transform; /* GPU acceleration for butter-smooth rendering */
+  will-change: transform;
+  /* GPU acceleration for butter-smooth rendering */
 }
 
 @media (max-width: 1024px) {
@@ -1983,15 +2228,19 @@ body:has(.modal.lightbox.show) .modal-backdrop {
   0% {
     transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
   }
+
   25% {
     transform: translateY(-25px) translateX(15px) rotate(5deg) scale(1.03);
   }
+
   50% {
     transform: translateY(-40px) translateX(-10px) rotate(-6deg) scale(0.97);
   }
+
   75% {
     transform: translateY(-15px) translateX(-20px) rotate(3deg) scale(1.02);
   }
+
   100% {
     transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
   }
@@ -2030,5 +2279,6 @@ body:has(.modal.lightbox.show) .modal-backdrop {
   z-index: -2;
   opacity: 0.45; // Keep it subtle
   animation: float-in-space 14s ease-in-out infinite;
-  will-change: transform; /* GPU acceleration for butter-smooth rendering */
+  will-change: transform;
+  /* GPU acceleration for butter-smooth rendering */
 }

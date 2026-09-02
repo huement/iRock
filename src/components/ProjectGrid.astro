@@ -110,39 +110,43 @@ const projectData = await Promise.all(
   })
 );
 
-const validProjects = projectData.filter((p): p is NonNullable<typeof p> => p != null);
+const validProjects = projectData.filter(
+  (p): p is NonNullable<typeof p> => p != null
+);
 ---
 
 <div
-  class='container-lg px-2 px-lg-0 py-5'
-  style='z-index: 5; position: relative'>
-  <div class='shipped-hero-section'>
-    <div class='hero-content-wrapper'>
+  class="container-lg px-2 px-lg-0 py-5"
+  style="z-index: 5; position: relative"
+>
+  <div class="shipped-hero-section">
+    <div class="hero-content-wrapper">
       <!-- Giant Edge-to-Edge Typography -->
-      <div class='giant-text-block'>
-        <h1 class='text-shipped'>SHIPPED</h1>
-        <h1 class='text-projects'>PROJECTS</h1>
+      <div class="giant-text-block">
+        <h1 class="text-shipped d-block">SHIPPED</h1>
+        <h1 class="text-projects d-block">PROJECTS</h1>
       </div>
 
       <!-- Floating Glass Card Overlapping Text -->
-      <div class='floating-info-box'>
-        <div class='icon-wrapper'>
-          <i class='bx bxs-rocket'></i>
+      <div class="floating-info-box">
+        <div class="icon-wrapper">
+          <i class="bx bxs-cool text-warning" aria-hidden="true"></i>
         </div>
 
         <!-- Content Columns -->
-        <div class='info-columns'>
-          <div class='col-item'>
-            <p class='col-text fs-5'>
+        <div class="info-columns">
+          <div class="col-item">
+            <p class="col-text fs-5">
               Below is my
-              <strong>"Greatest Hits"</strong>, things I've shipped over the course of my career.
+              <strong>"Greatest Hits"</strong>, things I've shipped over the
+              course of my career.
             </p>
           </div>
 
-          <div class='col-item'>
-            <p class='col-text monospaced text-muted-custom fs-sm'>
-              Click any image to trigger the expanded markdown view, or launch live projects and repositories via the
-              direct links.
+          <div class="col-item">
+            <p class="col-text monospaced text-muted-custom fs-sm">
+              Click any image to trigger the expanded markdown view, or launch
+              live projects and repositories via the direct links.
             </p>
           </div>
         </div>
@@ -150,46 +154,62 @@ const validProjects = projectData.filter((p): p is NonNullable<typeof p> => p !=
     </div>
   </div>
 
-  <div class='masonry-grid'>
+  <div class="masonry-grid">
     {
-      validProjects.map((proj) => {
+      validProjects.map((proj, index) => {
         const ctaHtml = proj.ctaUrl
-          ? `<a href="${proj.ctaUrl}" target="_blank" class="glass-cta-btn mt-3 d-inline-block">${proj.ctaText || 'Visit Project'} <i class='bx bx-right-arrow-alt'></i></a>`
+          ? `<a href="${proj.ctaUrl}" target="_blank" rel="noopener noreferrer" class="cyber-cta-btn mt-3 d-inline-block">
+          <span class="cyber-btn-text">
+            ${proj.ctaText || 'Visit Project'} 
+            <i class='bx bx-right-arrow-alt' aria-hidden='true'></i>
+          </span>
+        </a>`
           : '';
 
         return (
           <div class={`masonry-item ${proj.gridClass}`}>
             <div class={`${proj.cardClass} h-100`}>
               <a
-                class='lightbox-toggle cursor-pointer'
+                class="lightbox-toggle cursor-pointer"
                 href={proj.fullSrc}
                 data-title={proj.title}
                 data-details={proj.detailsHtml}
                 data-cta-url={proj.ctaUrl || ''}
-                data-cta-text={proj.ctaText || ''}>
+                data-cta-text={proj.ctaText || ''}
+              >
                 <Image
                   src={projectImages[proj.imageKey]}
                   alt={proj.title}
                   width={proj.width}
                   height={proj.height}
-                  format='webp'
+                  format="webp"
                   densities={[1, 2]}
-                  class='rounded card-img-top'
+                  loading={index < 2 ? 'eager' : 'lazy'}
+                  class="rounded card-img-top"
                 />
               </a>
-              <div class='card-body'>
-                <h5 class='card-title'>{proj.title}</h5>
-                <p class='card-text small text-muted'>{proj.description}</p>
-                <ul class='list-group list-group-flush'>
+              <div class="card-body d-flex flex-column">
+                <div class="card-title heavy-title proj-title">
+                  {proj.title}
+                </div>
+
+                <p class="card-text proj-desc text-muted">{proj.description}</p>
+
+                <div class="cyber-tag-group d-flex flex-wrap gap-2 mt-3">
                   {proj.tags.map((tag) => (
-                    <li
-                      key={tag}
-                      class='list-group-item'>
+                    <span class="cyber-tag">
+                      <span class="cyber-tag-prefix">//</span>
                       {tag}
-                    </li>
+                    </span>
                   ))}
-                </ul>
-                <Fragment set:html={ctaHtml} />
+                </div>
+
+                {/* mt-auto absorbs all remaining vertical space and locks the button to the bottom */}
+                {proj.ctaUrl && (
+                  <div class="mt-auto pt-3">
+                    <Fragment set:html={ctaHtml} />
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -198,3 +218,23 @@ const validProjects = projectData.filter((p): p is NonNullable<typeof p> => p !=
     }
   </div>
 </div>
+<!-- Project Grid Behavior -->
+<script>
+  const MOBILE_BREAKPOINT = 992;
+  const isMobile = () => window.innerWidth < MOBILE_BREAKPOINT;
+
+  document.querySelectorAll('.masonry-grid .card').forEach((card) => {
+    const lightboxLink =
+      card.querySelector<HTMLAnchorElement>('.lightbox-toggle');
+    if (!lightboxLink) return;
+
+    // Target image wrapper specifically instead of entire card-body to avoid nested click conflicts
+    lightboxLink.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('a')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      lightboxLink.click();
+    });
+  });
+</script>

@@ -11,6 +11,21 @@ const {
 const baseUrl = 'https://huement.github.io/iRock/'
 const basePath = '/iRock'
 
+const schemaMarkup = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Derek Scott", 
+  "url": "https://huement.github.io/iRock/",
+  "jobTitle": "Senior Full Stack Web Developer",
+  "sameAs": [
+    "https://github.com/huement",
+    "https://www.linkedin.com/in/derekscott13",
+    "https://twitter.com/huement",
+    "https://youtube.com/@barebonescode",
+    "https://huement.com/author/derek-scott"
+  ]
+};
+
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'boxicons/css/boxicons.min.css'
 import '../../prismjs/theme.css'
@@ -46,10 +61,8 @@ import '../styles/global.scss'
       name='theme-color'
       content='#0a0a0c'
     />
-    <link
-      rel='canonical'
-      href={baseUrl}
-    />
+    <link rel="canonical" href={new URL(Astro.url.pathname, baseUrl).href} />
+
     <link
       rel='icon'
       href={basePath + '/favicon.ico'}
@@ -82,10 +95,7 @@ import '../styles/global.scss'
       property='og:type'
       content='website'
     />
-    <meta
-      property='og:title'
-      content='Derek Scott | Developer Extraordinaire'
-    />
+    <meta property="og:title" content={title} />
     <meta
       property='og:description'
       content={description}
@@ -157,6 +167,7 @@ import '../styles/global.scss'
       src='https://cloud.umami.is/script.js'
       data-website-id='ac8ea07d-bb99-4732-bd09-db02ee1be1ac'
     ></script>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaMarkup)} />
   </head>
   <body>
     <div class='site-root'>
@@ -199,17 +210,26 @@ import '../styles/global.scss'
               class='w-100'
               controls
               playsinline
-            ></video>
+            >
+            <p>Your browser does not support HTML5 video.</p>
+            </video>
           </div>
         </div>
       </div>
     </div>
-    
+
     <script>
-      import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+      // Import only the specific JS modules you are using
+      import Modal from 'bootstrap/js/dist/modal'
+      import Offcanvas from 'bootstrap/js/dist/offcanvas'
       import Lightbox from 'bs5-lightbox'
-      if (typeof window !== 'undefined') (window as any).Lightbox = Lightbox
+
+      if (typeof window !== 'undefined') {
+        // Attach them to window.bootstrap so data-bs-* attributes and bs5-lightbox work seamlessly
+        (window as any).bootstrap = { Modal, Offcanvas }
+        ;(window as any).Lightbox = Lightbox
+      }
     </script>
-    <script src='https://cdn.jsdelivr.net/npm/@huement/cosmicwave@0.5.2/dist/cosmicwave.min.js'></script>
+    <script is:inline defer src='https://cdn.jsdelivr.net/npm/@huement/cosmicwave@0.5.2/dist/cosmicwave.min.js'></script>
   </body>
 </html>
