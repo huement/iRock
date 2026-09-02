@@ -1,0 +1,94 @@
+---
+// src/components/Hero.astro
+import { heroData } from '../data/portfolio';
+---
+
+<section class="hero-section" role="banner">
+  <!-- Outer wrapper isolates the entrance slide from Rellax parallax transforms -->
+  <div class="hero-entrance-wrap">
+    <div class="hero-card min-height">
+      <h1
+        class="display-1 hero-title cool-title mb-2 scramble-text"
+        data-scramble-text={heroData.name}
+      >
+        {heroData.name}
+      </h1>
+
+      <span
+        class="h4 text-uppercase tracking-widest mb-4 d-block p-relative w-100 scramble-text"
+        data-scramble-text={heroData.tagline}
+      >
+        {heroData.tagline}
+      </span>
+
+      <p class="lead text-summary px-lg-5">{heroData.intro}</p>
+
+      <div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
+        <a href="#work" class="hero-cta-secondary">
+          <i class="bx bxs-rocket me-2" aria-hidden="true"></i>
+          {heroData.ctaWork}
+        </a>
+
+        <a href="#contact" class="hero-cta-primary">
+          <i class="bx bxs-paper-plane me-2" aria-hidden="true"></i>
+          {heroData.ctaContact}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import Rellax from 'rellax';
+
+  const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  // 1. Entrance Animation Trigger
+  const entranceWrap = document.querySelector('.hero-entrance-wrap');
+  if (entranceWrap) {
+    entranceWrap.classList.add('is-visible');
+  }
+
+  // 2. Parallax Initialization
+  const card = document.querySelector('.hero-card');
+  if (card) {
+    new Rellax(card, { speed: 1.5 });
+  }
+
+  // 3. Text Scramble Logic
+  const scrambleElements =
+    document.querySelectorAll<HTMLElement>('.scramble-text');
+
+  scrambleElements.forEach((el) => {
+    const targetText = el.dataset.scrambleText || el.textContent || '';
+    let intervalId: number | null = null;
+
+    const startScramble = () => {
+      let iteration = 0;
+      if (intervalId) clearInterval(intervalId);
+
+      intervalId = window.setInterval(() => {
+        el.textContent = targetText
+          .split('')
+          .map((char, index) => {
+            if (char === ' ') return ' ';
+            if (index < iteration) return targetText[index];
+            return LETTERS[Math.floor(Math.random() * LETTERS.length)];
+          })
+          .join('');
+
+        if (iteration >= targetText.length) {
+          if (intervalId) clearInterval(intervalId);
+        }
+
+        iteration += 1 / 3;
+      }, 30);
+    };
+
+    // Scramble on initial load
+    startScramble();
+
+    // Scramble on hover
+    el.addEventListener('mouseover', startScramble);
+  });
+</script>

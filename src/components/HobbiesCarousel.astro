@@ -38,88 +38,96 @@ const hobbyData = await Promise.all(
   hobbies.map(async (hobby) => {
     const img = hobbyImages[hobby.imageKey];
     if (!img) return { ...hobby, imageHref: null };
-    const full = await getImage({ src: img, width: LIGHTBOX_WIDTH, height: LIGHTBOX_HEIGHT, format: 'webp' });
+    const full = await getImage({
+      src: img,
+      width: LIGHTBOX_WIDTH,
+      height: LIGHTBOX_HEIGHT,
+      format: 'webp',
+    });
     return { ...hobby, imageHref: full.src };
   })
 );
 ---
 
-<section
-  id='hobbies'
-  class='content-block wave-block'>
-  <div class='container'>
-    <div class='giant-hobby-header'>
-      <!-- Glowing Icon Badge -->
-      <div class='giant-chip-wrap'>
-        <i class='bx bxs-chip giant-chip-icon' aria-hidden='true'></i>
+<section id="hobbies" class="content-block wave-block">
+  <div class="container">
+    <!-- 1. Header Reveal -->
+    <div class="giant-hobby-header reveal-on-scroll reveal-on-scroll-far">
+      <div class="giant-chip-wrap">
+        <i class="bx bxs-chip giant-chip-icon" aria-hidden="true"></i>
       </div>
-
-      <!-- Giant Fluid Title -->
-      <h2 class='giant-hobby-title'>
-        HOBBY <span class='title-highlight'>PROJECTS</span>
+      <h2 class="giant-hobby-title">
+        HOBBY <span class="title-highlight">PROJECTS</span>
       </h2>
     </div>
-    <div class='row justify-content-center'>
-      <div class='col-12'>
+    <div class="row justify-content-center">
+      <div class="col-12">
         <div
-          id='hobbyCarousel'
-          class='carousel slide carousel-dark'
-          data-bs-interval='false'
-          data-bs-wrap='true'>
+          id="hobbyCarousel"
+          class="carousel slide carousel-dark reveal-on-scroll reveal-on-scroll-far"
+          style="transition-delay: 150ms;"
+          data-bs-interval="false"
+          data-bs-wrap="true"
+        >
           <div
-            class='carousel-inner rounded-3 overflow-hidden'
-            style='background: var(--card-bg); border: 1px solid #333;'>
+            class="carousel-inner rounded-3 overflow-hidden"
+            style="background: var(--card-bg); border: 1px solid #333;"
+          >
             {
               hobbyData.map((hobby, index) => {
                 const img = hobbyImages[hobby.imageKey];
                 if (!img) return null;
                 const isVideo = hobby.videoKey;
-                const href = isVideo ? 'javascript:void(0)' : (hobby.imageHref ?? 'javascript:void(0)');
+                const href = isVideo
+                  ? `${import.meta.env.BASE_URL}videos/${hobby.videoKey}`
+                  : (hobby.imageHref ?? '#');
                 return (
                   <div class={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                    <div class='row g-0 hobby-slide-row'>
-                      <div class='col-12 col-md-8 hobby-img-wrap position-relative'>
+                    <div class="row g-0 hobby-slide-row">
+                      <div class="col-12 col-md-8 hobby-img-wrap position-relative">
                         <a
-                          class='centerbox-toggle position-relative d-block'
+                          class="centerbox-toggle position-relative d-block"
                           href={href}
-                          data-video-src={isVideo ? `${import.meta.env.BASE_URL}videos/${hobby.videoKey}` : undefined}
+                          data-video-src={
+                            isVideo
+                              ? `${import.meta.env.BASE_URL}videos/${hobby.videoKey}`
+                              : undefined
+                          }
                           data-video-title={isVideo ? hobby.title : undefined}
-                          aria-label={isVideo ? `Play video: ${hobby.title}` : `View image: ${hobby.title}`}>
+                          aria-label={
+                            isVideo
+                              ? `Play video: ${hobby.title}`
+                              : `View image: ${hobby.title}`
+                          }
+                        >
                           <Image
                             src={img}
                             alt={hobby.title}
                             width={SLIDE_WIDTH}
                             height={SLIDE_HEIGHT}
-                            format='webp'
+                            format="webp"
                             densities={[1.5, 2]}
-                            class='d-block w-100'
-                            style='object-fit: contain; background: var(--card-bg);'
+                            class="d-block w-100"
+                            style="object-fit: contain; background: var(--card-bg);"
                           />
-                          <span
-                            class='hobby-slide-icon'
-                            aria-hidden='true'>
+                          <span class="hobby-slide-icon" aria-hidden="true">
                             {isVideo ? (
-                              <i
-                                class='bx bx-play-circle'
-                                aria-hidden='true'
-                              />
+                              <i class="bx bx-play-circle" aria-hidden="true" />
                             ) : (
-                              <i
-                                class='bx bxs-camera'
-                                aria-hidden='true'
-                              />
+                              <i class="bx bxs-camera" aria-hidden="true" />
                             )}
                           </span>
                         </a>
                         <div
-                          class='hobby-overlay d-md-none'
-                          role='button'
+                          class="hobby-overlay d-md-none"
+                          role="button"
                           tabindex={0}
-                          aria-expanded='false'>
-                          <div class='hobby-overlay-content'>
-                            <h4>{hobby.title}</h4>
+                          aria-expanded="false"
+                        >
+                          <div class="hobby-overlay-content">
+                            <div class="h4">{hobby.title}</div>
                             {Array.isArray(hobby.description) ? (
-                              <ul class='mb-0'>
+                              <ul class="mb-0">
                                 {hobby.description.map((line) => (
                                   <li>{line}</li>
                                 ))}
@@ -130,35 +138,39 @@ const hobbyData = await Promise.all(
                             {hobby.href && (
                               <a
                                 href={hobby.href}
-                                target='_blank'
-                                rel='noopener'
-                                class='btn btn-outline-light btn-sm mt-2'
-                                onclick='event.stopPropagation()'>
+                                target="_blank"
+                                rel="noopener"
+                                class="btn btn-outline-light btn-sm mt-2"
+                                onclick="event.stopPropagation()"
+                              >
                                 View repo
                               </a>
                             )}
-                            <span class='hobby-overlay-tap-hint'>Tap to expand</span>
+                            <span class="hobby-overlay-tap-hint">
+                              Tap to expand
+                            </span>
                           </div>
                         </div>
                       </div>
-                      <div class='col-12 col-md-4 hobby-text-panel d-none d-md-flex align-items-center p-4'>
+                      <div class="col-12 col-md-4 hobby-text-panel d-none d-md-flex align-items-center p-4">
                         <div>
-                          <h4>{hobby.title}</h4>
+                          <div class="h4">{hobby.title}</div>
                           {Array.isArray(hobby.description) ? (
-                            <ul class='text-muted mb-0'>
+                            <ul class="text-muted mb-0">
                               {hobby.description.map((line) => (
                                 <li>{line}</li>
                               ))}
                             </ul>
                           ) : (
-                            <p class='text-muted mb-0'>{hobby.description}</p>
+                            <p class="text-muted mb-0">{hobby.description}</p>
                           )}
                           {hobby.href && (
                             <a
                               href={hobby.href}
-                              target='_blank'
-                              rel='noopener'
-                              class='btn btn-outline-light btn-sm mt-2'>
+                              target="_blank"
+                              rel="noopener"
+                              class="btn btn-outline-light btn-sm mt-2"
+                            >
                               View repo
                             </a>
                           )}
@@ -171,50 +183,50 @@ const hobbyData = await Promise.all(
             }
           </div>
           <button
-            class='carousel-control-prev'
-            type='button'
-            data-bs-target='#hobbyCarousel'
-            data-bs-slide='prev'>
-            <span
-              class='carousel-control-prev-icon'
-              aria-hidden='true'
-            ></span>
-            <span class='visually-hidden'>Previous</span>
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#hobbyCarousel"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
           </button>
           <button
-            class='carousel-control-next'
-            type='button'
-            data-bs-target='#hobbyCarousel'
-            data-bs-slide='next'>
-            <span
-              class='carousel-control-next-icon'
-              aria-hidden='true'
-            ></span>
-            <span class='visually-hidden'>Next</span>
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#hobbyCarousel"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
           </button>
         </div>
-        <div
-          class='hobby-thumbnails'
-          id='hobbyThumbnails'>
+        <!-- 3. Staggered Thumbnail Ribbon Reveal -->
+        <div class="hobby-thumbnails" id="hobbyThumbnails">
           {
             hobbies.map((hobby, index) => {
               const img = hobbyImages[hobby.imageKey];
               if (!img) return null;
+              // Stagger thumbnails starting at 250ms with 40ms step increments
+              const staggerDelay = `${250 + index * 40}ms`;
+
               return (
                 <button
-                  type='button'
-                  data-bs-target='#hobbyCarousel'
+                  type="button"
+                  data-bs-target="#hobbyCarousel"
                   data-bs-slide-to={String(index)}
-                  class={index === 0 ? 'active' : ''}
-                  aria-current={index === 0 ? 'true' : undefined}>
+                  class={`reveal-on-scroll reveal-on-scroll-far ${index === 0 ? 'active' : ''}`}
+                  style={`transition-delay: ${staggerDelay};`}
+                  aria-current={index === 0 ? 'true' : undefined}
+                >
                   <Image
                     src={img}
                     alt={hobby.title}
                     width={THUMB_SIZE}
                     height={THUMB_SIZE}
-                    format='webp'
+                    format="webp"
                     densities={[1.5, 2]}
-                    style='object-fit: cover; border-radius: 6px; display: block;'
+                    style="object-fit: cover; border-radius: 6px; display: block;"
                   />
                 </button>
               );

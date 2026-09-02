@@ -1,11 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 const SECTIONS = [
-  { id: "work", label: "Projects", icon: "bxs-tv" },
-  { id: "timeline", label: "Employment", icon: "bxs-time" },
-  { id: "hobbies", label: "Hobbies", icon: "bxs-dog" },
-  { id: "socialmedia", label: "Social", icon: "bxs-star" },
-  { id: "contact", label: "Contact", icon: "bxs-contact" },
+  { id: 'work', label: 'Projects', icon: 'bxs-tv' },
+  { id: 'timeline', label: 'Employment', icon: 'bxs-time' },
+  { id: 'hobbies', label: 'Hobbies', icon: 'bxs-dog' },
+  { id: 'socialmedia', label: 'Social', icon: 'bxs-star' },
+  { id: 'contact', label: 'Contact', icon: 'bxs-contact' },
 ] as const;
 
 export default function SectionNav() {
@@ -47,9 +47,9 @@ export default function SectionNav() {
       }
 
       links.forEach((a) => {
-        const isActive = a.getAttribute("href") === `#${currentSectionId}`;
-        a.classList.toggle("active", isActive);
-        a.setAttribute("aria-current", isActive ? "page" : "false");
+        const isActive = a.getAttribute('href') === `#${currentSectionId}`;
+        a.classList.toggle('active', isActive);
+        a.setAttribute('aria-current', isActive ? 'page' : 'false');
 
         // Auto-scroll active link to screen center on mobile
         if (isActive && activeLinkRef.current !== currentSectionId) {
@@ -60,7 +60,7 @@ export default function SectionNav() {
             const containerWidth = navInner.offsetWidth;
             navInner.scrollTo({
               left: linkLeft - containerWidth / 2 + linkWidth / 2,
-              behavior: "smooth",
+              behavior: 'smooth',
             });
           }
         }
@@ -72,39 +72,39 @@ export default function SectionNav() {
         const entry = entries[0];
         if (!entry) return;
         if (!entry.isIntersecting) {
-          nav.classList.add("is-stuck");
+          nav.classList.add('is-stuck');
         } else {
-          nav.classList.remove("is-stuck", "scroll-down", "scroll-up");
+          nav.classList.remove('is-stuck', 'scroll-down', 'scroll-up');
         }
       },
-      { threshold: 0, rootMargin: "0px" },
+      { threshold: 0, rootMargin: '0px' }
     );
     observer.observe(sentinel);
 
     const onScroll = () => {
       setActiveFromScroll();
 
-      if (!nav.classList.contains("is-stuck")) return;
+      if (!nav.classList.contains('is-stuck')) return;
       const currentScrollY = window.scrollY;
       const last = lastScrollYRef.current;
 
       if (currentScrollY > last) {
-        nav.classList.remove("scroll-up");
-        nav.classList.add("scroll-down");
+        nav.classList.remove('scroll-up');
+        nav.classList.add('scroll-down');
       } else {
-        nav.classList.remove("scroll-down");
-        nav.classList.add("scroll-up");
+        nav.classList.remove('scroll-down');
+        nav.classList.add('scroll-up');
       }
       lastScrollYRef.current = currentScrollY;
     };
 
     lastScrollYRef.current = window.scrollY;
     setActiveFromScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     return () => {
       observer.disconnect();
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener('scroll', onScroll);
     };
   }, []);
 
@@ -121,6 +121,7 @@ export default function SectionNav() {
         ref={navRef}
         className="site-header section-nav"
         aria-label="Page sections"
+        role="navigation"
       >
         <div ref={navInnerRef} className="section-nav-inner">
           {SECTIONS.map(({ id, label, icon }) => (

@@ -1,8 +1,6 @@
 @use 'variables' as *;
 @use 'mixins' as *;
 
-@import url('https://fonts.googleapis.com/css2?family=Saira:wght@500..900&family=Jost:wght@300;400&family=Fira+Code:wght@400;500&display=swap');
-
 @property --icon-drift-x {
   syntax: '<length>';
   inherits: false;
@@ -150,6 +148,10 @@ pre {
   -webkit-text-stroke: 1px #000;
   text-stroke: 1px #000;
   /* Standard fallback */
+}
+
+.hero-title {
+  min-height: 96px;
 }
 
 @keyframes text-flow {
@@ -315,7 +317,7 @@ pre {
   font-size: 2rem;
   line-height: 1;
   font-family: $font-saira;
-  @include gradient-text-animated($gradient-card-title, card-title-flow, 8s, 600);
+  @include gradient-text-animated($gradient-card-title-bright, card-title-flow, 8s, 600);
   -webkit-text-stroke: 0.5px #0a0a0f; // Dark border outline
   paint-order: stroke fill; // Places stroke BEHIND fill so letters don't get thin
 }
@@ -334,6 +336,7 @@ pre {
   position: fixed;
   z-index: -2;
   pointer-events: none;
+  min-height: 100vh;
 }
 
 .floating-icon {
@@ -479,10 +482,10 @@ pre {
 }
 
 .hero-card {
-  background: rgba(0, 0, 0, 0.12) !important;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  border: 1px solid rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(0, 0, 0, 0.95);
   border-radius: 2rem;
   padding: 4rem;
   max-width: $hero-card-max-width;
@@ -491,22 +494,6 @@ pre {
 
   .text-summary {
     color: #fff;
-  }
-}
-
-.card-box {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  border: 1px solid rgba(0, 0, 0, 0.75);
-  padding: 1rem;
-  border-radius: 0.5rem;
-
-  &.center-box {
-    margin-top: 100px;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 800px;
   }
 }
 
@@ -523,6 +510,23 @@ pre {
 
   .content-block {
     padding: 60px 0;
+  }
+}
+
+.hero-entrance-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(120px) scale(0.94);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+
+  &.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -852,6 +856,7 @@ pre {
   flex-direction: column;
   user-select: none;
   width: 100%;
+  min-height: 390px;
 }
 
 .text-shipped,
@@ -1001,6 +1006,9 @@ pre {
 // ---------------------------------------------------------------------------
 // Full-Width Giant Bleed Typography
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Full-Width Giant Bleed Typography (Staggered High-Contrast Shimmer)
+// ---------------------------------------------------------------------------
 .giant-bleed-text {
   position: absolute;
   top: 50%;
@@ -1008,7 +1016,6 @@ pre {
   transform: translate(-50%, -50%) rotate(-3deg);
   font-family: 'Saira', sans-serif;
   font-weight: 900;
-  // Massively scaled typography that intentionally clips on mobile/desktop
   font-size: clamp(6.5rem, 22vw, 22rem);
   line-height: 0.8;
   white-space: nowrap;
@@ -1020,18 +1027,49 @@ pre {
   gap: 3rem;
   z-index: 0;
 
-  span:first-child {
-    background: linear-gradient(180deg, rgba(55, 55, 55, 0.75) 0%, rgba(55, 55, 55, 0.03) 100%);
+  // Shared base style: High-contrast semi-solid fill + razor dark stroke
+  span {
+    background: linear-gradient(110deg,
+        rgba(255, 255, 255, 0.28) 20%,
+        rgba(255, 255, 255, 0.95) 50%,
+        rgba(255, 255, 255, 0.28) 80%);
+    background-size: 200% 100%;
     -webkit-background-clip: text;
-    -webkit-text-fill-color: rgba(255, 255, 255, 0.65);
-    -webkit-text-stroke: 1px rgba(99, 99, 99, 0.65);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    // Dark outline separates the text from the vibrant cyan/pink background
+    -webkit-text-stroke: 1.5px rgba(10, 10, 15, 0.65);
+    paint-order: stroke fill;
   }
 
+  // 1. "MY": First shimmer wave
+  span:first-child {
+    animation: textShimmer 6s ease-in-out infinite;
+    will-change: background-position;
+  }
+
+  // 2. "HISTORY": Solid readable fill with a staggered follow-through sweep
   .stroke-text {
-    color: rgba(255, 255, 255, 0.75);
-    -webkit-text-stroke: 1px rgba(99, 99, 99, 0.85);
+    animation: textShimmer 6s ease-in-out infinite;
+    animation-delay: 0.8s; // Sweeps immediately after "MY" finishes
+    will-change: background-position;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Continuous Sweep Animation
+// ---------------------------------------------------------------------------
+@keyframes textShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 
 // ---------------------------------------------------------------------------
 // Floating Overlapping Glass Card
@@ -1581,13 +1619,51 @@ pre {
   line-height: 10rem;
   color: #fcedd8;
   font-weight: 700;
+
+  // 1. Initial State: All shadow layers start collapsed behind the text
   text-shadow:
-    5px 5px 0px #eb452b,
-    10px 10px 0px #efa032,
-    15px 15px 0px #46b59b,
-    20px 20px 0px #017e7f,
-    25px 25px 0px #052939,
-    30px 30px 0px #c11a2b;
+    0px 0px 0px #eb452b,
+    0px 0px 0px #efa032,
+    0px 0px 0px #46b59b,
+    0px 0px 0px #017e7f,
+    0px 0px 0px #052939,
+    0px 0px 0px #c11a2b;
+
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+
+  // 2. Elastic Spring Transition
+  transition:
+    text-shadow 1.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 1.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 1.6s ease-out;
+
+  will-change: text-shadow, transform, opacity;
+
+  // 3. Scroll Reveal Triggered State
+  &.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+
+    // Shadows fan out into 3D stacked depth
+    text-shadow:
+      5px 5px 0px #eb452b,
+      10px 10px 0px #efa032,
+      15px 15px 0px #46b59b,
+      20px 20px 0px #017e7f,
+      25px 25px 0px #052939,
+      30px 30px 0px #c11a2b;
+  }
+
+  &:hover {
+    text-shadow:
+      8px 8px 0px #eb452b,
+      16px 16px 0px #efa032,
+      24px 24px 0px #46b59b,
+      32px 32px 0px #017e7f,
+      40px 40px 0px #052939,
+      48px 48px 0px #c11a2b;
+  }
 }
 
 .icon-large {
@@ -1871,7 +1947,7 @@ pre {
       }
     }
 
-    h4 {
+    .h4 {
       font-family: $font-saira;
       font-weight: 700;
       margin-bottom: 0.75rem;
@@ -2281,4 +2357,54 @@ body:has(.modal.lightbox.show) .modal-backdrop {
   animation: float-in-space 14s ease-in-out infinite;
   will-change: transform;
   /* GPU acceleration for butter-smooth rendering */
+}
+
+// Hardware-accelerated entrance animation
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(40px) scale(0.96);
+  transition:
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+
+  &.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.reveal-on-scroll-far {
+  transform: translateY(150px) scale(0.92);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+// Base hidden state for mobile (<992px): Standard upward slide
+.reveal-left,
+.reveal-right {
+  opacity: 0;
+  transform: translateY(60px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+
+  &.is-visible {
+    opacity: 1;
+    transform: translate(0) scale(1);
+  }
+}
+
+// AT OR ABOVE LG BREAKPOINT (>=992px): Directional Horizontal Slide
+@media (min-width: 992px) {
+  .reveal-left {
+    transform: translateX(-120px) scale(0.95);
+  }
+
+  .reveal-right {
+    transform: translateX(120px) scale(0.95);
+    transition-delay: 150ms; // Small delay for right card entrance
+  }
 }

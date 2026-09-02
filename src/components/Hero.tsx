@@ -71,8 +71,12 @@ export function ScrambleText({ text, className }: ScrambleTextProps) {
 export default function Hero() {
   const cardRef = useRef<HTMLDivElement>(null);
   const rellaxRef = useRef<ReturnType<typeof Rellax> | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // Trigger entrance animation on mount
+    setIsMounted(true);
+
     if (cardRef.current) {
       rellaxRef.current = new Rellax(cardRef.current, { speed: 1.5 });
     }
@@ -85,27 +89,30 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="hero-section">
-      <div className="hero-card min-height" ref={cardRef}>
-        <ScrambleText
-          text={heroData.name}
-          className="display-1 cool-title mb-2"
-        />
-        <ScrambleText
-          text={heroData.tagline}
-          className="h4 text-uppercase tracking-widest cool-title mb-4 d-block p-relative w-100"
-        />
-        <p className="lead text-summary px-lg-5">{heroData.intro}</p>
-        <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
-          <a href="#work" className="hero-cta-secondary">
-            <i className="bx bxs-rocket me-2" aria-hidden="true"></i>
-            {heroData.ctaWork}
-          </a>
+    <section className="hero-section" role="banner">
+      {/* Outer wrapper isolates the entrance slide from Rellax parallax transforms */}
+      <div className={`hero-entrance-wrap ${isMounted ? 'is-visible' : ''}`}>
+        <div className="hero-card min-height" ref={cardRef}>
+          <ScrambleText
+            text={heroData.name}
+            className="display-1 hero-title cool-title mb-2"
+          />
+          <ScrambleText
+            text={heroData.tagline}
+            className="h4 text-uppercase tracking-widest cool-title mb-4 d-block p-relative w-100"
+          />
+          <p className="lead text-summary px-lg-5">{heroData.intro}</p>
+          <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
+            <a href="#work" className="hero-cta-secondary">
+              <i className="bx bxs-rocket me-2" aria-hidden="true"></i>
+              {heroData.ctaWork}
+            </a>
 
-          <a href="#contact" className="hero-cta-primary">
-            <i className="bx bxs-paper-plane me-2" aria-hidden="true"></i>
-            {heroData.ctaContact}
-          </a>
+            <a href="#contact" className="hero-cta-primary">
+              <i className="bx bxs-paper-plane me-2" aria-hidden="true"></i>
+              {heroData.ctaContact}
+            </a>
+          </div>
         </div>
       </div>
     </section>

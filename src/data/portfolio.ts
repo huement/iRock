@@ -38,11 +38,13 @@ export const projects: Project[] = [
 Cutting-edge tech blog built on **Statamic CMS** and **Laravel Livewire**.
 
 ### Technical Highlights
+* **LIGHTHOUSE SCORES**: 97% Performance and a PERFECT 100% in SEO, Accessibility, Best Practices, and Progressive Web App categories.
 * **Full Stack Architecture**: Built from the ground up using modern **PHP 8.3+** and Livewire reactive components.
 * **100% Original Content**: All articles, custom artwork, and interactive tools were created and coded directly by me.
 * **SEO & Speed**: Rigorously optimized for core web vitals, dynamic open-graph card generation, and automated CI/CD deployments.
     `,
-    imageKey: 'blog.png',
+    imageKey: 'huementblog.png',
+    lightboxImageKey: 'blog.gif',
     tags: ['Laravel Livewire', 'Statamic CMS', 'PHP 8.3+', 'CI/CD'],
     gridClass: 'masonry-item--w4-double',
     cardClass: 'card card-featured',
@@ -91,7 +93,7 @@ Advanced affiliate marketing fraud detection and cookie manipulation prevention 
 * **Ad-Tech Suppression**: Identifies and suppresses hidden ad-tech cookie synchronization loops.
 * **Scoring Engine**: Evaluates real-time threats using a normalized multi-signal scoring algorithm.
     `,
-    imageKey: 'cookie-sq2.gif',
+    imageKey: 'cookie-sq.gif',
     lightboxImageKey: 'cookie.png',
     tags: ['React.js', 'Marketing'],
     gridClass: 'masonry-item--w4',
@@ -568,7 +570,7 @@ export const socials: Social[] = [
     title: 'LinkedIn',
     description:
       'Professional profile, experience, and network—connect for opportunities.',
-    buttonText: 'Connect',
+    buttonText: 'LinkedIn Connect',
     href: 'https://www.linkedin.com/in/derekscott13/',
   },
   {
@@ -595,7 +597,7 @@ export const socials: Social[] = [
     title: 'The Blog',
     description:
       'Long-form articles on internet culture, software architecture, and future tech.',
-    buttonText: 'Read More',
+    buttonText: 'Visit Blog',
     href: 'https://huement.com/blog',
   },
   {

@@ -4,7 +4,8 @@ import { marked } from 'marked';
 
 import { projects } from '../data/portfolio';
 
-import blogImg from '../assets/imgs/blog.png';
+import blogImg from '../assets/imgs/huementblog.png';
+import blogGif from '../assets/imgs/blog.gif';
 import cosmicImg from '../assets/imgs/cosmic.png';
 import cosmicSqImg from '../assets/imgs/cosmic-sq.png';
 import lumaImg from '../assets/imgs/luma.png';
@@ -23,19 +24,20 @@ import freshlime1Img from '../assets/imgs/freshlime1.png';
 import resultsImg from '../assets/imgs/results.png';
 import freshlime3Img from '../assets/imgs/freshlime3.png';
 import cookieImg from '../assets/imgs/cookie.png';
-import cookieGifImg from '../assets/imgs/cookie-sq2.gif';
+import cookieGifImg from '../assets/imgs/cookie-sq.gif';
 import shopifyImg from '../assets/imgs/shopify.png';
 import shopifyImg2 from '../assets/imgs/shopify-2.png';
 import trendforgeImg from '../assets/imgs/trendforge.png';
 
 const projectImages: Record<string, typeof blogImg> = {
-  'blog.png': blogImg,
+  'huementblog.png': blogImg,
+  'blog.gif': blogGif,
   'cosmic.png': cosmicImg,
   'cosmic-sq.png': cosmicSqImg,
   'shopify.png': shopifyImg,
   'shopify-2.png': shopifyImg2,
   'cookie.png': cookieImg,
-  'cookie-sq2.gif': cookieGifImg,
+  'cookie-sq.gif': cookieGifImg,
   'bare-thumb.gif': bareGif,
   'bare-600.gif': bare600Gif,
   'luma.png': lumaImg,
@@ -157,6 +159,9 @@ const validProjects = projectData.filter(
   <div class="masonry-grid">
     {
       validProjects.map((proj, index) => {
+        // Stagger items dynamically: (0ms, 120ms, 240ms) repeat
+        const staggerDelay = `${(index % 3) * 120}ms`;
+
         const ctaHtml = proj.ctaUrl
           ? `<a href="${proj.ctaUrl}" target="_blank" rel="noopener noreferrer" class="cyber-cta-btn mt-3 d-inline-block">
           <span class="cyber-btn-text">
@@ -167,7 +172,10 @@ const validProjects = projectData.filter(
           : '';
 
         return (
-          <div class={`masonry-item ${proj.gridClass}`}>
+          <div
+            class={`masonry-item ${proj.gridClass} reveal-on-scroll`}
+            style={`transition-delay: ${staggerDelay};`}
+          >
             <div class={`${proj.cardClass} h-100`}>
               <a
                 class="lightbox-toggle cursor-pointer"
@@ -219,16 +227,37 @@ const validProjects = projectData.filter(
   </div>
 </div>
 <!-- Project Grid Behavior -->
+<!-- Update your script tag at the bottom of ProjectGrid.astro -->
 <script>
   const MOBILE_BREAKPOINT = 992;
   const isMobile = () => window.innerWidth < MOBILE_BREAKPOINT;
 
+  // 1. Intersection Observer for Scroll Animations
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -50px 0px',
+    threshold: 0.15,
+  };
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target); // Unobserve once animated
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
+    revealObserver.observe(el);
+  });
+
+  // 2. Existing Lightbox Logic
   document.querySelectorAll('.masonry-grid .card').forEach((card) => {
     const lightboxLink =
       card.querySelector<HTMLAnchorElement>('.lightbox-toggle');
     if (!lightboxLink) return;
 
-    // Target image wrapper specifically instead of entire card-body to avoid nested click conflicts
     lightboxLink.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target.closest('a')) return;
