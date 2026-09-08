@@ -654,6 +654,13 @@ pre {
 // ---------------------------------------------------------------------------
 // Work section + fractal canvas
 // ---------------------------------------------------------------------------
+/* Inside global.scss */
+#starfield-canvas,
+#fractalCanvas {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
 #work {
   position: relative;
   overflow: hidden;
@@ -859,6 +866,12 @@ pre {
   min-height: 390px;
 }
 
+@media (max-width: 768px) {
+  .giant-text-block {
+    min-height: 100px;
+  }
+}
+
 .text-shipped,
 .text-projects {
   font-family: 'Saira', sans-serif;
@@ -997,15 +1010,12 @@ pre {
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
-  padding: 7rem 1rem;
+  padding: 2rem 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-// ---------------------------------------------------------------------------
-// Full-Width Giant Bleed Typography
-// ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // Full-Width Giant Bleed Typography (Staggered High-Contrast Shimmer)
 // ---------------------------------------------------------------------------
@@ -1054,6 +1064,22 @@ pre {
     animation: textShimmer 6s ease-in-out infinite;
     animation-delay: 0.8s; // Sweeps immediately after "MY" finishes
     will-change: background-position;
+  }
+}
+
+@media (min-width: 992px) {
+  .timeline-hero-wrap {
+    position: relative;
+    // Break out of parent constraints to span full viewport width
+    width: 100vw;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    padding: 7rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -1613,10 +1639,10 @@ pre {
 }
 
 .layered-title {
-  font-size: 10rem;
+  font-size: 5rem;
   text-align: center;
-  height: 12rem;
-  line-height: 10rem;
+  height: 8rem;
+  line-height: 5rem;
   color: #fcedd8;
   font-weight: 700;
 
@@ -1624,10 +1650,7 @@ pre {
   text-shadow:
     0px 0px 0px #eb452b,
     0px 0px 0px #efa032,
-    0px 0px 0px #46b59b,
-    0px 0px 0px #017e7f,
-    0px 0px 0px #052939,
-    0px 0px 0px #c11a2b;
+    0px 0px 0px #46b59b;
 
   opacity: 0;
   transform: translateY(30px) scale(0.95);
@@ -1649,20 +1672,63 @@ pre {
     text-shadow:
       5px 5px 0px #eb452b,
       10px 10px 0px #efa032,
-      15px 15px 0px #46b59b,
-      20px 20px 0px #017e7f,
-      25px 25px 0px #052939,
-      30px 30px 0px #c11a2b;
+      15px 15px 0px #46b59b;
   }
+}
 
-  &:hover {
+@media (min-width: 992px) {
+  .layered-title {
+    font-size: 10rem;
+    text-align: center;
+    height: 12rem;
+    line-height: 10rem;
+    color: #fcedd8;
+    font-weight: 700;
+
+    // 1. Initial State: All shadow layers start collapsed behind the text
     text-shadow:
-      8px 8px 0px #eb452b,
-      16px 16px 0px #efa032,
-      24px 24px 0px #46b59b,
-      32px 32px 0px #017e7f,
-      40px 40px 0px #052939,
-      48px 48px 0px #c11a2b;
+      0px 0px 0px #eb452b,
+      0px 0px 0px #efa032,
+      0px 0px 0px #46b59b,
+      0px 0px 0px #017e7f,
+      0px 0px 0px #052939,
+      0px 0px 0px #c11a2b;
+
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+
+    // 2. Elastic Spring Transition
+    transition:
+      text-shadow 1.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+      transform 1.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+      opacity 1.6s ease-out;
+
+    will-change: text-shadow, transform, opacity;
+
+    // 3. Scroll Reveal Triggered State
+    &.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+
+      // Shadows fan out into 3D stacked depth
+      text-shadow:
+        5px 5px 0px #eb452b,
+        10px 10px 0px #efa032,
+        15px 15px 0px #46b59b,
+        20px 20px 0px #017e7f,
+        25px 25px 0px #052939,
+        30px 30px 0px #c11a2b;
+    }
+
+    &:hover {
+      text-shadow:
+        8px 8px 0px #eb452b,
+        16px 16px 0px #efa032,
+        24px 24px 0px #46b59b,
+        32px 32px 0px #017e7f,
+        40px 40px 0px #052939,
+        48px 48px 0px #c11a2b;
+    }
   }
 }
 
@@ -2216,11 +2282,11 @@ body:has(.modal.lightbox.show) .modal-backdrop {
   z-index: 11;
 
   &[data-wave-face='top'] {
-    margin-top: calc(($hobby-wave-height * -1.25));
+    margin-top: calc(($hobby-wave-height * -1.5));
   }
 
   &[data-wave-face='bottom'] {
-    margin-bottom: -$hobby-wave-height;
+    margin-bottom: calc(-1 * ($hobby-wave-height - 15px));
   }
 }
 
@@ -2359,46 +2425,48 @@ body:has(.modal.lightbox.show) .modal-backdrop {
   /* GPU acceleration for butter-smooth rendering */
 }
 
-// Hardware-accelerated entrance animation
-.reveal-on-scroll {
-  opacity: 0;
-  transform: translateY(40px) scale(0.96);
-  transition:
-    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
-
-  &.is-visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.reveal-on-scroll-far {
-  transform: translateY(150px) scale(0.92);
-  transition:
-    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-// Base hidden state for mobile (<992px): Standard upward slide
-.reveal-left,
-.reveal-right {
-  opacity: 0;
-  transform: translateY(60px);
-  transition:
-    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
-
-  &.is-visible {
-    opacity: 1;
-    transform: translate(0) scale(1);
-  }
-}
 
 // AT OR ABOVE LG BREAKPOINT (>=992px): Directional Horizontal Slide
 @media (min-width: 992px) {
+
+  // Hardware-accelerated entrance animation
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+
+    &.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .reveal-on-scroll-far {
+    transform: translateY(150px) scale(0.92);
+    transition:
+      opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  // Base hidden state for mobile (<992px): Standard upward slide
+  .reveal-left,
+  .reveal-right {
+    opacity: 0;
+    transform: translateY(60px);
+    transition:
+      opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+
+    &.is-visible {
+      opacity: 1;
+      transform: translate(0) scale(1);
+    }
+  }
+
   .reveal-left {
     transform: translateX(-120px) scale(0.95);
   }
@@ -2406,5 +2474,101 @@ body:has(.modal.lightbox.show) .modal-backdrop {
   .reveal-right {
     transform: translateX(120px) scale(0.95);
     transition-delay: 150ms; // Small delay for right card entrance
+  }
+}
+
+// MOBILE FIXES
+@media (max-width: 768px) {
+
+  /* Fallback solid backgrounds to bypass heavy mobile GPU blur layers */
+  .hero-card,
+  .floating-detail-box,
+  .floating-info-box {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(10, 10, 16, 0.92) !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Mobile View (< 600px): 1-Column Stacked Cards
+ * --------------------------------------------------------------------------- */
+@media (max-width: 599px) {
+  .masonry-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .masonry-item--w6,
+  .masonry-item--w2,
+  .masonry-item--w1,
+  .masonry-item--w4,
+  .masonry-item--w4-double {
+    grid-column: span 1;
+  }
+
+  .masonry-grid .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+
+    .card-img-top {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .card-body {
+      position: static;
+      /* Restores normal document flow so card height expands */
+      width: 100%;
+      height: auto;
+      max-height: none;
+      /* Removes height caps */
+      background: rgba(14, 14, 20, 0.95);
+      color: $text-main;
+      display: flex;
+      flex-direction: column;
+      padding: 1.25rem 1rem;
+
+      &::after {
+        display: none;
+        /* Removes the "Tap to read more" overlay hint */
+      }
+    }
+
+    .card-title {
+      margin-bottom: 0.5rem;
+      font-size: 1.35rem;
+      color: #00f0ff;
+      -webkit-text-fill-color: initial;
+    }
+
+    .card-text {
+      display: block;
+      /* Removes line clamping */
+      -webkit-line-clamp: unset;
+      overflow: visible;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .cyber-tag-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .cyber-cta-btn {
+      width: 100%;
+      /* Spans button full-width for easier mobile touch targets */
+      text-align: center;
+      justify-content: center;
+    }
+
+    .list-group {
+      display: none;
+    }
   }
 }

@@ -1,12 +1,15 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
+const isMobile =
+  typeof window !== 'undefined' &&
+  (window.innerWidth < 768 || /iPhone|iPad|iPod/i.test(navigator.userAgent));
 const BASE_SPEED = 0.5;
 const MAX_SPEED = 3.2;
 const LINE_THRESHOLD = 0.85;
 const STRETCH_FACTOR = 28;
-const NUM_STARS = 5000;
-const RANGE = 300;
+const NUM_STARS = isMobile ? 2000 : 5000;
+const RANGE = isMobile ? 150 : 300;
 
 // Generates a soft glowing star sprite in memory (No network fetch delay!)
 function createStarTexture(): THREE.CanvasTexture {
@@ -34,7 +37,9 @@ export default function Starfield() {
   const starsRef = useRef<THREE.Points | null>(null);
   const starLinesRef = useRef<THREE.LineSegments | null>(null);
 
-  const starPositionsRef = useRef<Float32Array>(new Float32Array(NUM_STARS * 3));
+  const starPositionsRef = useRef<Float32Array>(
+    new Float32Array(NUM_STARS * 3)
+  );
   const currentSpeedRef = useRef(BASE_SPEED);
   const scrollVelocityRef = useRef(0);
   const lastScrollYRef = useRef(0);
@@ -46,12 +51,21 @@ export default function Starfield() {
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      window.innerWidth / window.innerHeight,
+      1,
+      1000
+    );
     camera.position.z = 1;
     camera.rotation.x = Math.PI / 2;
     cameraRef.current = camera;
 
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      alpha: true,
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     rendererRef.current = renderer;
@@ -60,7 +74,7 @@ export default function Starfield() {
     const starPositions = new Float32Array(NUM_STARS * 3);
     for (let i = 0; i < NUM_STARS; i++) {
       const i3 = i * 3;
-      starPositions[i3] = (Math.random() - 0.5) * RANGE * 2;     // X
+      starPositions[i3] = (Math.random() - 0.5) * RANGE * 2; // X
       starPositions[i3 + 1] = (Math.random() - 0.5) * RANGE * 2; // Y
       starPositions[i3 + 2] = (Math.random() - 0.5) * RANGE * 2; // Z
     }
@@ -68,7 +82,10 @@ export default function Starfield() {
 
     // === 2. Points (Star) Setup ===
     const pointGeo = new THREE.BufferGeometry();
-    pointGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+    pointGeo.setAttribute(
+      'position',
+      new THREE.BufferAttribute(starPositions, 3)
+    );
 
     const starTexture = createStarTexture();
 
@@ -92,7 +109,10 @@ export default function Starfield() {
     // === 3. Line (Hyperspace Streak) Setup ===
     const linePositions = new Float32Array(NUM_STARS * 6);
     const lineGeo = new THREE.BufferGeometry();
-    lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+    lineGeo.setAttribute(
+      'position',
+      new THREE.BufferAttribute(linePositions, 3)
+    );
 
     const starLines = new THREE.LineSegments(
       lineGeo,
@@ -120,10 +140,14 @@ export default function Starfield() {
       scrollVelocityRef.current *= 0.91;
       if (scrollVelocityRef.current < 0.001) scrollVelocityRef.current = 0;
 
-      const targetSpeed = Math.min(BASE_SPEED + scrollVelocityRef.current, MAX_SPEED);
+      const targetSpeed = Math.min(
+        BASE_SPEED + scrollVelocityRef.current,
+        MAX_SPEED
+      );
 
       // Smooth framerate-independent speed lerp
-      currentSpeedRef.current += (targetSpeed - currentSpeedRef.current) * Math.min(delta * 12, 1);
+      currentSpeedRef.current +=
+        (targetSpeed - currentSpeedRef.current) * Math.min(delta * 12, 1);
       const speed = currentSpeedRef.current;
 
       const positions = starPositionsRef.current;
@@ -148,8 +172,12 @@ export default function Starfield() {
       if (starLinesRef.current) starLinesRef.current.visible = isStreaking;
 
       if (isStreaking && starLinesRef.current) {
-        const streakLength = Math.min((speed - BASE_SPEED) * STRETCH_FACTOR + 4, 110);
-        const linePos = starLinesRef.current.geometry.attributes.position.array as Float32Array;
+        const streakLength = Math.min(
+          (speed - BASE_SPEED) * STRETCH_FACTOR + 4,
+          110
+        );
+        const linePos = starLinesRef.current.geometry.attributes.position
+          .array as Float32Array;
 
         for (let i = 0; i < NUM_STARS; i++) {
           const i3 = i * 3;
@@ -180,6 +208,8 @@ export default function Starfield() {
 
     // === Scroll Handler with Smooth Momentum ===
     const onScroll = () => {
+      if (isMobile) return;
+
       const currentScrollY = window.scrollY;
       const scrollDelta = Math.abs(currentScrollY - lastScrollYRef.current);
 

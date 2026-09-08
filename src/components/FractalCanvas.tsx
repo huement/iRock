@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import p5 from "p5";
+import { useEffect, useRef } from 'react';
+import p5 from 'p5';
 
 function correctRotation(deg: number): number {
   if (deg > 360) return deg % 360;
@@ -11,6 +11,9 @@ export default function FractalCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
   const p5InstanceRef = useRef<p5 | null>(null);
   const lastStepRef = useRef<number | null>(null);
+  const isMobile =
+    typeof window !== 'undefined' &&
+    (window.innerWidth < 768 || /iPhone|iPad|iPod/i.test(navigator.userAgent));
 
   useEffect(() => {
     const container = containerRef.current;
@@ -27,12 +30,12 @@ export default function FractalCanvas() {
       }
 
       function fractal(x: number, y: number, d: number, i: number) {
-        if (!circleHue || typeof circleHue.x === "undefined") return;
+        if (!circleHue || typeof circleHue.x === 'undefined') return;
 
         p.fill(
           correctRotation(circleHue.x + p.random(-25, 25)),
           circleHue.y + p.random(-15, 15),
-          circleHue.z + p.random(-15, 15),
+          circleHue.z + p.random(-15, 15)
         );
         p.noStroke();
         p.ellipse(x, y, d, d);
@@ -50,7 +53,7 @@ export default function FractalCanvas() {
 
       function drawCanvas() {
         if (!bgHue || !circleHue) return;
-        p.clear();
+        // p.clear();
         p.background(bgHue.x, bgHue.y, bgHue.z);
 
         const baseSize = Math.max(p.width, p.height) * 0.32;
@@ -85,13 +88,13 @@ export default function FractalCanvas() {
           p.redraw();
         };
 
-        window.addEventListener("fractalUpdateColors", fractalUpdateHandler);
+        window.addEventListener('fractalUpdateColors', fractalUpdateHandler);
         (
           window as unknown as { __fractalRemoveUpdateListener?: () => void }
         ).__fractalRemoveUpdateListener = () =>
           window.removeEventListener(
-            "fractalUpdateColors",
-            fractalUpdateHandler,
+            'fractalUpdateColors',
+            fractalUpdateHandler
           );
       };
 
@@ -114,8 +117,8 @@ export default function FractalCanvas() {
     p5InstanceRef.current = p5Instance;
 
     const checkFractalScrollTrigger = () => {
-      const workSection = document.getElementById("work");
-      if (!workSection) return;
+      const workSection = document.getElementById('work');
+      if (!workSection || isMobile) return;
 
       const rect = workSection.getBoundingClientRect();
       const windowHeight = window.innerHeight;
@@ -125,7 +128,7 @@ export default function FractalCanvas() {
       const totalRange = rect.height + windowHeight;
       const progress = Math.max(
         0,
-        Math.min(1, (windowHeight - rect.top) / totalRange),
+        Math.min(1, (windowHeight - rect.top) / totalRange)
       );
 
       // Reduced to 4 trigger steps across the scroll distance for less frequent updates
@@ -137,7 +140,7 @@ export default function FractalCanvas() {
         const targetHue = (currentStep / STEPS) * 360;
 
         window.dispatchEvent(
-          new CustomEvent("fractalUpdateColors", { detail: { targetHue } }),
+          new CustomEvent('fractalUpdateColors', { detail: { targetHue } })
         );
       }
     };
@@ -151,13 +154,13 @@ export default function FractalCanvas() {
       p5InstanceRef.current.redraw();
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
     checkFractalScrollTrigger();
 
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
       (
         window as unknown as { __fractalRemoveUpdateListener?: () => void }
       ).__fractalRemoveUpdateListener?.();

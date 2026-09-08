@@ -5,8 +5,13 @@ export default function FloatingEdgeIcons() {
   const containerRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isScrollingRef = useRef(false);
+  const isMobile =
+    typeof window !== 'undefined' &&
+    (window.innerWidth < 768 || /iPhone|iPad|iPod/i.test(navigator.userAgent));
 
   const handleScroll = useCallback(() => {
+    if (isMobile) return;
+
     const container = containerRef.current;
     if (!container) return;
 
@@ -24,6 +29,7 @@ export default function FloatingEdgeIcons() {
   }, []);
 
   useEffect(() => {
+    if (isMobile) return;
     const updateHeight = () => {
       const contactSection = document.getElementById('contact');
       const container = containerRef.current;
