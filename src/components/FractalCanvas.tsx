@@ -13,7 +13,7 @@ export default function FractalCanvas() {
   const lastStepRef = useRef<number | null>(null);
   const isMobile =
     typeof window !== 'undefined' &&
-    (window.innerWidth < 768 || /iPhone|iPad|iPod/i.test(navigator.userAgent));
+    (window.innerWidth < 992 || /iPhone|iPad|iPod/i.test(navigator.userAgent));
 
   useEffect(() => {
     const container = containerRef.current;
@@ -100,6 +100,7 @@ export default function FractalCanvas() {
 
       p.draw = drawCanvas;
 
+      if (isMobile) return;
       p.mousePressed = () => {
         if (
           p.mouseX > 0 &&

@@ -7,7 +7,7 @@ export default function FloatingEdgeIcons() {
   const isScrollingRef = useRef(false);
   const isMobile =
     typeof window !== 'undefined' &&
-    (window.innerWidth < 768 || /iPhone|iPad|iPod/i.test(navigator.userAgent));
+    (window.innerWidth < 992 || /iPhone|iPad|iPod/i.test(navigator.userAgent));
 
   const handleScroll = useCallback(() => {
     if (isMobile) return;

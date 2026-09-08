@@ -3,7 +3,7 @@ import * as THREE from 'three';
 
 const isMobile =
   typeof window !== 'undefined' &&
-  (window.innerWidth < 768 || /iPhone|iPad|iPod/i.test(navigator.userAgent));
+  (window.innerWidth < 992 || /iPhone|iPad|iPod/i.test(navigator.userAgent));
 const BASE_SPEED = 0.5;
 const MAX_SPEED = 3.2;
 const LINE_THRESHOLD = 0.85;
