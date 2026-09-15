@@ -1,0 +1,21 @@
+---
+// SLICK Cyberpunk Section Divider Using SVG Images
+const { image = 'bar.svg', hClass = 'h-[26px]' } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
+---
+
+<!-- 1. Negative vertical margin (-my-[12.5px]) centers the 25px bar directly over the seam -->
+<div class="relative w-full z-30 pointer-events-none -my-[10px]">
+  <!-- 2. Full-width 25px background bar matching #1a1a1a with downward black shadow -->
+  <div
+    class={`w-full ${hClass} bg-[#1a1a1a] shadow-[0_14px_25px_rgba(0,0,0,0.95)] relative flex items-center justify-center`}
+  >
+    <!-- 3. Centered SVG HUD detailing overflowing above & below the 25px bar -->
+    <img
+      src={`${baseUrl}/svgs/${image}`}
+      alt=""
+      aria-hidden="true"
+      class="absolute max-w-6xl w-full h-auto pointer-events-none"
+    />
+  </div>
+</div>

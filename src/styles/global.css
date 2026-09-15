@@ -1,0 +1,622 @@
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+@import 'boxicons/css/boxicons.min.css';
+
+/* ==========================================================================
+   1. Base Page Styles & Laser Edge Glows
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  position: relative;
+  background-color: #0a0a0c;
+  color: #f8fafc;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  pointer-events: none;
+  z-index: 99;
+}
+
+body::before {
+  left: 0;
+  background: linear-gradient(180deg, transparent, #ff4757, transparent);
+  box-shadow: 4px 0 20px rgba(255, 71, 87, 0.5);
+}
+
+body::after {
+  right: 0;
+  background: linear-gradient(180deg, transparent, #54a0ff, transparent);
+  box-shadow: -4px 0 20px rgba(84, 160, 255, 0.5);
+}
+
+/* ==========================================================================
+   2. Starfield Three.js Canvas Positioning
+   ========================================================================== */
+#starfield-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* ==========================================================================
+   3. Cosmic Wave Custom Fills & Negative Margins
+   ========================================================================== */
+.fill-dark {
+  fill: #0a0a0c !important;
+}
+.fill-wave {
+  fill: #16161a !important;
+}
+.fill-wave-dark {
+  fill: #0a0a0c !important;
+}
+.fill-wave-medium {
+  fill: #16161a !important;
+}
+.fill-wave-ultra {
+  fill: #420360 !important;
+}
+
+.bg-wave {
+  background: #16161a !important;
+}
+
+.bg-ultra {
+  background: #420360 !important;
+}
+
+.hobby-wave {
+  height: 150px;
+}
+
+.nav-wave {
+  height: 120px;
+}
+
+.nav-wave,
+.hobby-wave {
+  width: 100%;
+  display: block;
+  position: relative;
+  z-index: 9999;
+}
+
+.nav-wave[data-wave-face='top'] {
+  margin-top: -80px;
+}
+.nav-wave[data-wave-face='bottom'] {
+  margin-bottom: -80px;
+}
+.nav-wave-top {
+  margin-bottom: -5px !important;
+}
+
+/* .hobby-wave[data-wave-face='top'] { margin-top: -120px; }
+.hobby-wave[data-wave-face='bottom'] { margin-bottom: -65px; } */
+
+@media (max-width: 992px) {
+  .mobile-move-down {
+    margin-bottom: -5px !important;
+  }
+}
+
+#work,
+.hexyG {
+  margin-top: -1rem;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.giant-bleed-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-3deg);
+  font-family: 'Saira', sans-serif;
+  font-weight: 900;
+  font-size: clamp(6.5rem, 22vw, 22rem);
+  line-height: 0.8;
+  white-space: nowrap;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  user-select: none;
+  pointer-events: none;
+  display: flex;
+  gap: 3rem;
+  z-index: 0;
+}
+
+.giant-bleed-text span {
+  display: inline-block;
+  background: linear-gradient(
+    110deg,
+    rgba(255, 255, 255, 0.28) 20%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(255, 255, 255, 0.28) 80%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1.5px rgba(10, 10, 15, 0.65);
+  paint-order: stroke fill;
+}
+
+.giant-bleed-text span:first-child {
+  animation: textShimmer 6s ease-in-out infinite;
+  will-change: background-position;
+}
+
+.giant-bleed-text span.stroke-text {
+  animation: textShimmer 6s ease-in-out infinite 0.8s;
+  will-change: background-position;
+}
+
+@keyframes textShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ==========================================================================
+   4. Sticky SectionNav Component & Active State Tracking
+   ========================================================================== */
+.header-sentinel {
+  display: block;
+  width: 100%;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.site-header.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  padding: 2rem 0;
+  background: #16161a;
+  transition:
+    transform 0.3s ease,
+    padding 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.site-header.section-nav.is-stuck {
+  background: rgba(10, 10, 14, 0.85);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.site-header.section-nav.is-stuck.scroll-down {
+  padding: 0.35rem 0;
+  background: rgba(10, 10, 14, 0.65);
+}
+
+@media (max-width: 768px) {
+  .site-header.section-nav.is-stuck.scroll-down {
+    transform: translateY(-100%);
+  }
+}
+
+.site-header.section-nav.is-stuck.scroll-up {
+  padding: 0.75rem 0;
+  background: rgba(10, 10, 14, 0.95);
+}
+
+.section-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.section-nav-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.section-nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.45rem 0.9rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  border-radius: 50px;
+  border: 1px solid transparent;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.section-nav-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.section-nav-link.active {
+  color: #ffffff !important;
+  background: rgba(13, 202, 240, 0.15);
+  border-color: rgba(13, 202, 240, 0.4);
+  box-shadow: 0 0 15px rgba(13, 202, 240, 0.25);
+  font-weight: 600;
+}
+
+.section-nav-link.active .icon-nav {
+  color: #0dcaf0 !important;
+}
+
+/* ==========================================================================
+   5. Keyframes & Text Gradient Animations
+   ========================================================================== */
+@keyframes text-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.cool-title {
+  background: linear-gradient(
+    90deg,
+    #6366f1,
+    #a855f7,
+    #ec4899,
+    #14b8a6,
+    #0ea5e9,
+    #6366f1
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-flow 6s linear infinite;
+  font-weight: 700;
+}
+
+/* GPU-isolate tags to prevent parent text jitter */
+.software-tag {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, color, background-color, border-color, box-shadow;
+  contain: layout style;
+}
+
+/* Ensure active state uses glow shadows instead of dimension-altering pseudo-elements */
+.software-tag.active {
+  position: relative;
+  border-color: #00f0ff !important;
+  background-color: rgba(0, 240, 255, 0.15) !important;
+  color: #00f0ff !important;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+}
+
+.gcard {
+  border-radius: 0.25rem;
+  background: rgba(10, 10, 14, 0.35);
+  border: 0.06rem solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 0 0.06rem rgba(13, 202, 240, 0.45),
+    0 0 1.44rem rgba(13, 202, 240, 0.28);
+  backdrop-filter: blur(0.28rem);
+  -webkit-backdrop-filter: blur(0.28rem);
+}
+
+.gcard:hover {
+  box-shadow:
+    0 0 0 0.06rem hsl(163 82% 70% / 0.45),
+    0 0 3.44rem hsl(163 70% 50% / 0.28);
+}
+
+/* .gcard h2 {
+  margin: 0 0 0.63rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.75rem);
+  letter-spacing: 0.01875em;
+  font-weight: 100;
+}
+
+.gcard p {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--muted);
+} */
+
+.type-char {
+  opacity: 0;
+  transition: opacity 0.18s ease-in;
+}
+.type-char.visible {
+  opacity: 1;
+}
+.typing-caret {
+  display: inline-block;
+  width: 0;
+  height: 1em;
+  vertical-align: bottom;
+  border-right: 0.12em solid currentColor;
+  margin-right: -0.12em;
+  animation: blink-caret 0.75s step-end infinite;
+}
+@keyframes blink-caret {
+  from,
+  to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Modal Entrance Animations */
+#project-detail-modal:not(.hidden) {
+  animation: modal-backdrop-in 0.3s ease-out forwards;
+}
+
+#project-detail-modal:not(.hidden) .modal-card {
+  animation: modal-card-in 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Modal Exit Animations */
+#project-detail-modal.is-closing {
+  animation: modal-backdrop-out 0.25s ease-in forwards !important;
+}
+
+#project-detail-modal.is-closing .modal-card {
+  animation: modal-card-out 0.25s cubic-bezier(0.4, 0, 1, 1) forwards !important;
+}
+
+@keyframes modal-backdrop-in {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(16px);
+  }
+}
+
+@keyframes modal-backdrop-out {
+  0% {
+    opacity: 1;
+    backdrop-filter: blur(16px);
+  }
+  100% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+}
+
+@keyframes modal-card-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(30px) rotateX(12deg);
+    filter: brightness(2) drop-shadow(0 0 40px rgba(0, 240, 255, 0.8));
+  }
+  70% {
+    transform: scale(1.02) translateY(-4px) rotateX(0deg);
+    filter: brightness(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotateX(0deg);
+    filter: brightness(1);
+  }
+}
+
+@keyframes modal-card-out {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: brightness(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px) rotateX(-8deg);
+    filter: brightness(0.5);
+  }
+}
+
+/* ==========================================================================
+   Layered 3D Multi-Shadow Title Animation
+   ========================================================================== */
+.layered-title {
+  font-family: 'Saira', sans-serif;
+  font-weight: 900;
+  color: #fcedd8;
+  height: auto;
+  line-height: 1;
+
+  /* Initial state: Shadows collapsed behind text */
+  text-shadow:
+    0px 0px 0px #eb452b,
+    0px 0px 0px #efa032,
+    0px 0px 0px #46b59b;
+
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+
+  /* Elastic Spring Transition */
+  transition:
+    text-shadow 1.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 1.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 1.6s ease-out;
+
+  will-change: text-shadow, transform, opacity;
+}
+
+/* Scroll Triggered Visible State */
+.layered-title.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  text-shadow:
+    5px 5px 0px #eb452b,
+    10px 10px 0px #efa032,
+    15px 15px 0px #46b59b;
+}
+
+/* Desktop Multi-Layer Depth (>992px) */
+@media (min-width: 992px) {
+  .layered-title {
+    text-shadow:
+      0px 0px 0px #eb452b,
+      0px 0px 0px #efa032,
+      0px 0px 0px #46b59b,
+      0px 0px 0px #017e7f,
+      0px 0px 0px #052939,
+      0px 0px 0px #c11a2b;
+  }
+
+  .layered-title.is-visible {
+    text-shadow:
+      5px 5px 0px #eb452b,
+      10px 10px 0px #efa032,
+      15px 15px 0px #46b59b,
+      20px 20px 0px #017e7f,
+      25px 25px 0px #052939,
+      30px 30px 0px #c11a2b;
+  }
+
+  .layered-title.is-visible:hover {
+    text-shadow:
+      8px 8px 0px #eb452b,
+      16px 16px 0px #efa032,
+      24px 24px 0px #46b59b,
+      32px 32px 0px #017e7f,
+      40px 40px 0px #052939,
+      48px 48px 0px #c11a2b;
+  }
+}
+
+/* Dynamic Cosmic Wave Bubbles */
+.wave-bubbles-group {
+  pointer-events: none;
+}
+
+.wave-bubble {
+  fill: currentColor;
+  opacity: 0.65;
+  transform-origin: center;
+  animation: wave-bubble-float var(--float-dur, 4s) ease-in-out
+    var(--float-delay, 0s) infinite alternate;
+}
+
+@keyframes wave-bubble-float {
+  0% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-8px) scale(1.12);
+    opacity: 0.55;
+  }
+}
+
+/* ==========================================================================
+   SPACE MAN FLOAT ON
+   ========================================================================== */
+/* Zero-G Float Animation */
+@keyframes float-in-space {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-25px) translateX(15px) rotate(5deg) scale(1.03);
+  }
+  50% {
+    transform: translateY(-40px) translateX(-10px) rotate(-6deg) scale(0.97);
+  }
+  75% {
+    transform: translateY(-15px) translateX(-20px) rotate(3deg) scale(1.02);
+  }
+}
+
+.animate-float-space {
+  animation: float-in-space 14s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Scroll-reveal state handlers */
+.reveal-right {
+  opacity: 0;
+  transform: translateY(60px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+@media (min-width: 992px) {
+  .reveal-right {
+    transform: translateX(120px) scale(0.95);
+    transition-delay: 150ms;
+  }
+}
+
+.reveal-right.is-visible {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}

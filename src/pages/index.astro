@@ -1,16 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Starfield from '../components/Starfield';
-import FloatingEdgeIcons from '../components/FloatingEdgeIcons';
 import Hero from '../components/Hero.astro';
-import FractalCanvas from '../components/FractalCanvas';
+import SectionNav from '../components/SectionNav';
 import ProjectGrid from '../components/ProjectGrid.astro';
-import LightboxBehavior from '../components/LightboxBehavior';
-import LightboxDrawer from '../components/LightboxDrawer';
+import SectionDivider from '../components/SectionDivider.astro';
 import Timeline from '../components/Timeline';
 import HobbiesCarousel from '../components/HobbiesCarousel.astro';
-import HobbiesBehavior from '../components/HobbiesBehavior';
-import SectionNav from '../components/SectionNav';
 import Socials from '../components/Socials';
 import Contact from '../components/Contact.astro';
 
@@ -60,9 +56,6 @@ const websiteSchema = {
   description="Full Stack RockStar Web Developer. Expert with TypeScript, PHP & Python. 11 years of experience building web applications, and over 5 years building Java based Android Applications. I focus on UI/UX as well as AI automation."
 >
   <Starfield client:only="react" />
-  <FloatingEdgeIcons client:only="react" />
-  <LightboxBehavior client:load />
-  <LightboxDrawer client:load />
 
   <div style="min-height: 100vh;">
     <Hero />
@@ -70,80 +63,74 @@ const websiteSchema = {
 
   <cosmic-wave
     class="fill-wave-medium nav-wave nav-wave-top"
-    data-wave-points="7"
-    data-wave-variance="3"
-    data-wave-face="up"
-    data-wave-speed="5000"
+    data-wave-points="10"
+    data-wave-variance="2"
+    data-wave-face="top"
+    data-wave-speed="2000"
+    data-circles="true"
     data-wave-animate="true"></cosmic-wave>
 
   <SectionNav client:load />
+  <div class="bg-wave -mb-[1px] h-[20px]"></div>
 
   <cosmic-wave
     class="fill-wave-medium nav-wave nav-wave-bottom"
-    data-wave-points='9"'
-    data-wave-variance="2"
+    data-wave-points="9"
+    data-wave-variance="1"
     data-wave-face="bottom"
-    data-wave-speed="5000"
+    data-wave-speed="1500"
+    data-circles="true"
     data-wave-animate="true"></cosmic-wave>
 
-  <section id="work" role="main">
-    <FractalCanvas client:only="react" />
-    <ProjectGrid />
-  </section>
+  <ProjectGrid />
 
-  <div style="min-height: 1024px;">
+  <!-- Cyber HUD Seam Divider -->
+  <SectionDivider />
+
+  <div class="relative z-10">
     <Timeline client:only="react" />
   </div>
 
-  <cosmic-wave
-    class="fill-wave hobby-wave mobile-move-down"
-    data-wave-points="8"
-    data-wave-variance="1"
-    data-wave-face="top"
-    data-wave-speed="5000"
-    data-wave-animate="true"></cosmic-wave>
+  <SectionDivider image="bottom-bar.svg" />
 
   <HobbiesCarousel />
-  <HobbiesBehavior client:load />
 
-  <cosmic-wave
-    class="fill-wave hobby-wave"
-    data-wave-points="8"
-    data-wave-variance="1"
-    data-wave-face="bottom"
-    data-wave-speed="5000"
-    data-wave-animate="true"></cosmic-wave>
-
+  <div class="relative z-10" style="margin-top:-130px;margin-bottom: -130px;">
+    <cosmic-wave
+      class="fill-wave-ultra hobby-wave mobile-move-down z-[9999] mb-[-10px]"
+      data-wave-points="11"
+      data-wave-variance="2"
+      data-wave-face="top"
+      data-wave-speed="3333"
+      data-wave-animate="true"
+      data-circles="true"
+      data-circlefill="fill-wave-ultra"></cosmic-wave>
+    <div class="bg-ultra -mb-[1px] h-[200px]"></div>
+    <cosmic-wave
+      class="fill-wave-ultra hobby-wave relative"
+      data-wave-points="14"
+      data-wave-variance="3"
+      data-wave-face="bottom"
+      data-wave-speed="2000"
+      data-wave-animate="true"
+      data-circles="true"
+      data-circlefill="fill-wave-ultra"></cosmic-wave>
+  </div>
   <Socials client:only="react" />
 
   <cosmic-wave
     class="fill-wave hobby-wave mobile-move-down"
-    data-wave-points="8"
-    data-wave-variance="1"
-    data-wave-face="up"
-    data-wave-speed="5000"
+    data-wave-points="11"
+    data-wave-variance="3"
+    data-wave-face="top"
+    data-wave-speed="2345"
+    data-circles="true"
     data-wave-animate="true"></cosmic-wave>
 
   <Contact />
 
   <!-- Cycle .active on software tags for gradient flair -->
-  <script>
-    (function () {
-      const wrap = document.getElementById('software-tags-wrap');
-      if (!wrap) return;
-      const tags = wrap.querySelectorAll('.software-tag');
-      if (!tags.length) return;
-      const duration = 2500;
-      let index = 0;
-      function cycle() {
-        tags.forEach((t) => t.classList.remove('active'));
-        tags[index].classList.add('active');
-        index = (index + 1) % tags.length;
-      }
-      cycle();
-      setInterval(cycle, duration);
-    })();
-  </script>
+
   <script
     type="application/ld+json"
     set:html={JSON.stringify([personSchema, websiteSchema])}

@@ -2,7 +2,7 @@
 import { Image, getImage } from 'astro:assets';
 import { hobbies } from '../data/portfolio';
 
-// Import hobby images from src/assets so Astro can optimize (WebP, resize) at build time
+// Import hobby images from src/assets so Astro optimizes them at build time
 import gameartPreview from '../assets/imgs/gameart-preview.png';
 import godotImg from '../assets/imgs/godot.png';
 import godotGif from '../assets/imgs/shooter.gif';
@@ -27,12 +27,13 @@ const hobbyImages: Record<string, ImageMetadata> = {
   'the-end.png': theEnd,
 };
 
-// Carousel slide: larger to fill 12 cols; thumbnail: 120×120 with retina. Full-size for image lightbox.
 const SLIDE_WIDTH = 1100;
 const SLIDE_HEIGHT = 520;
 const THUMB_SIZE = 240;
 const LIGHTBOX_WIDTH = 1200;
 const LIGHTBOX_HEIGHT = 675;
+
+const baseUrl = import.meta.env.BASE_URL;
 
 const hobbyData = await Promise.all(
   hobbies.map(async (hobby) => {
@@ -49,191 +50,432 @@ const hobbyData = await Promise.all(
 );
 ---
 
-<section id="hobbies" class="content-block wave-block">
-  <div class="container">
-    <!-- 1. Header Reveal -->
-    <div class="giant-hobby-header reveal-on-scroll reveal-on-scroll-far">
-      <div class="giant-chip-wrap">
-        <i class="bx bxs-chip giant-chip-icon" aria-hidden="true"></i>
+<section id="hobbies" class="relative z-0 bg-slate-950/80 pb-[120px] pt-[80px]">
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- 1. Header Section -->
+    <div class="reveal-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out flex flex-col items-center justify-center text-center mb-12">
+      <!-- Glowing Chip Icon -->
+      <div class="relative flex items-center justify-center mb-4 mt-[100px]">
+        <div class="absolute w-28 h-28 bg-indigo-500/30 rounded-full blur-2xl pointer-events-none"></div>
+        <i class="bx bxs-chip text-6xl sm:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-500 animate-pulse drop-shadow-[0_0_25px_rgba(0,240,255,0.5)]"></i>
       </div>
-      <h2 class="giant-hobby-title">
-        HOBBY <span class="title-highlight">PROJECTS</span>
+
+      <h2 class="text-4xl sm:text-6xl md:text-7xl font-black font-saira uppercase tracking-tight text-white">
+        HOBBY <span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-pink-500 bg-clip-text text-transparent">PROJECTS</span>
       </h2>
     </div>
-    <div class="row justify-content-center">
-      <div class="col-12">
-        <div
-          id="hobbyCarousel"
-          class="carousel slide carousel-dark reveal-on-scroll reveal-on-scroll-far"
-          style="transition-delay: 150ms;"
-          data-bs-interval="false"
-          data-bs-wrap="true"
-        >
-          <div
-            class="carousel-inner rounded-3 overflow-hidden"
-            style="background: var(--card-bg); border: 1px solid #333;"
-          >
-            {
-              hobbyData.map((hobby, index) => {
-                const img = hobbyImages[hobby.imageKey];
-                if (!img) return null;
-                const isVideo = hobby.videoKey;
-                const href = isVideo
-                  ? `${import.meta.env.BASE_URL}videos/${hobby.videoKey}`
-                  : (hobby.imageHref ?? '#');
-                return (
-                  <div class={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                    <div class="row g-0 hobby-slide-row">
-                      <div class="col-12 col-md-8 hobby-img-wrap position-relative">
-                        <a
-                          class="centerbox-toggle position-relative d-block"
-                          href={href}
-                          data-video-src={
-                            isVideo
-                              ? `${import.meta.env.BASE_URL}videos/${hobby.videoKey}`
-                              : undefined
-                          }
-                          data-video-title={isVideo ? hobby.title : undefined}
-                          aria-label={
-                            isVideo
-                              ? `Play video: ${hobby.title}`
-                              : `View image: ${hobby.title}`
-                          }
-                        >
-                          <Image
-                            src={img}
-                            alt={hobby.title}
-                            width={SLIDE_WIDTH}
-                            height={SLIDE_HEIGHT}
-                            format="webp"
-                            densities={[1.5, 2]}
-                            class="d-block w-100"
-                            style="object-fit: contain; background: var(--card-bg);"
-                          />
-                          <span class="hobby-slide-icon" aria-hidden="true">
-                            {isVideo ? (
-                              <i class="bx bx-play-circle" aria-hidden="true" />
-                            ) : (
-                              <i class="bx bxs-camera" aria-hidden="true" />
-                            )}
-                          </span>
-                        </a>
-                        <div
-                          class="hobby-overlay d-md-none"
-                          role="button"
-                          tabindex={0}
-                          aria-expanded="false"
-                        >
-                          <div class="hobby-overlay-content">
-                            <div class="h4">{hobby.title}</div>
-                            {Array.isArray(hobby.description) ? (
-                              <ul class="mb-0">
-                                {hobby.description.map((line) => (
-                                  <li>{line}</li>
-                                ))}
-                              </ul>
-                            ) : (
-                              <p>{hobby.description}</p>
-                            )}
-                            {hobby.href && (
-                              <a
-                                href={hobby.href}
-                                target="_blank"
-                                rel="noopener"
-                                class="btn btn-outline-light btn-sm mt-2"
-                                onclick="event.stopPropagation()"
-                              >
-                                View repo
-                              </a>
-                            )}
-                            <span class="hobby-overlay-tap-hint">
-                              Tap to expand
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-12 col-md-4 hobby-text-panel d-none d-md-flex align-items-center p-4">
-                        <div>
-                          <div class="h4">{hobby.title}</div>
-                          {Array.isArray(hobby.description) ? (
-                            <ul class="text-muted mb-0">
-                              {hobby.description.map((line) => (
-                                <li>{line}</li>
-                              ))}
-                            </ul>
-                          ) : (
-                            <p class="text-muted mb-0">{hobby.description}</p>
-                          )}
-                          {hobby.href && (
-                            <a
-                              href={hobby.href}
-                              target="_blank"
-                              rel="noopener"
-                              class="btn btn-outline-light btn-sm mt-2"
-                            >
-                              View repo
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            }
-          </div>
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#hobbyCarousel"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#hobbyCarousel"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-        <!-- 3. Staggered Thumbnail Ribbon Reveal -->
-        <div class="hobby-thumbnails" id="hobbyThumbnails">
+
+    <!-- 2. Main Cyberpunk Carousel Frame -->
+    <div class="reveal-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out relative group/carousel max-w-6xl mx-auto" style="transition-delay: 150ms;">
+      <!-- Carousel Slide Container -->
+      <div class="relative rounded-2xl overflow-hidden bg-slate-900/90 border border-slate-800 shadow-[0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+        <!-- Sliding Track -->
+        <div id="hobby-slide-track" class="flex transition-transform duration-500 ease-out">
           {
-            hobbies.map((hobby, index) => {
+            hobbyData.map((hobby, index) => {
               const img = hobbyImages[hobby.imageKey];
               if (!img) return null;
-              // Stagger thumbnails starting at 250ms with 40ms step increments
-              const staggerDelay = `${250 + index * 40}ms`;
+              const isVideo = !!hobby.videoKey;
+              const videoUrl = isVideo ? `${baseUrl}/videos/${hobby.videoKey}` : '';
+              const mediaSrc = isVideo ? videoUrl : (hobby.imageHref ?? '#');
 
               return (
-                <button
-                  type="button"
-                  data-bs-target="#hobbyCarousel"
-                  data-bs-slide-to={String(index)}
-                  class={`reveal-on-scroll reveal-on-scroll-far ${index === 0 ? 'active' : ''}`}
-                  style={`transition-delay: ${staggerDelay};`}
-                  aria-current={index === 0 ? 'true' : undefined}
-                >
-                  <Image
-                    src={img}
-                    alt={hobby.title}
-                    width={THUMB_SIZE}
-                    height={THUMB_SIZE}
-                    format="webp"
-                    densities={[1.5, 2]}
-                    style="object-fit: cover; border-radius: 6px; display: block;"
-                  />
-                </button>
+                <div class="w-full flex-shrink-0 grid grid-cols-1 md:grid-cols-12 min-h-[420px] lg:min-h-[500px]">
+                  <!-- Left Pane: Media Preview -->
+                  <div class="md:col-span-8 relative bg-slate-950 flex items-center justify-center overflow-hidden group/img">
+                    <Image
+                      src={img}
+                      alt={hobby.title}
+                      width={SLIDE_WIDTH}
+                      height={SLIDE_HEIGHT}
+                      format="webp"
+                      densities={[1.5, 2]}
+                      class="w-full h-full object-contain max-h-[500px] transition-transform duration-700 group-hover/img:scale-105"
+                    />
+
+                    <!-- Interactive HUD Trigger Overlay -->
+                    <button
+                      type="button"
+                      class="hobby-modal-trigger absolute inset-0 bg-slate-950/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 cursor-pointer backdrop-blur-[2px]"
+                      data-title={hobby.title}
+                      data-is-video={isVideo ? 'true' : 'false'}
+                      data-media-src={mediaSrc}
+                      data-description={JSON.stringify(hobby.description)}
+                      data-repo-url={hobby.href || ''}
+                    >
+                      <span class="w-16 h-16 rounded-full bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-cyan-300 text-3xl shadow-[0_0_25px_rgba(0,240,255,0.6)] group-hover/img:scale-110 transition-transform">
+                        <i class={`bx ${isVideo ? 'bx-play-circle' : 'bxs-camera'}`}></i>
+                      </span>
+                      <span class="font-mono text-xs font-bold tracking-widest text-cyan-300 bg-slate-950/90 border border-cyan-500/40 px-3 py-1 rounded-md uppercase">
+                        {isVideo ? 'Play Holo-Video' : 'Expand High-Res Spec'}
+                      </span>
+                    </button>
+                  </div>
+
+                  <!-- Right Pane: Info Box -->
+                  <div class="md:col-span-4 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/90 border-t md:border-t-0 md:border-l border-slate-800/80">
+                    <div>
+                      <!-- HUD Status Bar -->
+                      <div class="flex items-center gap-2 mb-3 font-mono text-[11px] text-cyan-400 uppercase tracking-widest">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                        <span>// EXPERIMENTAL_LAB</span>
+                      </div>
+
+                      <h3 class="text-2xl sm:text-3xl font-bold font-saira text-white mb-4">
+                        {hobby.title}
+                      </h3>
+
+                      <!-- Description -->
+                      <div class="text-slate-300 text-sm leading-relaxed font-sans space-y-2 mb-6">
+                        {Array.isArray(hobby.description) ? (
+                          <ul class="space-y-1.5 list-none pl-0">
+                            {hobby.description.map((line) => (
+                              <li class="flex items-start gap-2">
+                                <span class="text-pink-500 font-mono font-bold">//</span>
+                                <span>{line}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p>{hobby.description}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap items-center gap-3 pt-4 border-t border-slate-800">
+                      {hobby.href && (
+                        <a
+                          href={hobby.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="inline-flex items-center gap-2 px-4 py-2 font-mono text-xs font-bold text-cyan-300 bg-slate-950 border border-cyan-500/40 rounded-lg hover:bg-cyan-500 hover:text-slate-950 transition-all shadow-md group/btn"
+                        >
+                          <i class="bx bxl-github text-base"></i>
+                          <span>Repository</span>
+                        </a>
+                      )}
+
+                      <button
+                        type="button"
+                        class="hobby-modal-trigger inline-flex items-center gap-2 px-4 py-2 font-mono text-xs font-bold text-slate-300 bg-slate-800/80 hover:bg-slate-700 rounded-lg transition-colors ml-auto"
+                        data-title={hobby.title}
+                        data-is-video={isVideo ? 'true' : 'false'}
+                        data-media-src={mediaSrc}
+                        data-description={JSON.stringify(hobby.description)}
+                        data-repo-url={hobby.href || ''}
+                      >
+                        <i class="bx bx-expand-alt"></i>
+                        <span>Matrix View</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               );
             })
           }
         </div>
       </div>
+
+      <!-- Navigation Arrows -->
+      <button
+        id="hobby-prev-btn"
+        type="button"
+        class="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-slate-950/80 border border-cyan-500/40 text-cyan-400 flex items-center justify-center hover:bg-cyan-500 hover:text-slate-950 transition-all shadow-lg backdrop-blur-md opacity-80 hover:opacity-100 z-20"
+        aria-label="Previous Slide"
+      >
+        <i class="bx bx-chevron-left text-3xl"></i>
+      </button>
+
+      <button
+        id="hobby-next-btn"
+        type="button"
+        class="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-slate-950/80 border border-cyan-500/40 text-cyan-400 flex items-center justify-center hover:bg-cyan-500 hover:text-slate-950 transition-all shadow-lg backdrop-blur-md opacity-80 hover:opacity-100 z-20"
+        aria-label="Next Slide"
+      >
+        <i class="bx bx-chevron-right text-3xl"></i>
+      </button>
     </div>
+
+    <!-- 3. Thumbnail Ribbon -->
+    <div id="hobby-thumbnails" class="reveal-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out flex items-center justify-start sm:justify-center gap-3 overflow-x-auto py-6 mt-6 scrollbar-none" style="transition-delay: 300ms;">
+      {
+        hobbies.map((hobby, index) => {
+          const img = hobbyImages[hobby.imageKey];
+          if (!img) return null;
+
+          return (
+            <button
+              type="button"
+              data-slide-index={index}
+              class={`hobby-thumb-btn flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden border-2 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer ${
+                index === 0 ? 'border-cyan-400 shadow-[0_0_15px_rgba(0,240,255,0.6)] opacity-100 scale-105' : 'border-slate-800'
+              }`}
+            >
+              <Image
+                src={img}
+                alt={hobby.title}
+                width={THUMB_SIZE}
+                height={THUMB_SIZE}
+                format="webp"
+                densities={[1.5, 2]}
+                class="w-full h-full object-cover"
+              />
+            </button>
+          );
+        })
+      }
+    </div>
+
+    <div class="relative w-full h-[100px] d-block block"></div>
   </div>
 </section>
+
+<!-- 4. Fullscreen Cyberpunk Hobby Lightbox Modal -->
+<div
+  id="hobby-detail-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed top-0 left-0 right-0 z-[9999] hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-slate-950/85 backdrop-blur-xl"
+>
+  <div class="modal-card relative w-full max-w-5xl max-h-full mx-auto my-auto [perspective:1000px]">
+    <div class="relative bg-slate-900 border border-cyan-500/40 rounded-2xl shadow-[0_0_50px_rgba(0,240,255,0.25)] overflow-hidden">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-800 bg-slate-950/60">
+        <div class="flex items-center gap-3">
+          <span class="w-3 h-3 rounded-full bg-cyan-400 animate-ping"></span>
+          <h3 id="hobby-modal-title" class="text-2xl sm:text-3xl font-bold font-saira text-cyan-400">
+            Hobby Matrix
+          </h3>
+        </div>
+        <button
+          type="button"
+          class="close-hobby-modal-btn text-slate-400 bg-transparent hover:bg-cyan-500/20 hover:text-cyan-300 rounded-lg text-sm w-9 h-9 inline-flex justify-center items-center transition-colors"
+        >
+          <i class="bx bx-x text-2xl"></i>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 sm:p-8 overflow-y-auto max-h-[75vh] space-y-6">
+        <!-- Media Frame Container -->
+        <div id="hobby-media-container" class="relative rounded-xl overflow-hidden border border-slate-800 bg-slate-950/90 min-h-[280px] max-h-[500px] flex items-center justify-center">
+          <!-- Dynamically populated img or video tag -->
+        </div>
+
+        <!-- Description Details -->
+        <div id="hobby-modal-desc" class="text-slate-300 font-sans text-sm sm:text-base leading-relaxed"></div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-end p-4 sm:p-6 border-t border-slate-800 bg-slate-950/60 gap-4">
+        <button
+          type="button"
+          class="close-hobby-modal-btn px-5 py-2.5 font-mono text-xs font-bold text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
+        >
+          Close View
+        </button>
+        <a
+          id="hobby-modal-repo-btn"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-6 py-2.5 font-mono text-xs font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 rounded-lg transition-all shadow-[0_0_20px_rgba(0,240,255,0.4)]"
+        >
+          <i class="bx bxl-github text-lg"></i>
+          <span>View Source Code</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Modal Entrance & Exit Animations */
+  #hobby-detail-modal:not(.hidden) {
+    animation: modal-backdrop-in 0.3s ease-out forwards;
+  }
+
+  #hobby-detail-modal:not(.hidden) .modal-card {
+    animation: modal-card-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  #hobby-detail-modal.is-closing {
+    animation: modal-backdrop-out 0.25s ease-in forwards !important;
+  }
+
+  #hobby-detail-modal.is-closing .modal-card {
+    animation: modal-card-out 0.25s cubic-bezier(0.4, 0, 1, 1) forwards !important;
+  }
+
+  @keyframes modal-backdrop-in {
+    0% { opacity: 0; backdrop-filter: blur(0px); }
+    100% { opacity: 1; backdrop-filter: blur(16px); }
+  }
+
+  @keyframes modal-backdrop-out {
+    0% { opacity: 1; backdrop-filter: blur(16px); }
+    100% { opacity: 0; backdrop-filter: blur(0px); }
+  }
+
+  @keyframes modal-card-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.85) translateY(30px) rotateX(12deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0) rotateX(0deg);
+    }
+  }
+
+  @keyframes modal-card-out {
+    0% {
+      opacity: 1;
+      transform: scale(1) translateY(0) rotateX(0deg);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.88) translateY(20px) rotateX(-8deg);
+    }
+  }
+</style>
+
+<script>
+  function setupHobbiesCarousel() {
+    const track = document.getElementById('hobby-slide-track');
+    const prevBtn = document.getElementById('hobby-prev-btn');
+    const nextBtn = document.getElementById('hobby-next-btn');
+    const thumbBtns = document.querySelectorAll<HTMLButtonElement>('.hobby-thumb-btn');
+
+    if (!track) return;
+
+    let currentIndex = 0;
+    const totalSlides = thumbBtns.length;
+
+    function updateCarousel(index: number) {
+      if (index < 0) currentIndex = totalSlides - 1;
+      else if (index >= totalSlides) currentIndex = 0;
+      else currentIndex = index;
+
+      // Slide track transition
+      if(track) track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+      // Update active thumbnail state
+      thumbBtns.forEach((btn, i) => {
+        if (i === currentIndex) {
+          btn.classList.add('border-cyan-400', 'shadow-[0_0_15px_rgba(0,240,255,0.6)]', 'opacity-100', 'scale-105');
+          btn.classList.remove('border-slate-800', 'opacity-60');
+        } else {
+          btn.classList.remove('border-cyan-400', 'shadow-[0_0_15px_rgba(0,240,255,0.6)]', 'opacity-100', 'scale-105');
+          btn.classList.add('border-slate-800', 'opacity-60');
+        }
+      });
+    }
+
+    prevBtn?.addEventListener('click', () => updateCarousel(currentIndex - 1));
+    nextBtn?.addEventListener('click', () => updateCarousel(currentIndex + 1));
+
+    thumbBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.slideIndex || '0', 10);
+        updateCarousel(idx);
+      });
+    });
+
+    // ---------------------------------------------------------------------------
+    // Modal Controller Logic
+    // ---------------------------------------------------------------------------
+    const modalElement = document.getElementById('hobby-detail-modal');
+    const modalTitle = document.getElementById('hobby-modal-title');
+    const mediaContainer = document.getElementById('hobby-media-container');
+    const modalDesc = document.getElementById('hobby-modal-desc');
+    const modalRepoBtn = document.getElementById('hobby-modal-repo-btn') as HTMLAnchorElement;
+
+    function openModal(trigger: HTMLElement) {
+      if (!modalElement) return;
+
+      const title = trigger.dataset.title || '';
+      const isVideo = trigger.dataset.isVideo === 'true';
+      const mediaSrc = trigger.dataset.mediaSrc || '';
+      const descData = JSON.parse(trigger.dataset.description || '""');
+      const repoUrl = trigger.dataset.repoUrl || '';
+
+      if (modalTitle) modalTitle.textContent = title;
+
+      // Populate Media Container (Image vs HTML5 Video)
+      if (mediaContainer) {
+        if (isVideo) {
+          mediaContainer.innerHTML = `
+            <video src="${mediaSrc}" controls autoplay class="w-full h-auto max-h-[480px] object-contain rounded-lg">
+              Your browser does not support html5 video.
+            </video>
+          `;
+        } else {
+          mediaContainer.innerHTML = `
+            <img src="${mediaSrc}" alt="${title}" class="w-full h-auto max-h-[480px] object-contain rounded-lg" />
+          `;
+        }
+      }
+
+      // Populate Description
+      if (modalDesc) {
+        if (Array.isArray(descData)) {
+          modalDesc.innerHTML = `
+            <ul class="space-y-2 list-none pl-0">
+              ${descData.map((line: string) => `<li class="flex items-start gap-2"><span class="text-pink-500 font-mono font-bold">//</span><span>${line}</span></li>`).join('')}
+            </ul>
+          `;
+        } else {
+          modalDesc.innerHTML = `<p>${descData}</p>`;
+        }
+      }
+
+      // Populate Repo Button
+      if (modalRepoBtn) {
+        if (repoUrl) {
+          modalRepoBtn.href = repoUrl;
+          modalRepoBtn.classList.remove('hidden');
+        } else {
+          modalRepoBtn.classList.add('hidden');
+        }
+      }
+
+      modalElement.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      if (!modalElement) return;
+      modalElement.classList.add('is-closing');
+
+      // Stop video playback if active
+      const video = mediaContainer?.querySelector('video');
+      if (video) video.pause();
+
+      setTimeout(() => {
+        modalElement.classList.add('hidden');
+        modalElement.classList.remove('is-closing');
+        if (mediaContainer) mediaContainer.innerHTML = '';
+      }, 240);
+    }
+
+    document.querySelectorAll('.hobby-modal-trigger').forEach((trigger) => {
+      trigger.addEventListener('click', () => openModal(trigger as HTMLElement));
+    });
+
+    document.querySelectorAll('.close-hobby-modal-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeModal();
+      });
+    });
+
+    modalElement?.addEventListener('click', (e) => {
+      if (e.target === modalElement) closeModal();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupHobbiesCarousel);
+  document.addEventListener('astro:page-load', setupHobbiesCarousel);
+</script>

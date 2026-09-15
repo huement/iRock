@@ -1,0 +1,139 @@
+---
+// src/components/HexGridBackground.astro
+---
+
+<div class="absolute inset-0 overflow-hidden pointer-events-none z-0 hexyG">
+  <canvas id="hexGridCanvas" class="w-full h-full block opacity-60"></canvas>
+</div>
+
+<script>
+  function initHexGrid() {
+    const canvas = document.getElementById(
+      'hexGridCanvas'
+    ) as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let animationFrameId: number;
+
+    let mouseX = -1000;
+    let mouseY = -1000;
+
+    // Radius scaling for mobile vs desktop
+    const isMobile = window.innerWidth < 768;
+    const HEX_RADIUS = isMobile ? 36 : 28;
+    const HEX_WIDTH = Math.sqrt(3) * HEX_RADIUS;
+    const HORIZ_DIST = HEX_WIDTH;
+    const VERT_DIST = 1.5 * HEX_RADIUS;
+
+    function resize() {
+      if (!canvas || !canvas.parentElement) return;
+      width = canvas.parentElement.offsetWidth;
+      height = canvas.parentElement.offsetHeight;
+
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      ctx.scale(dpr, dpr);
+    }
+
+    function drawHexagon(x: number, y: number, r: number) {
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const angle = (Math.PI / 3) * i - Math.PI / 6;
+        const hx = x + r * Math.cos(angle);
+        const hy = y + r * Math.sin(angle);
+        if (i === 0) ctx.moveTo(hx, hy);
+        else ctx.lineTo(hx, hy);
+      }
+      ctx.closePath();
+    }
+
+    function render(time: number) {
+      ctx.clearRect(0, 0, width, height);
+
+      const cols = Math.ceil(width / HORIZ_DIST) + 2;
+      const rows = Math.ceil(height / VERT_DIST) + 2;
+
+      for (let row = -1; row < rows; row++) {
+        const y = row * VERT_DIST;
+        const xOffset = row % 2 !== 0 ? HORIZ_DIST / 2 : 0;
+
+        for (let col = -1; col < cols; col++) {
+          const x = col * HORIZ_DIST + xOffset;
+
+          // Mouse proximity calculation
+          const dx = mouseX - x;
+          const dy = mouseY - y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const mouseHover = Math.max(0, 1 - dist / 200);
+
+          // Ambient sine wave math for dynamic pulsing
+          const wave = Math.sin(time * 0.0012 + x * 0.004 + y * 0.004);
+          const ambientAlpha = Math.max(0.03, (wave + 1) * 0.07);
+          const alpha = Math.min(0.85, ambientAlpha + mouseHover * 0.65);
+
+          drawHexagon(x, y, HEX_RADIUS);
+
+          if (mouseHover > 0.05) {
+            // Interactive Cyan Mouse Glow
+            ctx.fillStyle = `rgba(0, 240, 255, ${mouseHover * 0.18})`;
+            ctx.fill();
+            ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
+            ctx.lineWidth = 1.5;
+          } else if (wave > 0.75) {
+            // Secondary Ambient Purple Highlight
+            ctx.fillStyle = `rgba(168, 85, 247, 0.05)`;
+            ctx.fill();
+            ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
+            ctx.lineWidth = 1;
+          } else {
+            // Standard Wireframe Lattice
+            ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
+            ctx.lineWidth = 0.75;
+          }
+
+          ctx.stroke();
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(render);
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    };
+
+    const handleMouseLeave = () => {
+      mouseX = -1000;
+      mouseY = -1000;
+    };
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseleave', handleMouseLeave);
+
+    resize();
+    animationFrameId = requestAnimationFrame(render);
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }
+
+  // Support initial load and Astro view transitions
+  document.addEventListener('DOMContentLoaded', initHexGrid);
+  document.addEventListener('astro:page-load', initHexGrid);
+</script>

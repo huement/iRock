@@ -1,0 +1,28 @@
+---
+interface Props {
+  href?: string;
+  icon?: string;
+  variant?: 'primary' | 'secondary' | 'cyber';
+  class?: string;
+}
+
+const { href, icon = 'bx-cube', variant = 'primary', class: className = '' } = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+
+const variantClasses = {
+  primary:
+    'bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-600 text-white shadow-cyan-500/40 hover:shadow-cyan-500/80 hover:bg-gradient-to-br focus:ring-cyan-800',
+  secondary:
+    'text-cyan-400 bg-slate-900/60 backdrop-blur-md border border-cyan-500/40 hover:border-cyan-400 hover:text-white hover:bg-cyan-500/20 focus:ring-cyan-900 hover:shadow-[0_0_20px_rgba(0,240,255,0.4)]',
+  cyber:
+    'text-cyan-300 bg-cyan-950/80 border-x-2 border-cyan-400 hover:bg-cyan-900/50 hover:text-white shadow-[0_0_15px_rgba(0,240,255,0.2)] hover:shadow-[0_0_25px_rgba(0,240,255,0.6)] [clip-path:polygon(10px_0,100%_0,100%_calc(100%-10px),calc(100%-10px)_100%,0_100%,0_10px)]',
+};
+---
+
+<Tag
+  href={href}
+  class={`relative inline-flex items-center justify-center gap-2.5 px-6 py-3 font-mono text-xs font-bold tracking-widest uppercase transition-all duration-300 rounded-lg shadow-lg hover:-translate-y-0.5 active:translate-y-0 focus:ring-4 focus:outline-none group ${variantClasses[variant]} ${className}`}>
+  <i class={`bx ${icon} text-lg transition-transform duration-300 group-hover:scale-110`}></i>
+  <slot />
+</Tag>

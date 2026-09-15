@@ -1,8 +1,8 @@
 ---
 import { Image, getImage } from 'astro:assets';
 import { marked } from 'marked';
-
 import { projects } from '../data/portfolio';
+import HexGridBackground from './HexGridBackground.astro';
 
 import blogImg from '../assets/imgs/huementblog.png';
 import blogGif from '../assets/imgs/blog.gif';
@@ -12,7 +12,6 @@ import lumaImg from '../assets/imgs/luma.png';
 import lumaGif from '../assets/imgs/luma.gif';
 import bareGif from '../assets/imgs/bare-thumb.gif';
 import bare600Gif from '../assets/imgs/bare-600.gif';
-// import youtubeImg from '../assets/imgs/youtube.png'
 import flightplanImg from '../assets/imgs/flightplan.png';
 import mapTextureImg from '../assets/imgs/map_texture.png';
 import laancImg from '../assets/imgs/laanc.png';
@@ -60,33 +59,23 @@ const THUMB_HEIGHT = 320;
 const LIGHTBOX_WIDTH = 1200;
 const LIGHTBOX_HEIGHT = 800;
 
-// 3. Update the data processing to handle lightboxImageKey
 const projectData = await Promise.all(
   projects.map(async (proj) => {
     const thumbImg = projectImages[proj.imageKey];
     if (!thumbImg) return null;
 
-    // 1. Set max bounding box constraints
     const maxW = proj.thumbWidth ?? THUMB_WIDTH;
     const maxH = proj.thumbHeight ?? THUMB_HEIGHT;
-
-    // 2. Calculate scale factor to fit within max bounds
-    // (Optional: add `, 1` to Math.min if you don't want small images upscaled)
     const scale = Math.min(maxW / thumbImg.width, maxH / thumbImg.height);
-
-    // 3. Derive proportional target width and height
     const width = Math.round(thumbImg.width * scale);
     const height = Math.round(thumbImg.height * scale);
 
     let fullSrc = '';
-
-    // Parse markdown string into HTML
     const markdownContent = proj.lightboxDetails || proj.description;
     const detailsHtml = await marked.parse(markdownContent);
 
     if (proj.lightboxImageKey && projectImages[proj.lightboxImageKey]) {
       const lightboxImg = projectImages[proj.lightboxImageKey];
-
       if (proj.lightboxImageKey.endsWith('.gif')) {
         fullSrc = lightboxImg.src;
       } else {
@@ -115,122 +104,212 @@ const projectData = await Promise.all(
 const validProjects = projectData.filter(
   (p): p is NonNullable<typeof p> => p != null
 );
+
+
+// Map legacy gridClass names or apply a repeating 12-column layout pattern
+const getColSpan = (index: number, gridClass?: string) => {
+  if (gridClass?.includes('w6') || gridClass?.includes('w4-double')) return 'lg:col-span-8';
+  if (gridClass?.includes('w2') || gridClass?.includes('w1')) return 'lg:col-span-4';
+
+  // Fallback pattern cycle: [8, 4] -> [4, 8] -> [4, 4, 4] -> [3, 3, 3, 3]
+  const pattern = [
+    'lg:col-span-8', // Row 1 (8 + 4 = 12)
+    'lg:col-span-4',
+    'lg:col-span-4', // Row 2 (4 + 8 = 12)
+    'lg:col-span-8',
+    'lg:col-span-4', // Row 3 (4 + 4 + 4 = 12)
+    'lg:col-span-4',
+    'lg:col-span-4',
+  ];
+
+  return pattern[index % pattern.length];
+};
+
 ---
 
-<div
-  class="container-lg px-2 px-lg-0 py-5"
-  style="z-index: 5; position: relative"
->
-  <div class="shipped-hero-section">
-    <div class="hero-content-wrapper">
-      <!-- Giant Edge-to-Edge Typography -->
-      <div class="giant-text-block">
-        <h1 class="text-shipped d-block">SHIPPED</h1>
-        <h1 class="text-projects d-block">PROJECTS</h1>
-      </div>
+<section id="work" class="relative z-10 bg-slate-950/70 backdrop-blur-sm py-16 overflow-hidden">
+  <!-- Dynamic Hexagonal HUD Canvas Background -->
+  <HexGridBackground />
 
-      <!-- Floating Glass Card Overlapping Text -->
-      <div class="floating-info-box">
-        <div class="icon-wrapper">
-          <i class="bx bxs-cool text-warning" aria-hidden="true"></i>
+  <!-- Main Grid Content -->
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Section Header -->
+    <div class="relative overflow-hidden mb-16">
+      <div class="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+        <!-- Typography Title -->
+        <div class="select-none">
+          <h1 class="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black font-saira tracking-tighter uppercase leading-none bg-gradient-to-b from-white via-slate-200 to-slate-500 bg-clip-text text-transparent">
+            SHIPPED
+          </h1>
+          <h1 class="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black font-saira tracking-tighter uppercase leading-none bg-gradient-to-b from-slate-300 via-slate-500 to-slate-800 bg-clip-text text-transparent -mt-2 sm:-mt-4">
+            PROJECTS
+          </h1>
         </div>
 
-        <!-- Content Columns -->
-        <div class="info-columns">
-          <div class="col-item">
-            <p class="col-text fs-5">
-              Below is my
-              <strong>"Greatest Hits"</strong>, things I've shipped over the
-              course of my career.
-            </p>
+        <!-- HUD Info Box -->
+        <div class="relative max-w-lg w-full bg-slate-900/80 backdrop-blur-md border border-cyan-500/30 rounded-xl p-6 shadow-2xl shadow-cyan-500/10">
+          <div class="absolute -top-5 right-6 w-12 h-12 rounded-full bg-slate-950 border border-cyan-400/50 flex items-center justify-center text-yellow-400 text-2xl shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+            <i class="bx bxs-cool"></i>
           </div>
-
-          <div class="col-item">
-            <p class="col-text monospaced text-muted-custom fs-sm">
-              Click any image to trigger the expanded markdown view, or launch
-              live projects and repositories via the direct links.
-            </p>
-          </div>
+          <p class="text-slate-100 font-medium text-base mb-2">
+            Below is my <strong class="text-cyan-400 font-semibold">"Greatest Hits"</strong>—key software, products, and tools I've shipped over my career.
+          </p>
+          <p class="text-xs font-mono text-cyan-300/70 leading-relaxed">
+            Click any card to launch the full spec matrix and interactive preview window.
+          </p>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="masonry-grid">
-    {
-      validProjects.map((proj, index) => {
-        // Stagger items dynamically: (0ms, 120ms, 240ms) repeat
-        const staggerDelay = `${(index % 3) * 120}ms`;
+    <!-- 12-Column Asymmetric Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
+      {
+        validProjects.map((proj, index) => {
+          const staggerDelay = `${(index % 3) * 120}ms`;
+          const colSpanClass = proj.gridClass;
 
-        const ctaHtml = proj.ctaUrl
-          ? `<a href="${proj.ctaUrl}" target="_blank" rel="noopener noreferrer" class="cyber-cta-btn mt-3 d-inline-block">
-          <span class="cyber-btn-text">
-            ${proj.ctaText || 'Visit Project'} 
-            <i class='bx bx-right-arrow-alt' aria-hidden='true'></i>
-          </span>
-        </a>`
-          : '';
-
-        return (
-          <div
-            class={`masonry-item ${proj.gridClass} reveal-on-scroll`}
-            style={`transition-delay: ${staggerDelay};`}
-          >
-            <div class={`${proj.cardClass} h-100`}>
-              <a
-                class="lightbox-toggle cursor-pointer"
-                href={proj.fullSrc}
-                data-title={proj.title}
-                data-details={proj.detailsHtml}
-                data-cta-url={proj.ctaUrl || ''}
-                data-cta-text={proj.ctaText || ''}
-              >
-                <Image
-                  src={projectImages[proj.imageKey]}
-                  alt={proj.title}
-                  width={proj.width}
-                  height={proj.height}
-                  format="webp"
-                  densities={[1, 2]}
-                  loading={index < 2 ? 'eager' : 'lazy'}
-                  class="rounded card-img-top"
-                />
-              </a>
-              <div class="card-body d-flex flex-column">
-                <div class="card-title heavy-title proj-title">
-                  {proj.title}
-                </div>
-
-                <p class="card-text proj-desc text-muted">{proj.description}</p>
-
-                <div class="cyber-tag-group d-flex flex-wrap gap-2 mt-3">
-                  {proj.tags.map((tag) => (
-                    <span class="cyber-tag">
-                      <span class="cyber-tag-prefix">//</span>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* mt-auto absorbs all remaining vertical space and locks the button to the bottom */}
-                {proj.ctaUrl && (
-                  <div class="mt-auto pt-3">
-                    <Fragment set:html={ctaHtml} />
+          return (
+            <div
+              class={`${colSpanClass} opacity-0 translate-y-8 transition-all duration-700 ease-out reveal-on-scroll flex`}
+              style={`transition-delay: ${staggerDelay};`}
+            >
+              <div class="group relative w-full bg-slate-900/80 border border-slate-800 hover:border-cyan-500/60 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,240,255,0.25)] flex flex-col">
+                <!-- Thumbnail Image Button -->
+                <button
+                  type="button"
+                  class="lightbox-trigger w-full text-left overflow-hidden relative cursor-pointer group-hover:opacity-95 transition-opacity"
+                  data-title={proj.title}
+                  data-image={proj.fullSrc}
+                  data-details={proj.detailsHtml}
+                  data-tags={JSON.stringify(proj.tags)}
+                  data-cta-url={proj.ctaUrl || ''}
+                  data-cta-text={proj.ctaText || ''}
+                >
+                  <Image
+                    src={projectImages[proj.imageKey]}
+                    alt={proj.title}
+                    width={proj.width}
+                    height={proj.height}
+                    format="webp"
+                    densities={[1, 2]}
+                    loading={index < 2 ? 'eager' : 'lazy'}
+                    class="w-full h-64 sm:h-72 lg:h-80 object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60"></div>
+                  <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-950/80 text-cyan-400 border border-cyan-500/40 px-2.5 py-1 rounded text-xs font-mono flex items-center gap-1 backdrop-blur-sm">
+                    <i class="bx bx-expand-alt"></i> Expand
                   </div>
-                )}
+                </button>
+
+                <!-- Card Body -->
+                <div class="p-6 flex flex-col flex-grow">
+                  <h2 class="text-2xl font-bold font-saira text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                    {proj.title}
+                  </h2>
+
+                  <p class="text-slate-400 text-sm leading-relaxed mb-4 flex-grow">
+                    {proj.description}
+                  </p>
+
+                  <!-- Cyberpunk Tags -->
+                  <div class="flex flex-wrap gap-1.5 mb-6">
+                    {proj.tags.map((tag) => (
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-mono font-semibold text-cyan-300 bg-cyan-950/60 border border-cyan-500/30 rounded uppercase tracking-wider">
+                        <span class="text-pink-500">//</span>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <!-- CTA Link Button -->
+                  {proj.ctaUrl && (
+                    <div class="mt-auto pt-2">
+                      <a
+                        href={proj.ctaUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 px-4 py-2 font-mono text-xs font-bold text-cyan-300 bg-slate-950 border border-cyan-500/40 rounded-lg hover:bg-cyan-500 hover:text-slate-950 transition-all duration-200 shadow-md group/btn"
+                      >
+                        <span>{proj.ctaText || 'Visit Project'}</span>
+                        <i class="bx bx-right-arrow-alt text-lg group-hover/btn:translate-x-1 transition-transform"></i>
+                      </a>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })
-    }
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Flowbite Full-Screen Project Details Modal -->
+<div
+  id="project-detail-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed top-0 left-0 right-0 z-[9999] hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-slate-950/80 backdrop-blur-xl"
+>
+  <div class="modal-card relative w-full max-w-5xl max-h-full mx-auto my-auto [perspective:1000px]">
+    <!-- Modal content -->
+    <div class="relative bg-slate-900 border border-cyan-500/40 rounded-2xl shadow-[0_0_50px_rgba(0,240,255,0.2)] overflow-hidden">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-800 bg-slate-950/50">
+        <h3 id="modal-title" class="text-2xl sm:text-3xl font-bold font-saira text-cyan-400">
+          Project Spec Matrix
+        </h3>
+        <button
+          type="button"
+          class="close-modal-btn text-slate-400 bg-transparent hover:bg-cyan-500/20 hover:text-cyan-300 rounded-lg text-sm w-9 h-9 inline-flex justify-center items-center transition-colors"
+        >
+          <i class="bx bx-x text-2xl"></i>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 sm:p-8 overflow-y-auto max-h-[75vh] space-y-6">
+        <!-- Expanded Full Image View -->
+        <div class="relative rounded-xl overflow-hidden border border-slate-800 bg-slate-950/80 max-h-[450px] flex items-center justify-center">
+          <img id="modal-image" src="" alt="Project Preview" class="w-full h-auto max-h-[450px] object-contain" />
+        </div>
+
+        <!-- Tag List -->
+        <div id="modal-tags" class="flex flex-wrap gap-2"></div>
+
+        <!-- Rendered Markdown Details -->
+        <div id="modal-details" class="prose prose-invert prose-cyan max-w-none text-slate-300 text-sm sm:text-base leading-relaxed"></div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div id="modal-footer" class="flex items-center justify-end p-4 sm:p-6 border-t border-slate-800 bg-slate-950/50 gap-4">
+        <button
+          type="button"
+          class="close-modal-btn px-5 py-2.5 font-mono text-xs font-bold text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
+        >
+          Close Matrix
+        </button>
+        <a
+          id="modal-cta-btn"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-6 py-2.5 font-mono text-xs font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 rounded-lg transition-all shadow-[0_0_20px_rgba(0,240,255,0.4)]"
+        >
+          <span id="modal-cta-text">Launch Live Project</span>
+          <i class="bx bx-export text-lg"></i>
+        </a>
+      </div>
+    </div>
   </div>
 </div>
-<!-- Project Grid Behavior -->
-<!-- Update your script tag at the bottom of ProjectGrid.astro -->
+
 <script>
-  const MOBILE_BREAKPOINT = 992;
-  const isMobile = () => window.innerWidth < MOBILE_BREAKPOINT;
+  import { Modal } from 'flowbite';
 
   // 1. Intersection Observer for Scroll Animations
   const observerOptions = {
@@ -242,8 +321,8 @@ const validProjects = projectData.filter(
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        revealObserver.unobserve(entry.target); // Unobserve once animated
+        entry.target.classList.remove('opacity-0', 'translate-y-8');
+        revealObserver.unobserve(entry.target);
       }
     });
   }, observerOptions);
@@ -252,18 +331,82 @@ const validProjects = projectData.filter(
     revealObserver.observe(el);
   });
 
-  // 2. Existing Lightbox Logic
-  document.querySelectorAll('.masonry-grid .card').forEach((card) => {
-    const lightboxLink =
-      card.querySelector<HTMLAnchorElement>('.lightbox-toggle');
-    if (!lightboxLink) return;
+  // 2. Initialize Flowbite Modal
+  const modalElement = document.getElementById('project-detail-modal');
+  const modal = modalElement ? new Modal(modalElement) : null;
 
-    lightboxLink.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('a')) return;
-      e.preventDefault();
-      e.stopPropagation();
-      lightboxLink.click();
+  // Elements inside Modal to update dynamically
+  const modalTitle = document.getElementById('modal-title');
+  const modalImage = document.getElementById('modal-image') as HTMLImageElement;
+  const modalDetails = document.getElementById('modal-details');
+  const modalTags = document.getElementById('modal-tags');
+  const modalCtaBtn = document.getElementById('modal-cta-btn') as HTMLAnchorElement;
+  const modalCtaText = document.getElementById('modal-cta-text');
+
+  // Add click handlers for all project triggers
+  document.querySelectorAll('.lightbox-trigger').forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      const btn = trigger as HTMLButtonElement;
+      const title = btn.dataset.title || '';
+      const image = btn.dataset.image || '';
+      const details = btn.dataset.details || '';
+      const tags = JSON.parse(btn.dataset.tags || '[]');
+      const ctaUrl = btn.dataset.ctaUrl || '';
+      const ctaText = btn.dataset.ctaText || 'Visit Project';
+
+      if (modalTitle) modalTitle.textContent = title;
+      if (modalImage) modalImage.src = image;
+      if (modalDetails) modalDetails.innerHTML = details;
+
+      // Populate Tags
+      if (modalTags) {
+        modalTags.innerHTML = tags
+          .map(
+            (tag: string) =>
+              `<span class="inline-flex items-center gap-1 px-3 py-1 text-xs font-mono font-bold text-cyan-300 bg-cyan-950/80 border border-cyan-500/40 rounded-md uppercase tracking-wider"><span class="text-pink-500">//</span>${tag}</span>`
+          )
+          .join('');
+      }
+
+      // Populate CTA Button
+      if (modalCtaBtn && modalCtaText) {
+        if (ctaUrl) {
+          modalCtaBtn.href = ctaUrl;
+          modalCtaText.textContent = ctaText;
+          modalCtaBtn.classList.remove('hidden');
+        } else {
+          modalCtaBtn.classList.add('hidden');
+        }
+      }
+
+      // Show Modal via Flowbite JS API
+      if (modal) modal.show();
     });
+  });
+
+  // Smooth Animated Close Function
+  const closeModalWithAnimation = () => {
+    if (!modalElement || !modal) return;
+    modalElement.classList.add('is-closing');
+
+    setTimeout(() => {
+      modal.hide();
+      modalElement.classList.remove('is-closing');
+    }, 240);
+  };
+
+  // Bind close buttons explicitly
+  document.querySelectorAll('.close-modal-btn').forEach((closeBtn) => {
+    closeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeModalWithAnimation();
+    });
+  });
+
+  // Close when clicking backdrop
+  modalElement?.addEventListener('click', (e) => {
+    if (e.target === modalElement) {
+      closeModalWithAnimation();
+    }
   });
 </script>

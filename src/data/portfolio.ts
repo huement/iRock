@@ -5,7 +5,10 @@
 // Projects (portfolio grid)
 // ---------------------------------------------------------------------------
 export type GridClass =
-  'masonry-item--w4' | 'masonry-item--w4-double' | 'masonry-item--w6';
+  | 'col-span-1 md:col-span-1 lg:col-span-8'
+  | 'col-span-1 md:col-span-1 lg:col-span-7'
+  | 'col-span-1 md:col-span-1 lg:col-span-4'
+  | 'col-span-1 md:col-span-1 lg:col-span-3';
 export type CardClass =
   'card' | 'card card-featured' | 'card card-highlight' | 'card card-laanc';
 
@@ -46,7 +49,7 @@ Cutting-edge tech blog built on **Statamic CMS** and **Laravel Livewire**.
     imageKey: 'huementblog.png',
     lightboxImageKey: 'blog.gif',
     tags: ['Laravel Livewire', 'Statamic CMS', 'PHP 8.3+', 'CI/CD'],
-    gridClass: 'masonry-item--w4-double',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-8',
     cardClass: 'card card-featured',
     ctaUrl: 'https://huement.com/blog',
     ctaText: 'Read Blog',
@@ -72,7 +75,7 @@ A interactive sensory mobile game tailored for infants and toddlers.
     imageKey: 'luma.gif',
     lightboxImageKey: 'luma.gif',
     tags: ['Godot', 'Android', 'Musical', 'Pixel Art'],
-    gridClass: 'masonry-item--w4',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-4',
     ctaUrl:
       'https://play.google.com/store/apps/details?id=com.huement.lumashapes&hl=en_US',
     ctaText: 'Google PlayStore',
@@ -96,7 +99,7 @@ Advanced affiliate marketing fraud detection and cookie manipulation prevention 
     imageKey: 'cookie-sq.gif',
     lightboxImageKey: 'cookie.png',
     tags: ['React.js', 'Marketing'],
-    gridClass: 'masonry-item--w4',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-4',
     cardClass: 'card',
     ctaUrl: 'https://github.com/huement/cookie_sleuth',
     ctaText: 'Goto Repository',
@@ -121,7 +124,7 @@ A developer-centric video platform exploring modern software engineering, AI too
     imageKey: 'bare-thumb.gif',
     lightboxImageKey: 'bare-600.gif',
     tags: ['YouTube', 'Video', 'Animation', 'Voiceover'],
-    gridClass: 'masonry-item--w4-double',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-8',
     cardClass: 'card card-highlight',
     ctaUrl: 'https://youtube.com/@barebonescode',
     ctaText: 'Visit Channel',
@@ -146,7 +149,7 @@ Real-time trend analysis platform leveraging modern AI models for **Narrative Ar
     `,
     imageKey: 'trendforge.png',
     tags: ['AI Analytics', 'Docker', 'PGVector', 'Volt', 'Tailwind'],
-    gridClass: 'masonry-item--w4-double',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-8',
     cardClass: 'card',
     ctaUrl: 'https://trendforge.huement.com',
     ctaText: 'Goto TF Website',
@@ -171,7 +174,7 @@ Parametric SVG generation library engineered for dynamic cosmic wave visualizati
     imageKey: 'cosmic-sq.png',
     lightboxImageKey: 'cosmic.png',
     tags: ['SVG', 'Javascript', 'UI/UX', 'Visualization'],
-    gridClass: 'masonry-item--w4',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-4',
     cardClass: 'card',
     ctaUrl: 'https://huement.github.io/CosmicWave/',
     ctaText: 'Live Demo',
@@ -195,7 +198,7 @@ Commercial drone mission planning and automated flight controller platform.
     `,
     imageKey: 'flightplan.png',
     tags: ['Vue.js', 'TypeScript', 'GraphQL', 'Node.js', 'Android'],
-    gridClass: 'masonry-item--w4-double',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-4',
     cardClass: 'card',
     thumbWidth: 700,
     thumbHeight: 400,
@@ -216,7 +219,7 @@ Low Altitude Authorization and Notification Capability (LAANC) geospatial map re
     `,
     imageKey: 'laanc.png',
     tags: ['PostGIS', 'GeoJSON', 'PHP', 'SQL'],
-    gridClass: 'masonry-item--w4',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-4',
     cardClass: 'card card-laanc',
   },
   {
@@ -237,7 +240,7 @@ Headless e-commerce template powered by Shopify's GraphQL Storefront API.
     imageKey: 'shopify.png',
     lightboxImageKey: 'shopify-2.png',
     tags: ['React.js', 'NextJS', 'Shopify', 'Ecommerce'],
-    gridClass: 'masonry-item--w6',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-4',
     cardClass: 'card',
     ctaUrl: 'https://github.com/huement/shopify-react-demo',
     ctaText: 'Goto Repository',
@@ -258,7 +261,7 @@ Enterprise physical site and asset tracking dashboard for commercial drone opera
     `,
     imageKey: 'sites.png',
     tags: ['Vue.js', 'TypeScript', 'GraphQL', 'Node.js'],
-    gridClass: 'masonry-item--w6',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-3',
     cardClass: 'card',
     thumbWidth: 700,
     thumbHeight: 400,
@@ -279,7 +282,7 @@ Automated aerial photo ingest and spatial telemetry tagging pipeline.
     `,
     imageKey: 'image.png',
     tags: ['Vue.js', 'TypeScript', 'Android', 'GraphQL'],
-    gridClass: 'masonry-item--w4',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-3',
     cardClass: 'card',
   },
   {
@@ -298,7 +301,7 @@ Automated vector map layout engine for physical large-format plotter printing.
     `,
     imageKey: 'printed.png',
     tags: ['PostGIS', 'PHP', 'SQL', 'HTML5'],
-    gridClass: 'masonry-item--w4',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-3',
     cardClass: 'card',
   },
   {
@@ -317,7 +320,7 @@ Hybrid B2B mobile management platform built during the early adoption phase of m
     `,
     imageKey: 'freshlime1.png',
     tags: ['React.js', 'Python', 'Django', 'AWS', 'AngularJS'],
-    gridClass: 'masonry-item--w4',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-3',
     cardClass: 'card',
   },
 ];
@@ -566,7 +569,7 @@ export interface Social {
 export const socials: Social[] = [
   {
     icon: 'bxl-linkedin',
-    iconColorClass: 'text-info',
+    iconColorClass: 'text-blue-500',
     title: 'LinkedIn',
     description:
       'Professional profile, experience, and network—connect for opportunities.',
@@ -575,7 +578,7 @@ export const socials: Social[] = [
   },
   {
     icon: 'bxl-youtube',
-    iconColorClass: 'text-danger',
+    iconColorClass: 'text-red-500',
     title: 'YouTube',
     description:
       'Deep dives into new tech stacks, hardware teardowns, and live coding sessions.',
@@ -584,7 +587,7 @@ export const socials: Social[] = [
   },
   {
     icon: 'bxl-twitter',
-    iconColorClass: 'text-info',
+    iconColorClass: 'text-sky-400',
     title: 'X.com',
     description:
       'Real-time updates, hot takes on industry news, and community discussions.',
@@ -593,7 +596,7 @@ export const socials: Social[] = [
   },
   {
     icon: 'bxs-news',
-    iconColorClass: 'text-warning',
+    iconColorClass: 'text-amber-400',
     title: 'The Blog',
     description:
       'Long-form articles on internet culture, software architecture, and future tech.',
@@ -602,7 +605,7 @@ export const socials: Social[] = [
   },
   {
     icon: 'bxl-github',
-    iconColorClass: 'text-light',
+    iconColorClass: 'text-purple-400',
     title: 'GitHub',
     description:
       'Repos, open source, and code—RepRasp, Count-S3, MMCV, and more.',
@@ -611,7 +614,7 @@ export const socials: Social[] = [
   },
   {
     icon: 'bxl-codepen',
-    iconColorClass: 'text-success',
+    iconColorClass: 'text-emerald-400',
     title: 'CodePen',
     description:
       'Pens, prototypes, and front-end experiments—CSS, SVG, and interactive snippets.',
