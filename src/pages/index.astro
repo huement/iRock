@@ -55,7 +55,7 @@ const websiteSchema = {
   title="Derek Scott | Developer Extraordinaire"
   description="Full Stack RockStar Web Developer. Expert with TypeScript, PHP & Python. 11 years of experience building web applications, and over 5 years building Java based Android Applications. I focus on UI/UX as well as AI automation."
 >
-  <Starfield client:only="react" />
+  <Starfield client:visible />
 
   <div style="min-height: 100vh;">
     <Hero />
@@ -88,7 +88,7 @@ const websiteSchema = {
   <SectionDivider />
 
   <div class="relative z-10">
-    <Timeline client:only="react" />
+    <Timeline client:visible />
   </div>
 
   <SectionDivider image="bottom-bar.svg" />
@@ -116,7 +116,7 @@ const websiteSchema = {
       data-circles="true"
       data-circlefill="fill-wave-ultra"></cosmic-wave>
   </div>
-  <Socials client:only="react" />
+  <Socials client:visible />
 
   <cosmic-wave
     class="fill-wave hobby-wave mobile-move-down"

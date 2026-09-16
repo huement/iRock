@@ -22,10 +22,10 @@ const ogImageUrl = new URL(`${baseUrl}github-johnny13.png`, Astro.site).href;
 const schemaMarkup = {
   '@context': 'https://schema.org',
   '@type': 'Person',
-  'name': 'Derek Scott',
-  'url': 'https://huement.github.io/iRock/',
-  'jobTitle': 'Senior Full Stack Web Developer',
-  'sameAs': [
+  name: 'Derek Scott',
+  url: 'https://huement.github.io/iRock/',
+  jobTitle: 'Senior Full Stack Web Developer',
+  sameAs: [
     'https://github.com/huement',
     'https://www.linkedin.com/in/derekscott13',
     'https://twitter.com/huement',
@@ -36,156 +36,87 @@ const schemaMarkup = {
 ---
 
 <!doctype html>
-<html lang='en'>
+<html lang="en">
   <head>
-    <meta charset='UTF-8' />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="author" content="Derek Scott <admin@huement.com>" />
     <meta
-      name='viewport'
-      content='width=device-width, initial-scale=1.0'
+      name="keywords"
+      content="Derek Scott, Full Stack Developer, TypeScript, PHP, React, Web Developer, Portfolio"
     />
-    <meta
-      name='description'
-      content={description}
-    />
-    <meta
-      name='author'
-      content='Derek Scott <admin@huement.com>'
-    />
-    <meta
-      name='keywords'
-      content='Derek Scott, Full Stack Developer, TypeScript, PHP, React, Web Developer, Portfolio'
-    />
-    <meta
-      name='robots'
-      content='index, follow'
-    />
-    <meta
-      name='theme-color'
-      content='#0a0a0c'
-    />
-    <link
-      rel='canonical'
-      href={canonicalURL.href}
-    />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#0a0a0c" />
+    <link rel="canonical" href={canonicalURL.href} />
 
     <link
-      rel='icon'
-      type='image/x-icon'
+      rel="icon"
+      type="image/x-icon"
       href={`${import.meta.env.BASE_URL}favicon.ico`}
     />
     <link
-      rel='icon'
-      type='image/png'
-      sizes='32x32'
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
       href={baseUrl + '/favicon-32x32.png'}
     />
     <link
-      rel='icon'
-      type='image/png'
-      sizes='16x16'
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
       href={baseUrl + '/favicon-16x16.png'}
     />
     <link
-      rel='apple-touch-icon'
-      sizes='180x180'
+      rel="apple-touch-icon"
+      sizes="180x180"
       href={baseUrl + '/apple-touch-icon.png'}
     />
-    <link
-      rel='manifest'
-      href={baseUrl + '/site.webmanifest'}
-    />
+    <link rel="manifest" href={baseUrl + '/site.webmanifest'} />
     <title>{title}</title>
     <!-- Open Graph / Facebook -->
-    <meta
-      property='og:type'
-      content='website'
-    />
-    <meta
-      property='og:title'
-      content={title}
-    />
-    <meta
-      property='og:description'
-      content={description}
-    />
-    <meta
-      property='og:url'
-      content={canonicalURL.href}
-    />
-    <meta
-      property='og:image'
-      content={ogImageUrl}
-    />
-    <meta
-      property='og:image:secure_url'
-      content={ogImageUrl}
-    />
-    <meta
-      property='og:image:type'
-      content='image/png'
-    />
-    <meta
-      property='og:image:width'
-      content='1308'
-    />
-    <meta
-      property='og:image:height'
-      content='759'
-    />
-    <meta
-      property='og:site_name'
-      content='Derek Scott'
-    />
-    <meta
-      property='og:locale'
-      content='en_US'
-    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL.href} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:secure_url" content={ogImageUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1308" />
+    <meta property="og:image:height" content="759" />
+    <meta property="og:site_name" content="Derek Scott" />
+    <meta property="og:locale" content="en_US" />
     <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
     <meta
-      name='twitter:card'
-      content='summary_large_image'
+      name="twitter:title"
+      content="Derek Scott | Developer Extraordinaire"
     />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
     <meta
-      name='twitter:title'
-      content='Derek Scott | Developer Extraordinaire'
-    />
-    <meta
-      name='twitter:description'
-      content={description}
-    />
-    <meta
-      name='twitter:image'
-      content={ogImageUrl}
-    />
-    <meta
-      name='twitter:image:alt'
-      content='Derek Scott | Developer Extraordinaire'
+      name="twitter:image:alt"
+      content="Derek Scott | Developer Extraordinaire"
     />
     <script
       defer
-      src='https://cloud.umami.is/script.js'
-      data-website-id='ac8ea07d-bb99-4732-bd09-db02ee1be1ac'
-    ></script>
+      src="https://cloud.umami.is/script.js"
+      data-website-id="ac8ea07d-bb99-4732-bd09-db02ee1be1ac"></script>
     <script
-      type='application/ld+json'
+      type="application/ld+json"
       set:html={JSON.stringify(schemaMarkup)}
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel='preconnect'
-      href='https://fonts.googleapis.com'
-    />
-    <link
-      rel='preconnect'
-      href='https://fonts.gstatic.com'
-      crossorigin
-    />
-    <link
-      rel='stylesheet'
-      href='https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Jost:wght@300;400&family=Saira:wght@500..900&display=swap'
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Jost:wght@300;400&family=Saira:wght@500..900&display=optional"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
   </head>
   <body>
-    <div class='site-root'>
+    <div class="site-root">
       <slot />
     </div>
 
@@ -197,7 +128,11 @@ const schemaMarkup = {
       const initBubbles = () => {
         // Wait brief tick for custom element SVG rendering
         setTimeout(() => {
-          attachWaveBubbles('cosmic-wave', { count: 14, minRadius: 4, maxRadius: 16 });
+          attachWaveBubbles('cosmic-wave', {
+            count: 14,
+            minRadius: 4,
+            maxRadius: 16,
+          });
         }, 50);
       };
 

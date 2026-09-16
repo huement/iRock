@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import p5 from 'p5';
+import type p5 from 'p5';
 
 // Vertex Shader: Pass-through transform converting 3D mesh vertices into 2D screen space
 const pgVert = `
@@ -124,60 +124,63 @@ export default function NoiseBackground() {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const sketch = (p: p5) => {
-      let noiseShader: p5.Shader;
+    let p5Instance: p5 | null = null;
 
-      p.setup = () => {
-        const w = containerRef.current?.clientWidth || p.windowWidth;
-        const h = containerRef.current?.clientHeight || p.windowHeight;
-        console.log(w, h);
+    // Dynamically import p5 runtime client-side only
+    import('p5').then((p5Module) => {
+      const P5 = p5Module.default;
 
-        p.createCanvas(w, h, p.WEBGL);
-        p.pixelDensity(1);
+      if (!containerRef.current) return;
 
-        noiseShader = p.createShader(pgVert, pgFrag);
-        p.shader(noiseShader);
+      const sketch = (p: p5) => {
+        let noiseShader: p5.Shader;
 
-        // Converts standard hex strings ('#00F0FF' or '00F0FF') to normalized WebGL RGB arrays [0.0 - 1.0]
-        const hexToRgb = (hex: string) => {
-          const cleanHex = hex.replace('#', '');
-          const num = parseInt(cleanHex, 16);
-          return [
-            ((num >> 16) & 255) / 255,
-            ((num >> 8) & 255) / 255,
-            (num & 255) / 255,
-          ];
+        p.setup = () => {
+          const w = containerRef.current?.clientWidth || p.windowWidth;
+          const h = containerRef.current?.clientHeight || p.windowHeight;
+
+          p.createCanvas(w, h, p.WEBGL);
+          p.pixelDensity(1);
+
+          noiseShader = p.createShader(pgVert, pgFrag);
+          p.shader(noiseShader);
+
+          const hexToRgb = (hex: string) => {
+            const cleanHex = hex.replace('#', '');
+            const num = parseInt(cleanHex, 16);
+            return [
+              ((num >> 16) & 255) / 255,
+              ((num >> 8) & 255) / 255,
+              (num & 255) / 255,
+            ];
+          };
+
+          noiseShader.setUniform('uColor1', hexToRgb('#136b7d'));
+          noiseShader.setUniform('uColor2', hexToRgb('#802851'));
+          noiseShader.setUniform('uColor3', hexToRgb('#401c6c'));
+          noiseShader.setUniform('uStroke', hexToRgb('#0f234d'));
+          noiseShader.setUniform('uSeed', p.random(10000, 100000));
         };
 
-        // Muted Cyberpunk Palette (Darker & Desaturated)
-        noiseShader.setUniform('uColor1', hexToRgb('#136b7d')); // Dark Muted Cyan
-        noiseShader.setUniform('uColor2', hexToRgb('#802851')); // Deep Muted Rose / Wine
-        noiseShader.setUniform('uColor3', hexToRgb('#401c6c')); // Deep Dark Purple
-        noiseShader.setUniform('uStroke', hexToRgb('#0f234d')); // Ultra-dark Void
-        noiseShader.setUniform('uSeed', p.random(10000, 100000));
+        p.draw = () => {
+          noiseShader.setUniform('uTime', p.millis() / 30.0);
+          p.rect(-p.width / 2, -p.height / 2, p.width, p.height);
+        };
+
+        p.windowResized = () => {
+          if (!containerRef.current) return;
+          p.resizeCanvas(
+            containerRef.current.clientWidth,
+            containerRef.current.clientHeight
+          );
+        };
       };
 
-      p.draw = () => {
-        // Update time uniform to scroll the noise pattern
-        noiseShader.setUniform('uTime', p.millis() / 30.0);
-
-        // Render full canvas quad
-        p.rect(-p.width / 2, -p.height / 2, p.width, p.height);
-      };
-
-      p.windowResized = () => {
-        if (!containerRef.current) return;
-        p.resizeCanvas(
-          containerRef.current.clientWidth,
-          containerRef.current.clientHeight
-        );
-      };
-    };
-
-    const p5Instance = new p5(sketch, containerRef.current);
+      p5Instance = new P5(sketch, containerRef.current);
+    });
 
     return () => {
-      p5Instance.remove(); // Clean up on unmount
+      p5Instance?.remove();
     };
   }, []);
 

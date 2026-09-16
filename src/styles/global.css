@@ -321,11 +321,33 @@ body::after {
   font-weight: 700;
 }
 
+.hero-title {
+  /* Fluid font size: min 2.25rem (36px) on mobile, scales with viewport, max 5.5rem (88px) on desktop */
+  font-size: clamp(2.25rem, 7.5vw, 6rem);
+
+  /* Relative height maintains the exact bottom-crop ratio at any font size */
+  height: 0.8em;
+  line-height: 1;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.cyber-wave-text {
+  display: inline-block;
+  contain: layout style;
+}
+
+.hero-title {
+  position: relative;
+}
+
 /* GPU-isolate tags to prevent parent text jitter */
 .software-tag {
   transform: translateZ(0);
   backface-visibility: hidden;
-  will-change: transform, color, background-color, border-color, box-shadow;
+  will-change: transform, opacity;
   contain: layout style;
 }
 

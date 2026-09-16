@@ -17,7 +17,7 @@ import HudBox from './HudBox.astro';
       <div class="text-center flex flex-col items-center">
         <!-- Name Title -->
         <h1
-          class="cyber-wave-text text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight hero-title cool-title mb-3 cursor-pointer drop-shadow-[0_0_25px_rgba(0,240,255,0.4)]"
+          class="cyber-wave-text font-extrabold tracking-tight hero-title cool-title mb-3 cursor-pointer drop-shadow-[0_0_25px_rgba(0,240,255,0.4)]"
           data-text={heroData.name}
           data-stagger="16"
           data-shuffle="160"
@@ -86,7 +86,7 @@ import HudBox from './HudBox.astro';
     new Rellax(entranceWrap, { speed: 1.2 });
   }
 
-  // 2. High-Speed Cyber Wave Engine
+  // 2. Zero-Shift Cyber Wave Engine
   function triggerCyberWave(el: HTMLElement) {
     const fullText = el.dataset.text || el.textContent || '';
     if (!fullText.trim()) return;
@@ -104,58 +104,67 @@ import HudBox from './HudBox.astro';
 
     let animWrapper = el.querySelector<HTMLElement>('.cyber-anim-wrapper');
 
-    // Build layout-preserving DOM structure once
+    // Build layout-locked DOM structure once
     if (!animWrapper) {
-      // Transfer cool-title gradient styling to wrapper so absolute spans render correctly
-      const isCoolTitle = el.classList.contains('cool-title');
-      if (isCoolTitle) {
-        el.classList.remove('cool-title');
-      }
+      animWrapper = document.createElement('span');
+      animWrapper.className = 'cyber-anim-wrapper';
+      animWrapper.setAttribute('aria-hidden', 'true');
+
+      // Split into word groups to preserve clean multi-line wrapping
+      const words = fullText.split(' ');
+
+      words.forEach((word, wIdx) => {
+        const wordSpan = document.createElement('span');
+        wordSpan.className = 'inline-block whitespace-nowrap';
+
+        word.split('').forEach((char) => {
+          const charSpan = document.createElement('span');
+          charSpan.textContent = char;
+          charSpan.dataset.char = char;
+          charSpan.className =
+            'inline-block text-center transition-colors duration-75';
+          wordSpan.appendChild(charSpan);
+        });
+
+        animWrapper?.appendChild(wordSpan);
+
+        // Add space between words
+        if (wIdx < words.length - 1) {
+          const spaceSpan = document.createElement('span');
+          spaceSpan.textContent = '\u00A0';
+          spaceSpan.dataset.char = ' ';
+          spaceSpan.className = 'inline-block';
+          animWrapper?.appendChild(spaceSpan);
+        }
+      });
 
       el.innerHTML = '';
-      el.style.position = 'relative';
-
-      // Invisible Placeholder locks container dimensions (Prevents Layout Jumping)
-      const placeholder = document.createElement('span');
-      placeholder.style.visibility = 'hidden';
-      placeholder.style.pointerEvents = 'none';
-      placeholder.ariaHidden = 'true';
-      placeholder.textContent = fullText;
-      el.appendChild(placeholder);
-
-      // Absolute Animation Overlay
-      animWrapper = document.createElement('span');
-      animWrapper.className = `cyber-anim-wrapper ${isCoolTitle ? 'cool-title' : ''}`;
-      animWrapper.style.position = 'absolute';
-      animWrapper.style.top = '0';
-      animWrapper.style.left = '0';
-      animWrapper.style.width = '100%';
-      animWrapper.style.height = '100%';
-      animWrapper.style.display = 'inline-flex';
-      animWrapper.style.justifyContent = 'center';
-      animWrapper.style.alignItems = 'center';
-      animWrapper.style.flexWrap = 'wrap';
-      animWrapper.ariaHidden = 'true';
       el.appendChild(animWrapper);
 
-      fullText.split('').forEach((char) => {
-        const span = document.createElement('span');
-        span.textContent = char === ' ' ? '\u00A0' : char;
-        span.dataset.char = char;
-        span.className = 'inline-block transition-colors duration-75';
-        animWrapper?.appendChild(span);
+      // Lock each character span to its target width so shuffle symbols don't cause reflows
+      const charSpans =
+        animWrapper.querySelectorAll<HTMLElement>('span[data-char]');
+      charSpans.forEach((span) => {
+        if (span.dataset.char !== ' ') {
+          const width = span.getBoundingClientRect().width;
+          if (width > 0) {
+            span.style.width = `${width}px`;
+          }
+        }
       });
     }
 
     // Run Wave Animation
-    const spans = Array.from(animWrapper.children) as HTMLElement[];
+    const charSpans = Array.from(
+      animWrapper.querySelectorAll<HTMLElement>('span[data-char]')
+    );
     const startTime = performance.now();
 
     function animate(now: number) {
       const elapsed = now - startTime;
       let isComplete = true;
 
-      spans.forEach((span, index) => {
+      charSpans.forEach((span, index) => {
         const targetChar = span.dataset.char;
         if (targetChar === ' ' || targetChar === '\u00A0') return;
 
@@ -163,7 +172,6 @@ import HudBox from './HudBox.astro';
         const charEnd = charStart + shuffleMs;
 
         if (elapsed < charStart) {
-          // Waiting for wave to reach this character
           span.textContent =
             SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
           span.style.opacity = '0.35';
@@ -171,7 +179,6 @@ import HudBox from './HudBox.astro';
           span.style.webkitTextFillColor = '#00f0ff';
           isComplete = false;
         } else if (elapsed >= charStart && elapsed < charEnd) {
-          // Active character shuffle phase
           span.textContent =
             SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
           span.style.opacity = '1';
@@ -179,7 +186,6 @@ import HudBox from './HudBox.astro';
           span.style.webkitTextFillColor = '#ff0055';
           isComplete = false;
         } else {
-          // Deciphered final character (restores gradient text fill)
           span.textContent = targetChar || '';
           span.style.opacity = '1';
           span.style.color = '';
@@ -198,15 +204,9 @@ import HudBox from './HudBox.astro';
   // Initialize all wave elements & attach hover listeners
   const waveElements =
     document.querySelectorAll<HTMLElement>('.cyber-wave-text');
-  const titleElements = document.querySelectorAll<HTMLElement>('.cool-title');
 
   waveElements.forEach((el) => {
     triggerCyberWave(el);
-  });
-
-  titleElements.forEach((el) => {
-    el.addEventListener('mouseover', () => {
-      triggerCyberWave(el);
-    });
+    el.addEventListener('mouseover', () => triggerCyberWave(el));
   });
 </script>
