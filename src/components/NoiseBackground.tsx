@@ -122,9 +122,12 @@ export default function NoiseBackground() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
 
     let p5Instance: p5 | null = null;
+    let observer: IntersectionObserver | null = null;
+    let isIntersecting = true;
 
     // Dynamically import p5 runtime client-side only
     import('p5').then((p5Module) => {
@@ -177,9 +180,37 @@ export default function NoiseBackground() {
       };
 
       p5Instance = new P5(sketch, containerRef.current);
+
+      // === Pause loop when canvas is off-screen ===
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          isIntersecting = entry.isIntersecting;
+          if (isIntersecting && !document.hidden) {
+            p5Instance?.loop();
+          } else {
+            p5Instance?.noLoop();
+          }
+        },
+        { threshold: 0.01 }
+      );
+
+      observer.observe(container);
     });
 
+    // === Pause loop when browser tab is hidden ===
+    const handleVisibilityChange = () => {
+      if (!document.hidden && isIntersecting) {
+        p5Instance?.loop();
+      } else {
+        p5Instance?.noLoop();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     return () => {
+      observer?.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       p5Instance?.remove();
     };
   }, []);

@@ -81,20 +81,20 @@ const websiteSchema = {
     data-wave-speed="1500"
     data-circles="true"
     data-wave-animate="true"></cosmic-wave>
+  <main>
+    <ProjectGrid />
 
-  <ProjectGrid />
+    <!-- Cyber HUD Seam Divider -->
+    <SectionDivider />
 
-  <!-- Cyber HUD Seam Divider -->
-  <SectionDivider />
+    <div class="relative z-10">
+      <Timeline client:visible />
+    </div>
 
-  <div class="relative z-10">
-    <Timeline client:visible />
-  </div>
+    <SectionDivider image="bottom-bar.svg" />
 
-  <SectionDivider image="bottom-bar.svg" />
-
-  <HobbiesCarousel />
-
+    <HobbiesCarousel />
+  </main>
   <div class="relative z-10" style="margin-top:-130px;margin-bottom: -130px;">
     <cosmic-wave
       class="fill-wave-ultra hobby-wave mobile-move-down z-[9999] mb-[-10px]"

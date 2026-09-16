@@ -11,7 +11,7 @@ const STRETCH_FACTOR = 28;
 const NUM_STARS = isMobile ? 2000 : 5000;
 const RANGE = isMobile ? 150 : 300;
 
-// Generates a soft glowing star sprite in memory (No network fetch delay!)
+// Generates a soft glowing star sprite in memory
 function createStarTexture(): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');
   canvas.width = 32;
@@ -48,6 +48,17 @@ export default function Starfield() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    let isVisible = true;
+
+    // === OPTIMIZATION 1: Pause rendering when scrolled out of view ===
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0.01 }
+    );
+    observer.observe(canvas);
+
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
@@ -65,6 +76,7 @@ export default function Starfield() {
       canvas,
       antialias: true,
       alpha: true,
+      powerPreference: 'high-performance',
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -89,19 +101,17 @@ export default function Starfield() {
 
     const starTexture = createStarTexture();
 
-    const stars = new THREE.Points(
-      pointGeo,
-      new THREE.PointsMaterial({
-        color: 0xffffff,
-        size: 1.2,
-        map: starTexture,
-        transparent: true,
-        opacity: 0.9,
-        depthTest: false,
-        blending: THREE.AdditiveBlending,
-      })
-    );
-    // FIX 1: Disable frustum culling so stars never vanish when moving!
+    const starMaterial = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 1.2,
+      map: starTexture,
+      transparent: true,
+      opacity: 0.9,
+      depthTest: false,
+      blending: THREE.AdditiveBlending,
+    });
+
+    const stars = new THREE.Points(pointGeo, starMaterial);
     stars.frustumCulled = false;
     scene.add(stars);
     starsRef.current = stars;
@@ -114,16 +124,14 @@ export default function Starfield() {
       new THREE.BufferAttribute(linePositions, 3)
     );
 
-    const starLines = new THREE.LineSegments(
-      lineGeo,
-      new THREE.LineBasicMaterial({
-        color: 0xd0e0ff,
-        transparent: true,
-        opacity: 0.85,
-        blending: THREE.AdditiveBlending,
-      })
-    );
-    // FIX 2: Disable frustum culling for warp lines
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0xd0e0ff,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+    });
+
+    const starLines = new THREE.LineSegments(lineGeo, lineMaterial);
     starLines.frustumCulled = false;
     starLines.visible = false;
     scene.add(starLines);
@@ -132,7 +140,11 @@ export default function Starfield() {
     let lastTime = performance.now();
 
     function animate(now: number) {
-      // Delta time normalized to 60fps
+      frameRef.current = requestAnimationFrame(animate);
+
+      // Skip GPU render passes when tab is inactive or element is off-screen
+      if (!isVisible || document.hidden) return;
+
       const delta = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
 
@@ -160,7 +172,6 @@ export default function Starfield() {
         // Wrap star back to top when it falls past bottom
         if (positions[i3 + 1] < -RANGE) {
           positions[i3 + 1] = RANGE;
-          // Re-randomize X and Z slightly so star field always stays dynamic
           positions[i3] = (Math.random() - 0.5) * RANGE * 2;
           positions[i3 + 2] = (Math.random() - 0.5) * RANGE * 2;
         }
@@ -195,16 +206,22 @@ export default function Starfield() {
         }
         starLinesRef.current.geometry.attributes.position.needsUpdate = true;
       } else if (starsRef.current) {
-        const pointGeo = starsRef.current.geometry;
-        (pointGeo.attributes.position.array as Float32Array).set(positions);
-        pointGeo.attributes.position.needsUpdate = true;
+        const pGeo = starsRef.current.geometry;
+        (pGeo.attributes.position.array as Float32Array).set(positions);
+        pGeo.attributes.position.needsUpdate = true;
       }
 
       renderer.render(scene, camera);
-      frameRef.current = requestAnimationFrame(animate);
     }
 
     frameRef.current = requestAnimationFrame(animate);
+
+    // === OPTIMIZATION 2: Prevent delta jump on tab re-entry ===
+    const onVisibilityChange = () => {
+      if (!document.hidden) {
+        lastTime = performance.now();
+      }
+    };
 
     // === Scroll Handler with Smooth Momentum ===
     const onScroll = () => {
@@ -229,12 +246,21 @@ export default function Starfield() {
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize);
+    document.addEventListener('visibilitychange', onVisibilityChange);
     lastScrollYRef.current = window.scrollY;
 
+    // === OPTIMIZATION 3: Complete GPU Memory Cleanup ===
     return () => {
       cancelAnimationFrame(frameRef.current);
+      observer.disconnect();
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+
+      pointGeo.dispose();
+      lineGeo.dispose();
+      starMaterial.dispose();
+      lineMaterial.dispose();
       starTexture.dispose();
       renderer.dispose();
     };
