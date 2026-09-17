@@ -11,6 +11,7 @@ interface Props {
   showScanline?: boolean;
 }
 
+// Generates a random 6-digit seed (100000 - 999999)
 const randomNum = Math.floor(Math.random() * 900000) + 100000;
 
 const {
@@ -30,7 +31,7 @@ const { svgMarkup } = generateHudFrameSVG({ w: width, h: height, seed, glow });
   class={`hud-box-component relative group ${className}`}
   data-width={width}
   data-height={height}
-  data-glow={glow}
+  data-glow={glow ? 'true' : 'false'}
 >
   <!-- Procedural Vector Frame SVG -->
   <div class="hud-svg-container">
@@ -118,3 +119,61 @@ const { svgMarkup } = generateHudFrameSVG({ w: width, h: height, seed, glow });
     animation: hud-scan 6s ease-in-out infinite;
   }
 </style>
+
+<script>
+  import { generateHudFrameSVG } from '../utils/hudGenerator';
+
+  function initializeDynamicHud() {
+    const hudContainers =
+      document.querySelectorAll<HTMLElement>('.hud-box-component');
+
+    hudContainers.forEach((hudContainer) => {
+      const width = parseInt(hudContainer.dataset.width || '840', 10);
+      const height = parseInt(hudContainer.dataset.height || '420', 10);
+      const glow = hudContainer.dataset.glow === 'true';
+
+      const svgWrapper = hudContainer.querySelector('.hud-svg-container');
+      if (!svgWrapper) return;
+
+      const redraw = () => {
+        const seed = Math.floor(Math.random() * 900000) + 100000;
+        const { svgMarkup } = generateHudFrameSVG({
+          w: width,
+          h: height,
+          seed,
+          glow,
+        });
+        svgWrapper.innerHTML = svgMarkup;
+      };
+
+      // Set interval for subsequent random redraws (10s - 20s)
+      const randomInterval = () => Math.random() * 10000 + 10000;
+      let redrawInterval = setInterval(redraw, randomInterval());
+
+      // Redraw when scrolling back to the top
+      let isAtTop = window.scrollY < 5;
+      window.addEventListener(
+        'scroll',
+        () => {
+          const currentlyAtTop = window.scrollY < 5;
+          if (currentlyAtTop && !isAtTop) {
+            redraw();
+            clearInterval(redrawInterval);
+            redrawInterval = setInterval(redraw, randomInterval());
+          }
+          isAtTop = currentlyAtTop;
+        },
+        { passive: true }
+      );
+    });
+  }
+
+  // Run on initial page load & Astro View Transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeDynamicHud);
+  } else {
+    initializeDynamicHud();
+  }
+
+  document.addEventListener('astro:page-load', initializeDynamicHud);
+</script>

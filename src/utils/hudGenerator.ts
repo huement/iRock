@@ -169,7 +169,7 @@ export function generateHudFrameSVG(options: HudFrameOptions = {}) {
     triangleGapMax = 4,
   } = options;
 
-  console.log(seed);
+  // console.log(seed);
   const rng = mulberry32(seed);
   const maxChamfer = Math.floor(Math.min(w, h) * 0.4);
 
