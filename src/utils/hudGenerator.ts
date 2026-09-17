@@ -75,21 +75,33 @@ function buildTrapezoidFeature({
     p4: { x: number; y: number };
 
   if (edge === 'top') {
-    const y0 = 0, y1 = isInset ? d : -d;
-    p1 = { x: start, y: y0 }; p2 = { x: end, y: y0 };
-    p3 = { x: end - d, y: y1 }; p4 = { x: start + d, y: y1 };
+    const y0 = 0,
+      y1 = isInset ? d : -d;
+    p1 = { x: start, y: y0 };
+    p2 = { x: end, y: y0 };
+    p3 = { x: end - d, y: y1 };
+    p4 = { x: start + d, y: y1 };
   } else if (edge === 'bottom') {
-    const y0 = 0, y1 = isInset ? -d : d;
-    p1 = { x: start, y: y0 }; p2 = { x: end, y: y0 };
-    p3 = { x: end - d, y: y1 }; p4 = { x: start + d, y: y1 };
+    const y0 = 0,
+      y1 = isInset ? -d : d;
+    p1 = { x: start, y: y0 };
+    p2 = { x: end, y: y0 };
+    p3 = { x: end - d, y: y1 };
+    p4 = { x: start + d, y: y1 };
   } else if (edge === 'left') {
-    const x0 = 0, x1 = isInset ? d : -d;
-    p1 = { x: x0, y: start }; p2 = { x: x0, y: end };
-    p3 = { x: x1, y: end - d }; p4 = { x: x1, y: start + d };
+    const x0 = 0,
+      x1 = isInset ? d : -d;
+    p1 = { x: x0, y: start };
+    p2 = { x: x0, y: end };
+    p3 = { x: x1, y: end - d };
+    p4 = { x: x1, y: start + d };
   } else {
-    const x0 = 0, x1 = isInset ? -d : d;
-    p1 = { x: x0, y: start }; p2 = { x: x0, y: end };
-    p3 = { x: x1, y: end - d }; p4 = { x: x1, y: start + d };
+    const x0 = 0,
+      x1 = isInset ? -d : d;
+    p1 = { x: x0, y: start };
+    p2 = { x: x0, y: end };
+    p3 = { x: x1, y: end - d };
+    p4 = { x: x1, y: start + d };
   }
 
   const pathSegs = [p1, p4, p3, p2];
@@ -126,9 +138,12 @@ function buildInnerCornerTriangle(corner: string, size: number) {
 function buildOuterCornerTriangle(corner: string, size: number, gap: number) {
   const s = Math.max(10, size);
   const ng = -1 * gap;
-  if (corner === 'tl') return `M ${fmt(-s)} ${ng} L ${ng} ${fmt(-s)} L ${fmt(-s)} ${fmt(-s)} Z`;
-  if (corner === 'tr') return `M ${fmt(s)} ${ng} L ${gap} ${fmt(-s)} L ${fmt(s)} ${fmt(-s)} Z`;
-  if (corner === 'br') return `M ${fmt(s)} ${gap} L ${gap} ${fmt(s)} L ${fmt(s)} ${fmt(s)} Z`;
+  if (corner === 'tl')
+    return `M ${fmt(-s)} ${ng} L ${ng} ${fmt(-s)} L ${fmt(-s)} ${fmt(-s)} Z`;
+  if (corner === 'tr')
+    return `M ${fmt(s)} ${ng} L ${gap} ${fmt(-s)} L ${fmt(s)} ${fmt(-s)} Z`;
+  if (corner === 'br')
+    return `M ${fmt(s)} ${gap} L ${gap} ${fmt(s)} L ${fmt(s)} ${fmt(s)} Z`;
   return `M ${fmt(-s)} ${gap} L ${ng} ${fmt(s)} L ${fmt(-s)} ${fmt(s)} Z`;
 }
 
@@ -136,7 +151,7 @@ export function generateHudFrameSVG(options: HudFrameOptions = {}) {
   const {
     w = 800,
     h = 450,
-    seed = 898766,
+    seed = options.seed ?? 133769,
     pad = 22,
     strokeOuter = 'rgba(0, 240, 255, 0.95)',
     strokeInner = 'rgba(0, 240, 255, 0.35)',
@@ -154,6 +169,7 @@ export function generateHudFrameSVG(options: HudFrameOptions = {}) {
     triangleGapMax = 4,
   } = options;
 
+  console.log(seed);
   const rng = mulberry32(seed);
   const maxChamfer = Math.floor(Math.min(w, h) * 0.4);
 
@@ -164,7 +180,12 @@ export function generateHudFrameSVG(options: HudFrameOptions = {}) {
       : rInt(rng, 16, Math.floor(maxChamfer * 0.3));
   };
 
-  const corners = { tl: genChamfer(), tr: genChamfer(), br: genChamfer(), bl: genChamfer() };
+  const corners = {
+    tl: genChamfer(),
+    tr: genChamfer(),
+    br: genChamfer(),
+    bl: genChamfer(),
+  };
   const featureCount = rPick(rng, [1, 2, 2]);
   const edgesPool = ['top', 'bottom', 'top', 'bottom', 'left', 'right'];
   const features: any[] = [];
@@ -198,49 +219,125 @@ export function generateHudFrameSVG(options: HudFrameOptions = {}) {
     const nestedFill = rng() < 0.65;
     const nestedInset = rFloat(rng, featureFillInsetMin, featureFillInsetMax);
 
-    const { pathSegs, fillD } = buildTrapezoidFeature({ edge, start, end, depth, mode, nestedFill, nestedInset });
-    const f = { edge, mode, start, end, depth, nestedFill, nestedInset, pathSegs, fillD };
+    const { pathSegs, fillD } = buildTrapezoidFeature({
+      edge,
+      start,
+      end,
+      depth,
+      mode,
+      nestedFill,
+      nestedInset,
+    });
+    const f = {
+      edge,
+      mode,
+      start,
+      end,
+      depth,
+      nestedFill,
+      nestedInset,
+      pathSegs,
+      fillD,
+    };
     features.push(f);
     featureByEdge.set(edge, f);
   }
 
   const buildTop = () => {
     const f = featureByEdge.get('top');
-    const xL = corners.tl, xR = w - corners.tr;
-    if (!f) return [{ x: xL, y: 0 }, { x: xR, y: 0 }];
-    const s = clamp(f.start, xL + 4, xR - 4), e = clamp(f.end, s + 20, xR - 4);
+    const xL = corners.tl,
+      xR = w - corners.tr;
+    if (!f)
+      return [
+        { x: xL, y: 0 },
+        { x: xR, y: 0 },
+      ];
+    const s = clamp(f.start, xL + 4, xR - 4),
+      e = clamp(f.end, s + 20, xR - 4);
     const seg = f.pathSegs.map((p: any) => ({ x: p.x, y: p.y }));
-    return [{ x: xL, y: 0 }, { x: s, y: 0 }, seg[1], seg[2], { x: e, y: 0 }, { x: xR, y: 0 }];
+    return [
+      { x: xL, y: 0 },
+      { x: s, y: 0 },
+      seg[1],
+      seg[2],
+      { x: e, y: 0 },
+      { x: xR, y: 0 },
+    ];
   };
 
   const buildRight = () => {
     const f = featureByEdge.get('right');
-    const yT = corners.tr, yB = h - corners.br, x = w;
-    if (!f) return [{ x, y: yT }, { x, y: yB }];
-    const s = clamp(f.start, yT + 4, yB - 4), e = clamp(f.end, s + 20, yB - 4);
+    const yT = corners.tr,
+      yB = h - corners.br,
+      x = w;
+    if (!f)
+      return [
+        { x, y: yT },
+        { x, y: yB },
+      ];
+    const s = clamp(f.start, yT + 4, yB - 4),
+      e = clamp(f.end, s + 20, yB - 4);
     const seg = f.pathSegs.map((p: any) => ({ x: x + p.x, y: p.y }));
-    return [{ x, y: yT }, { x, y: s }, seg[1], seg[2], { x, y: e }, { x, y: yB }];
+    return [
+      { x, y: yT },
+      { x, y: s },
+      seg[1],
+      seg[2],
+      { x, y: e },
+      { x, y: yB },
+    ];
   };
 
   const buildBottom = () => {
     const f = featureByEdge.get('bottom');
-    const xL = corners.bl, xR = w - corners.br, y = h;
-    if (!f) return [{ x: xR, y }, { x: xL, y }];
-    const s = clamp(f.start, xL + 4, xR - 4), e = clamp(f.end, s + 20, xR - 4);
+    const xL = corners.bl,
+      xR = w - corners.br,
+      y = h;
+    if (!f)
+      return [
+        { x: xR, y },
+        { x: xL, y },
+      ];
+    const s = clamp(f.start, xL + 4, xR - 4),
+      e = clamp(f.end, s + 20, xR - 4);
     const seg = f.pathSegs.map((p: any) => ({ x: p.x, y: y + p.y }));
-    return [{ x: xR, y }, { x: e, y }, seg[2], seg[1], { x: s, y }, { x: xL, y }];
+    return [
+      { x: xR, y },
+      { x: e, y },
+      seg[2],
+      seg[1],
+      { x: s, y },
+      { x: xL, y },
+    ];
   };
 
   const buildLeft = () => {
     const f = featureByEdge.get('left');
-    const yT = corners.tl, yB = h - corners.bl, x = 0;
-    if (!f) return [{ x, y: yB }, { x, y: yT }];
-    const s = clamp(f.start, yT + 4, yB - 4), e = clamp(f.end, s + 20, yB - 4);
+    const yT = corners.tl,
+      yB = h - corners.bl,
+      x = 0;
+    if (!f)
+      return [
+        { x, y: yB },
+        { x, y: yT },
+      ];
+    const s = clamp(f.start, yT + 4, yB - 4),
+      e = clamp(f.end, s + 20, yB - 4);
     const seg = f.pathSegs.map((p: any) => ({ x: x + p.x, y: p.y }));
-    return [{ x, y: yB }, { x, y: e }, seg[2], seg[1], { x, y: s }, { x, y: yT }];
+    return [
+      { x, y: yB },
+      { x, y: e },
+      seg[2],
+      seg[1],
+      { x, y: s },
+      { x, y: yT },
+    ];
   };
 
-  const topPts = buildTop(), rightPts = buildRight(), bottomPts = buildBottom(), leftPts = buildLeft();
+  const topPts = buildTop(),
+    rightPts = buildRight(),
+    bottomPts = buildBottom(),
+    leftPts = buildLeft();
   const outlinePts = [...topPts];
   if (corners.tr > 0) outlinePts.push({ x: w, y: corners.tr });
   for (let i = 1; i < rightPts.length; i++) outlinePts.push(rightPts[i]);
@@ -249,7 +346,10 @@ export function generateHudFrameSVG(options: HudFrameOptions = {}) {
   if (corners.bl > 0) outlinePts.push({ x: 0, y: h - corners.bl });
   for (let i = 1; i < leftPts.length; i++) outlinePts.push(leftPts[i]);
 
-  let outlineD = outlinePts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${fmt(p.x)} ${fmt(p.y)}`).join(' ') + ' Z';
+  let outlineD =
+    outlinePts
+      .map((p, i) => `${i === 0 ? 'M' : 'L'} ${fmt(p.x)} ${fmt(p.y)}`)
+      .join(' ') + ' Z';
 
   const triangles: any[] = [];
   const maybeTriangle = (ck: string) => {
@@ -260,13 +360,21 @@ export function generateHudFrameSVG(options: HudFrameOptions = {}) {
         const d = buildInnerCornerTriangle(ck, rInt(rng, 12, 20));
         let tx = ck.includes('r') ? w - gap : gap;
         let ty = ck.includes('b') ? h - gap : gap;
-        triangles.push({ d, withFill: rng() < 0.7, transform: `translate(${fmt(tx)} ${fmt(ty)})` });
+        triangles.push({
+          d,
+          withFill: rng() < 0.7,
+          transform: `translate(${fmt(tx)} ${fmt(ty)})`,
+        });
       }
     } else if (rng() < 0.5) {
       const d = buildOuterCornerTriangle(ck, chamfer, gap + strokeOuterW);
       let tx = ck === 'tl' || ck === 'bl' ? chamfer : w - chamfer;
       let ty = ck === 'tl' || ck === 'tr' ? chamfer : h - chamfer;
-      triangles.push({ d, withFill: rng() < 0.5, transform: `translate(${fmt(tx)} ${fmt(ty)})` });
+      triangles.push({
+        d,
+        withFill: rng() < 0.5,
+        transform: `translate(${fmt(tx)} ${fmt(ty)})`,
+      });
     }
   };
 
@@ -283,12 +391,18 @@ export function generateHudFrameSVG(options: HudFrameOptions = {}) {
     .join('');
 
   const triMarkup = triangles
-    .map((t) => `<path d="${t.d}" transform="${t.transform}" fill="${t.withFill ? strokeOuter : 'transparent'}" stroke="${strokeOuter}" stroke-width="${strokeOuterW}" vector-effect="non-scaling-stroke" />`)
+    .map(
+      (t) =>
+        `<path d="${t.d}" transform="${t.transform}" fill="${t.withFill ? strokeOuter : 'transparent'}" stroke="${strokeOuter}" stroke-width="${strokeOuterW}" vector-effect="non-scaling-stroke" />`
+    )
     .join('');
 
   const dotsId = `dots_${seed}`;
   const glowId = `glow_${seed}`;
-  const vbX = -pad, vbY = -pad, vbW = w + pad * 2, vbH = h + pad * 2;
+  const vbX = -pad,
+    vbY = -pad,
+    vbW = w + pad * 2,
+    vbH = h + pad * 2;
 
   const svgMarkup = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="${vbX} ${vbY} ${vbW} ${vbH}" preserveAspectRatio="none" class="w-full h-full pointer-events-none absolute inset-0 overflow-visible">

@@ -11,8 +11,11 @@ interface Props {
   showScanline?: boolean;
 }
 
+const numbers = [473829, 898766, 839201, 574839, 920194];
+const randomNum = numbers[(Math.random() * 5) | 0];
+
 const {
-  seed = 898766,
+  seed = randomNum,
   width = 840,
   height = 420,
   glow = true,
@@ -24,48 +27,72 @@ const {
 const { svgMarkup } = generateHudFrameSVG({ w: width, h: height, seed, glow });
 ---
 
-<div class={`relative group ${className}`}>
+<div
+  class={`hud-box-component relative group ${className}`}
+  data-width={width}
+  data-height={height}
+  data-glow={glow}
+>
   <!-- Procedural Vector Frame SVG -->
-  <Fragment set:html={svgMarkup} />
+  <div class="hud-svg-container">
+    <Fragment set:html={svgMarkup} />
+  </div>
 
   <!-- Animated Sci-Fi Opaque Grid Background -->
-  <div class='absolute inset-2 pointer-events-none rounded-lg overflow-hidden z-0 opacity-40'>
+  <div
+    class="absolute inset-2 pointer-events-none rounded-lg overflow-hidden z-0 opacity-40"
+  >
     <div
-      class='absolute inset-0 bg-[linear-gradient(to_right,rgba(0,240,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,240,255,0.08)_1px,transparent_1px)] bg-[size:24px_24px]'>
+      class="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,240,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,240,255,0.08)_1px,transparent_1px)] bg-[size:24px_24px]"
+    >
     </div>
     <div
-      class='absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,transparent_20%,rgba(10,10,15,0.95)_100%)]'>
+      class="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,transparent_20%,rgba(10,10,15,0.95)_100%)]"
+    >
     </div>
   </div>
 
   <!-- Animated Scanline Laser -->
   {
     showScanline && (
-      <div class='absolute inset-x-4 h-0.5 bg-cyan-400/80 shadow-[0_0_12px_#00f0ff] z-10 pointer-events-none animate-hud-scan opacity-70' />
+      <div class="absolute inset-x-4 h-0.5 bg-cyan-400/80 shadow-[0_0_12px_#00f0ff] z-10 pointer-events-none animate-hud-scan opacity-70" />
     )
   }
 
   <!-- Top Status HUD Bar -->
   <div
-    class='absolute bottom-0 left-8 right-8 flex justify-between items-center z-20 pointer-events-none font-mono text-[10px] tracking-widest text-cyan-400/80 uppercase'>
-    <div class='flex items-center gap-2'>
-      <span class='w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping'></span>
+    class="absolute bottom-0 left-8 right-8 md:flex hidden justify-between items-center z-20 pointer-events-none font-mono text-[10px] tracking-widest text-cyan-400/80 uppercase"
+  >
+    <div class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
       <span>{title}</span>
     </div>
-    <div class='hidden sm:flex items-center gap-3 text-cyan-500/60'>
+    <div class="hidden sm:flex items-center gap-3 text-cyan-500/60">
       <span>LOC: 0x88F</span>
       <span>PWR: 99.8%</span>
     </div>
   </div>
 
   <!-- Corner Targeting Reticles -->
-  <div class='absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-cyan-400 z-20 pointer-events-none'></div>
-  <div class='absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-cyan-400 z-20 pointer-events-none'></div>
-  <div class='absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-cyan-400 z-20 pointer-events-none'></div>
-  <div class='absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-cyan-400 z-20 pointer-events-none'></div>
+  <div
+    class="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-cyan-400 z-20 pointer-events-none"
+  >
+  </div>
+  <div
+    class="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-cyan-400 z-20 pointer-events-none"
+  >
+  </div>
+  <div
+    class="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-cyan-400 z-20 pointer-events-none"
+  >
+  </div>
+  <div
+    class="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-cyan-400 z-20 pointer-events-none"
+  >
+  </div>
 
   <!-- Slotted Content Container -->
-  <div class='relative z-10 p-6 sm:p-10 md:p-12'>
+  <div class="relative z-10 p-6 sm:p-10 md:p-12">
     <slot />
   </div>
 </div>
@@ -92,3 +119,69 @@ const { svgMarkup } = generateHudFrameSVG({ w: width, h: height, seed, glow });
     animation: hud-scan 6s ease-in-out infinite;
   }
 </style>
+
+<script>
+  function initializeDynamicHud() {
+    console.log('Initializing dynamic HUD...');
+    const hudContainers =
+      document.querySelectorAll<HTMLElement>('.hud-box-component');
+
+    hudContainers.forEach((hudContainer) => {
+      const { width, height, glow } = hudContainer.dataset;
+      if (!width || !height) return;
+
+      const svgWrapper = hudContainer.querySelector('.hud-svg-container');
+      if (!svgWrapper) return;
+
+      const redraw = async () => {
+        try {
+          const params = new URLSearchParams({
+            w: width,
+            h: height,
+            glow: glow || 'true',
+            t: Date.now().toString(), // Cache buster
+          });
+          const response = await fetch(`/api/hud?${params.toString()}`);
+          if (!response.ok) return;
+          const svgMarkup = await response.text();
+          svgWrapper.innerHTML = svgMarkup;
+        } catch (error) {
+          console.error('Failed to redraw HUD:', error);
+        }
+      };
+
+      // 1. Force instant redraw on fresh page load
+      redraw();
+
+      // 2. Set interval for subsequent redraws
+      const randomInterval = () => Math.random() * 10000 + 10000;
+      let redrawInterval = setInterval(redraw, randomInterval());
+
+      // Redraw on scroll to top
+      let isAtTop = window.scrollY < 5;
+      window.addEventListener(
+        'scroll',
+        () => {
+          const currentlyAtTop = window.scrollY < 5;
+          if (currentlyAtTop && !isAtTop) {
+            redraw();
+            clearInterval(redrawInterval);
+            redrawInterval = setInterval(redraw, randomInterval());
+          }
+          isAtTop = currentlyAtTop;
+        },
+        { passive: true }
+      );
+    });
+  }
+
+  // Run on standard initial page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeDynamicHud);
+  } else {
+    initializeDynamicHud();
+  }
+
+  // Also listen for Astro View Transitions if enabled
+  document.addEventListener('astro:page-load', initializeDynamicHud);
+</script>

@@ -360,6 +360,16 @@ body::after {
   box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
 }
 
+.main {
+  margin-top: -110px;
+}
+
+@media (max-width: 992px) {
+  .main {
+    margin-top: -90px;
+  }
+}
+
 .gcard {
   border-radius: 0.25rem;
   background: rgba(10, 10, 14, 0.35);
@@ -641,4 +651,80 @@ body::after {
 .reveal-right.is-visible {
   opacity: 1;
   transform: translate(0) scale(1);
+}
+
+/* ==========================================================================
+   Mobile Overrides (< 500px)
+   ========================================================================== */
+@media (max-width: 500px) {
+  /* 1. Hide left & right laser edge glows */
+  body::before,
+  body::after {
+    display: none !important;
+  }
+
+  /* 3. Strip SVG graphics & HUD title clutter */
+  .hero-entrance-wrap svg,
+  .hero-entrance-wrap [class*='hud'] > span,
+  .hero-entrance-wrap header {
+    display: none !important;
+  }
+
+  /* 4. Convert HudBox into a clean, blurry opaque dark box */
+  .hero-entrance-wrap {
+    background: rgba(10, 10, 14, 0.8) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(0, 240, 255, 0.2) !important;
+    border-radius: 16px !important;
+    padding: 1.5rem 0.75rem !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  /* 5. Reduce outer hero section padding */
+  .hero-section {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  /* 6. Tighten intro paragraph spacing */
+  .hero-section p {
+    font-size: 0.95rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  /* Fix title clipping on static text */
+  .hero-title {
+    height: auto !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    font-size: 2.25rem !important;
+    line-height: 1.1 !important;
+  }
+
+  /* Ensure cool-title gradient text renders on static elements */
+  .cool-title {
+    display: inline-block !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+}
+
+@media (max-width: 500px) {
+  /* 1. Slash vertical padding on the section navbar */
+  .site-header.section-nav,
+  .site-header.section-nav.is-stuck,
+  .site-header.section-nav.is-stuck.scroll-up {
+    padding: 0.5rem 0 !important;
+  }
+
+  /* 2. Change flex alignment to flex-start so the left item is accessible */
+  .section-nav-inner {
+    justify-content: flex-start !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
 }

@@ -88,6 +88,13 @@ export default function SectionNav() {
       const currentScrollY = window.scrollY;
       const last = lastScrollYRef.current;
 
+      // On small screens, disable the hide/show on scroll behavior
+      if (window.innerWidth < 500) {
+        nav.classList.remove('scroll-down', 'scroll-up');
+        lastScrollYRef.current = currentScrollY;
+        return;
+      }
+
       if (currentScrollY > last) {
         nav.classList.remove('scroll-up');
         nav.classList.add('scroll-down');
