@@ -11,8 +11,7 @@ interface Props {
   showScanline?: boolean;
 }
 
-const numbers = [473829, 898766, 839201, 574839, 920194];
-const randomNum = numbers[(Math.random() * 5) | 0];
+const randomNum = Math.floor(Math.random() * 900000) + 100000;
 
 const {
   seed = randomNum,
@@ -119,69 +118,3 @@ const { svgMarkup } = generateHudFrameSVG({ w: width, h: height, seed, glow });
     animation: hud-scan 6s ease-in-out infinite;
   }
 </style>
-
-<script>
-  function initializeDynamicHud() {
-    console.log('Initializing dynamic HUD...');
-    const hudContainers =
-      document.querySelectorAll<HTMLElement>('.hud-box-component');
-
-    hudContainers.forEach((hudContainer) => {
-      const { width, height, glow } = hudContainer.dataset;
-      if (!width || !height) return;
-
-      const svgWrapper = hudContainer.querySelector('.hud-svg-container');
-      if (!svgWrapper) return;
-
-      const redraw = async () => {
-        try {
-          const params = new URLSearchParams({
-            w: width,
-            h: height,
-            glow: glow || 'true',
-            t: Date.now().toString(), // Cache buster
-          });
-          const response = await fetch(`/api/hud?${params.toString()}`);
-          if (!response.ok) return;
-          const svgMarkup = await response.text();
-          svgWrapper.innerHTML = svgMarkup;
-        } catch (error) {
-          console.error('Failed to redraw HUD:', error);
-        }
-      };
-
-      // 1. Force instant redraw on fresh page load
-      redraw();
-
-      // 2. Set interval for subsequent redraws
-      const randomInterval = () => Math.random() * 10000 + 10000;
-      let redrawInterval = setInterval(redraw, randomInterval());
-
-      // Redraw on scroll to top
-      let isAtTop = window.scrollY < 5;
-      window.addEventListener(
-        'scroll',
-        () => {
-          const currentlyAtTop = window.scrollY < 5;
-          if (currentlyAtTop && !isAtTop) {
-            redraw();
-            clearInterval(redrawInterval);
-            redrawInterval = setInterval(redraw, randomInterval());
-          }
-          isAtTop = currentlyAtTop;
-        },
-        { passive: true }
-      );
-    });
-  }
-
-  // Run on standard initial page load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeDynamicHud);
-  } else {
-    initializeDynamicHud();
-  }
-
-  // Also listen for Astro View Transitions if enabled
-  document.addEventListener('astro:page-load', initializeDynamicHud);
-</script>
