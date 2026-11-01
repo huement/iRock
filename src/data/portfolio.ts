@@ -7,10 +7,14 @@
 export type GridClass =
   | 'col-span-1 md:col-span-1 lg:col-span-8'
   | 'col-span-1 md:col-span-1 lg:col-span-7'
+  | 'col-span-1 md:col-span-1 lg:col-span-6'
+  | 'col-span-1 md:col-span-1 lg:col-span-5'
   | 'col-span-1 md:col-span-1 lg:col-span-4'
   | 'col-span-1 md:col-span-1 lg:col-span-3';
 export type CardClass =
   'card' | 'card card-featured' | 'card card-highlight' | 'card card-laanc';
+
+const publicBase = (import.meta.env.BASE_URL ?? '/').replace(/\/$/, '');
 
 export interface Project {
   id: string;
@@ -20,6 +24,8 @@ export interface Project {
   imageKey: string;
   lightboxImageKey?: string;
   lightboxDetails?: string;
+  /** Optional: filename in public/videos/ (e.g. "demo.mp4") to play in the project modal */
+  videoKey?: string;
   tags: string[];
   gridClass: GridClass;
   cardClass: CardClass;
@@ -30,6 +36,47 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    id: 'jewelml',
+    title: 'Jewel ML — 3D Product Generator',
+    description:
+      "At Jewel ML I worked on AI model generation for e-commerce. In addition, I also am working on Shop3D, a 3D product generator that turns a garment's ordinary product photos into an interactive 3D model shoppers can spin around and view from different angles under relightable HDRI environments.",
+    lightboxDetails: `
+# Jewel ML — 3D Product Generator
+
+At **Jewel ML** I worked on AI model generation for e-commerce. Computing product recommendations, capturing recently viewed items. I also built **Shop3D** which turns a garment's ordinary product photos into an interactive 3D model shoppers can spin around and view from different angles under relightable HDRI environments.
+
+### Pipeline
+* **2D pre-pass**: Never send a raw catalog person to a reconstructor. Isolate the garment first. Ghost v2 / Flux Kontext rewrites sheer, sequin, and print shots into empty product plates.
+* **Hunyuan3D-2mv**: Front and back plates only. The hull *is* the dress — straps, bandeau, drape, and bow stay in the mesh instead of being invented.
+* **Fit, don't replace**: Align the hull to the mannequin from plate height, then SDF-push vertices 4 mm off the body. Earlier "fitted shell" paths shredded sequins onto the hips.
+* **Cylindrical bake**: Project the same photo plates onto that hull so sequins and prints stay photographic, not redrawn by a paint model.
+
+### Lighting
+Shop3D relights the fitted GLB under Beach and Nightclub HDRIs without rebaking.
+
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose my-4">
+  <figure>
+    <img src="${publicBase}/imgs/shop3d.png" alt="Guess sequin mini on the female mannequin in the Nightclub HDRI" class="rounded-lg border border-slate-800 w-full" />
+    <figcaption class="mt-2 font-mono text-xs text-cyan-300/80 uppercase tracking-wider">Nightclub</figcaption>
+  </figure>
+  <figure>
+    <img src="${publicBase}/imgs/shop3d-beach.png" alt="Guess sequin mini on the female mannequin in the Beach HDRI" class="rounded-lg border border-slate-800 w-full" />
+    <figcaption class="mt-2 font-mono text-xs text-cyan-300/80 uppercase tracking-wider">Beach</figcaption>
+  </figure>
+</div>
+    `,
+    imageKey: 'shop3d.gif',
+    lightboxImageKey: 'shop3d.png',
+    videoKey: 'revolve.mp4',
+    ctaUrl: 'https://github.com/jml-derek-scott/revolve',
+    ctaText: 'Goto Repository',
+    tags: ['Python', 'Hunyuan3D', 'Three.js', 'Flux Kontext', 'Replicate'],
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-6',
+    cardClass: 'card card-featured',
+    thumbWidth: 850,
+    thumbHeight: 400,
+  },
   {
     id: 'blog',
     title: 'huement.com Blog',
@@ -49,7 +96,7 @@ Cutting-edge tech blog built on **Statamic CMS** and **Laravel Livewire**.
     imageKey: 'huementblog.png',
     lightboxImageKey: 'blog.gif',
     tags: ['Laravel Livewire', 'Statamic CMS', 'PHP 8.3+', 'CI/CD'],
-    gridClass: 'col-span-1 md:col-span-1 lg:col-span-8',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-6',
     cardClass: 'card card-featured',
     ctaUrl: 'https://huement.com/blog',
     ctaText: 'Read Blog',
@@ -84,7 +131,8 @@ A interactive sensory mobile game tailored for infants and toddlers.
   {
     id: 'cookie',
     title: 'Cookie Sleuth Browser Extension',
-    description: 'Affiliate Marketing Fraud detection',
+    description:
+      'Free Chrome Extension for Affiliate Marketing Fraud detection and prevention. It allows you to scan your browser for suspicious activity and block malicious cookies.',
     lightboxDetails: `
 # Cookie Sleuth
 
@@ -107,6 +155,31 @@ Advanced affiliate marketing fraud detection and cookie manipulation prevention 
     thumbHeight: 400,
   },
   {
+    id: 'cosmic',
+    title: 'Cosmic Wave',
+    description:
+      'An dynamic SVG generation library for creating cosmic waveforms and visualizations. Its lightweight, fast, easy to use, and is a great example of using Web Components to create a reusable component. It is also featured heavily on this page.',
+    lightboxDetails: `
+# Cosmic Wave
+
+Parametric SVG generation library engineered for dynamic cosmic wave visualizations.
+
+### Technical Highlights
+* **Procedural Rendering**: Generates mathematical vector waveforms dynamically without external image dependencies.
+* **Interactive Parameters**: Allows real-time tweaking of wave frequency, amplitude, decay, and particle density.
+* **Lightweight Footprint**: Pure JavaScript implementation designed for high frame-rate web UI graphics.
+    `,
+    imageKey: 'cosmic-sq.png',
+    lightboxImageKey: 'cosmic.png',
+    tags: ['SVG', 'Javascript', 'UI/UX', 'Visualization'],
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-4',
+    cardClass: 'card',
+    ctaUrl: 'https://huement.github.io/CosmicWave/',
+    ctaText: 'Live Demo',
+    thumbWidth: 400,
+    thumbHeight: 400,
+  },
+  {
     id: 'youtube',
     title: 'Barebones Code',
     description:
@@ -124,7 +197,7 @@ A developer-centric video platform exploring modern software engineering, AI too
     imageKey: 'bare-thumb.gif',
     lightboxImageKey: 'bare-600.gif',
     tags: ['YouTube', 'Video', 'Animation', 'Voiceover'],
-    gridClass: 'col-span-1 md:col-span-1 lg:col-span-8',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-7',
     cardClass: 'card card-highlight',
     ctaUrl: 'https://youtube.com/@barebonescode',
     ctaText: 'Visit Channel',
@@ -149,36 +222,11 @@ Real-time trend analysis platform leveraging modern AI models for **Narrative Ar
     `,
     imageKey: 'trendforge.png',
     tags: ['AI Analytics', 'Docker', 'PGVector', 'Volt', 'Tailwind'],
-    gridClass: 'col-span-1 md:col-span-1 lg:col-span-8',
+    gridClass: 'col-span-1 md:col-span-1 lg:col-span-5',
     cardClass: 'card',
     ctaUrl: 'https://trendforge.huement.com',
     ctaText: 'Goto TF Website',
     thumbWidth: 850,
-    thumbHeight: 400,
-  },
-  {
-    id: 'cosmic',
-    title: 'Cosmic Wave',
-    description:
-      'An dynamic SVG generation library for creating cosmic waveforms and visualizations.',
-    lightboxDetails: `
-# Cosmic Wave
-
-Parametric SVG generation library engineered for dynamic cosmic wave visualizations.
-
-### Technical Highlights
-* **Procedural Rendering**: Generates mathematical vector waveforms dynamically without external image dependencies.
-* **Interactive Parameters**: Allows real-time tweaking of wave frequency, amplitude, decay, and particle density.
-* **Lightweight Footprint**: Pure JavaScript implementation designed for high frame-rate web UI graphics.
-    `,
-    imageKey: 'cosmic-sq.png',
-    lightboxImageKey: 'cosmic.png',
-    tags: ['SVG', 'Javascript', 'UI/UX', 'Visualization'],
-    gridClass: 'col-span-1 md:col-span-1 lg:col-span-4',
-    cardClass: 'card',
-    ctaUrl: 'https://huement.github.io/CosmicWave/',
-    ctaText: 'Live Demo',
-    thumbWidth: 400,
     thumbHeight: 400,
   },
   {
@@ -336,31 +384,24 @@ export interface TimelineItem {
 
 export const timeline: TimelineItem[] = [
   {
-    filename: 'Upwork.tsx',
-    language: 'typescript',
-    code: `interface FreelanceConfig {
-  duration: "2026 - PRESENT";
-  stack: ["React.js", "Next.js", "TypeScript", "Tailwind"];
-}
+    filename: 'JewelML.py',
+    language: 'python',
+    code: `class JewelML(Contractor):
+    duration = "2026 - PRESENT"
+    stack = ["Python", "PyTorch", "TensorFlow", "Hunyuan3D"]
+    role = "ML Contractor"  # personalization models + 3D product gen
 
-export function UpworkConsultant({ clientScope }: { clientScope: ProjectBrief }) {
-  const [satisfaction, setSatisfaction] = useState<number>(5.0);
+    def train_rankers(self, catalog: Tensor) -> Ranking:
+        embeddings = torch.nn.functional.normalize(catalog)
+        scores = tf.keras.models.load("ltr").predict(embeddings)
+        return Ranking(scores, device=self.mps_or_cuda())
 
-  useEffect(() => {
-    async function shipClientApp() {
-      const cleanCode = await modernizeCodebase(clientScope);
-      setSatisfaction(5.0);
-    }
-
-    shipClientApp();
-  }, [clientScope]);
-
-  return (
-    <ClientSatisfaction rating={satisfaction}>
-      <ShippedFeatures status="Deployed & Approved" />
-    </ClientSatisfaction>
-  );
-}`,
+    def generate_3d_outfit(self, front: Image, back: Image) -> GLB:
+        plates = flux_kontext.ghost_v2(front, back)  # empty product shots
+        hull = hunyuan3d_2mv.reconstruct(plates)     # keep the hull
+        seated = sdf_fit(hull, clearance_mm=4)
+        return cylindrical_bake(seated, plates)
+`,
   },
   {
     filename: 'Botlink.ts',

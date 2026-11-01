@@ -4,6 +4,8 @@ import { marked } from 'marked';
 import { projects } from '../data/portfolio';
 import HexGridBackground from './HexGridBackground.astro';
 
+import shop3dImg from '../assets/imgs/shop3d.png';
+import shop3dGif from '../assets/imgs/shop3d.gif';
 import blogImg from '../assets/imgs/huementblog.png';
 import blogGif from '../assets/imgs/blog.gif';
 import cosmicImg from '../assets/imgs/cosmic.png';
@@ -29,6 +31,8 @@ import shopifyImg2 from '../assets/imgs/shopify-2.png';
 import trendforgeImg from '../assets/imgs/trendforge.png';
 
 const projectImages: Record<string, typeof blogImg> = {
+  'shop3d.png': shop3dImg,
+  'shop3d.gif': shop3dGif,
   'huementblog.png': blogImg,
   'blog.gif': blogGif,
   'cosmic.png': cosmicImg,
@@ -58,6 +62,7 @@ const THUMB_WIDTH = 750;
 const THUMB_HEIGHT = 320;
 const LIGHTBOX_WIDTH = 1200;
 const LIGHTBOX_HEIGHT = 800;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const projectData = await Promise.all(
   projects.map(async (proj) => {
@@ -97,7 +102,9 @@ const projectData = await Promise.all(
       fullSrc = full.src;
     }
 
-    return { ...proj, fullSrc, width, height, detailsHtml };
+    const videoUrl = proj.videoKey ? `${baseUrl}/videos/${proj.videoKey}` : '';
+
+    return { ...proj, fullSrc, width, height, detailsHtml, videoUrl };
   })
 );
 
@@ -180,24 +187,37 @@ const getColSpan = (index: number, gridClass?: string) => {
                   class="lightbox-trigger w-full text-left overflow-hidden relative cursor-pointer group-hover:opacity-95 transition-opacity"
                   data-title={proj.title}
                   data-image={proj.fullSrc}
+                  data-video={proj.videoUrl}
                   data-details={proj.detailsHtml}
                   data-tags={JSON.stringify(proj.tags)}
                   data-cta-url={proj.ctaUrl || ''}
                   data-cta-text={proj.ctaText || ''}
                 >
-                  <Image
-                    src={projectImages[proj.imageKey]}
-                    alt={proj.title}
-                    width={proj.width}
-                    height={proj.height}
-                    format="webp"
-                    densities={[1, 2]}
-                    loading={index < 2 ? 'eager' : 'lazy'}
-                    class="w-full h-64 sm:h-72 lg:h-80 object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                  {proj.imageKey.endsWith('.gif') ? (
+                    <img
+                      src={projectImages[proj.imageKey].src}
+                      alt={proj.title}
+                      width={proj.width}
+                      height={proj.height}
+                      loading={index < 2 ? 'eager' : 'lazy'}
+                      class="w-full h-64 sm:h-72 lg:h-80 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <Image
+                      src={projectImages[proj.imageKey]}
+                      alt={proj.title}
+                      width={proj.width}
+                      height={proj.height}
+                      format="webp"
+                      densities={[1, 2]}
+                      loading={index < 2 ? 'eager' : 'lazy'}
+                      class="w-full h-64 sm:h-72 lg:h-80 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  )}
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60"></div>
                   <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-950/80 text-cyan-400 border border-cyan-500/40 px-2.5 py-1 rounded text-xs font-mono flex items-center gap-1 backdrop-blur-sm">
-                    <i class="bx bx-expand-alt"></i> Expand
+                    <i class={`bx ${proj.videoUrl ? 'bx-play-circle' : 'bx-expand-alt'}`}></i>
+                    {proj.videoUrl ? 'Play' : 'Expand'}
                   </div>
                 </button>
 
@@ -273,9 +293,11 @@ const getColSpan = (index: number, gridClass?: string) => {
 
       <!-- Modal Body -->
       <div class="p-6 sm:p-8 overflow-y-auto max-h-[75vh] space-y-6">
-        <!-- Expanded Full Image View -->
-        <div class="relative rounded-xl overflow-hidden border border-slate-800 bg-slate-950/80 max-h-[450px] flex items-center justify-center">
-          <img id="modal-image" src="" alt="Project Preview" class="w-full h-auto max-h-[450px] object-contain" />
+        <!-- Expanded media (image or video) -->
+        <div
+          id="modal-media"
+          class="relative rounded-xl overflow-hidden border border-slate-800 bg-slate-950/80 min-h-[200px] max-h-[450px] flex items-center justify-center"
+        >
         </div>
 
         <!-- Tag List -->
@@ -298,7 +320,8 @@ const getColSpan = (index: number, gridClass?: string) => {
           href="#"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-6 py-2.5 font-mono text-xs font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 rounded-lg transition-all shadow-[0_0_20px_rgba(0,240,255,0.4)]"
+          class="items-center gap-2 px-6 py-2.5 font-mono text-xs font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 rounded-lg transition-all shadow-[0_0_20px_rgba(0,240,255,0.4)]"
+          style="display: none;"
         >
           <span id="modal-cta-text">Launch Live Project</span>
           <i class="bx bx-export text-lg"></i>
@@ -337,11 +360,17 @@ const getColSpan = (index: number, gridClass?: string) => {
 
   // Elements inside Modal to update dynamically
   const modalTitle = document.getElementById('modal-title');
-  const modalImage = document.getElementById('modal-image') as HTMLImageElement;
+  const modalMedia = document.getElementById('modal-media');
   const modalDetails = document.getElementById('modal-details');
   const modalTags = document.getElementById('modal-tags');
   const modalCtaBtn = document.getElementById('modal-cta-btn') as HTMLAnchorElement;
   const modalCtaText = document.getElementById('modal-cta-text');
+
+  const stopModalMedia = () => {
+    const video = modalMedia?.querySelector('video');
+    if (video) video.pause();
+    if (modalMedia) modalMedia.innerHTML = '';
+  };
 
   // Add click handlers for all project triggers
   document.querySelectorAll('.lightbox-trigger').forEach((trigger) => {
@@ -349,13 +378,26 @@ const getColSpan = (index: number, gridClass?: string) => {
       const btn = trigger as HTMLButtonElement;
       const title = btn.dataset.title || '';
       const image = btn.dataset.image || '';
+      const videoSrc = btn.dataset.video || '';
       const details = btn.dataset.details || '';
       const tags = JSON.parse(btn.dataset.tags || '[]');
       const ctaUrl = btn.dataset.ctaUrl || '';
       const ctaText = btn.dataset.ctaText || 'Visit Project';
 
       if (modalTitle) modalTitle.textContent = title;
-      if (modalImage) modalImage.src = image;
+      if (modalMedia) {
+        if (videoSrc) {
+          modalMedia.innerHTML = `
+            <video src="${videoSrc}" controls autoplay playsinline class="w-full h-auto max-h-[450px] object-contain">
+              Your browser does not support html5 video.
+            </video>
+          `;
+        } else {
+          modalMedia.innerHTML = `
+            <img src="${image}" alt="${title}" class="w-full h-auto max-h-[450px] object-contain" />
+          `;
+        }
+      }
       if (modalDetails) modalDetails.innerHTML = details;
 
       // Populate Tags
@@ -373,9 +415,10 @@ const getColSpan = (index: number, gridClass?: string) => {
         if (ctaUrl) {
           modalCtaBtn.href = ctaUrl;
           modalCtaText.textContent = ctaText;
-          modalCtaBtn.classList.remove('hidden');
+          modalCtaBtn.style.setProperty('display', 'inline-flex');
         } else {
-          modalCtaBtn.classList.add('hidden');
+          modalCtaBtn.removeAttribute('href');
+          modalCtaBtn.style.setProperty('display', 'none');
         }
       }
 
@@ -388,10 +431,13 @@ const getColSpan = (index: number, gridClass?: string) => {
   const closeModalWithAnimation = () => {
     if (!modalElement || !modal) return;
     modalElement.classList.add('is-closing');
+    const video = modalMedia?.querySelector('video');
+    if (video) video.pause();
 
     setTimeout(() => {
       modal.hide();
       modalElement.classList.remove('is-closing');
+      stopModalMedia();
     }, 240);
   };
 
