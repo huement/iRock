@@ -472,21 +472,23 @@ JOIN CartAbandonment a ON a.company = m.company_name
 WHERE s.hourly_revenue > 5000 AND s.annual_revenue > 10000000;`,
   },
   {
-    filename: 'RigMapper.php',
-    language: 'php',
-    code: `// Oilfield Mapping · 2015 - 2017
-namespace Mapping;
+    filename: 'FreshLime.py',
+    language: 'python',
+    code: `class FreshLime(Startup):
+    duration = "2013 - 2015"
+    stack = ["Python", "Django", "React.js", "AngularJS"]
+    role = "Solo Frontend"  # mockups → Django REST UI
 
-class RigMapper {
-    const DURATION = "2015 - 2017";
-    private $stack = ["PHP", "PostGIS", "SQL", "HTML5"];
+    def ship_responsive_views(self, mockups: Design) -> Pages:
+        templates = django.template.loader.get_template(mockups)
+        return self.bind_rest_api(templates)  # early React + AngularJS
 
-    public function run(): Map {
-        return $this->drillingRigLocations()
-            ->customerDataOverlay()
-            ->largePrintedMaps();
-    }
-}`,
+    def wire_business_tools(self) -> Integrations:
+        qb = quickbooks.sync(invoices=True)
+        reviews = google_reviews.autorespond()  # email pipeline
+        schedule = availability.dashboard()
+        return Integrations(qb, reviews, schedule)
+`,
   },
   {
     filename: 'UND.edu.txt',
